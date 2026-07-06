@@ -39,6 +39,13 @@ else
   echo "==> Certbot ya está instalado."
 fi
 
+if ! command -v rsync >/dev/null 2>&1; then
+  echo "==> Instalando rsync..."
+  apt-get install -y rsync
+else
+  echo "==> rsync ya está instalado."
+fi
+
 # ------------------------------------------------------------------------------
 # 2. Copiar el sitio al web root
 # ------------------------------------------------------------------------------
@@ -47,6 +54,8 @@ mkdir -p "${WEB_ROOT}"
 rsync -av --delete \
   --exclude '.git' \
   --exclude '.claude' \
+  --exclude '.gitignore' \
+  --exclude '.gitattributes' \
   --exclude 'deploy.sh' \
   --exclude 'README.md' \
   "${REPO_DIR}/" "${WEB_ROOT}/"

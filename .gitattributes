@@ -1,0 +1,20 @@
+# Normalización de finales de línea
+* text=auto
+
+# Scripts de shell SIEMPRE con LF (CRLF rompe bash en Linux)
+*.sh text eol=lf
+
+# Archivos web
+*.html text
+*.css text
+*.js text
+*.md text
+*.json text
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff2 binary
