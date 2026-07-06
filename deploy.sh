@@ -134,7 +134,7 @@ certbot --nginx \
   --email "${CERTBOT_EMAIL}" \
   --agree-tos --no-eff-email \
   --redirect --non-interactive \
-  --keep-until-expiring
+  --keep-until-expiring --expand
 
 # ------------------------------------------------------------------------------
 # 6. Firewall (UFW): permitir SSH y Nginx, denegar el resto
