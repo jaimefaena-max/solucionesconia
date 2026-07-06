@@ -125,17 +125,16 @@ systemctl reload nginx
 # ------------------------------------------------------------------------------
 # 5. SSL con Certbot (Let's Encrypt)
 # ------------------------------------------------------------------------------
-if [ -d "/etc/letsencrypt/live/${DOMAIN}" ]; then
-  echo "==> Certificado SSL ya existe. Verificando renovación..."
-  certbot renew --dry-run || true
-else
-  echo "==> Emitiendo certificado SSL..."
-  certbot --nginx \
-    -d "${DOMAIN}" -d "${WWW_DOMAIN}" \
-    --email "${CERTBOT_EMAIL}" \
-    --agree-tos --no-eff-email \
-    --redirect --non-interactive
-fi
+# --keep-until-expiring hace la operación idempotente: si el certificado ya
+# existe y es válido lo reutiliza, y re-instala el bloque SSL en el vhost
+# (necesario porque la sección 4 reescribe el archivo y borra el bloque 443).
+echo "==> Configurando SSL con Certbot..."
+certbot --nginx \
+  -d "${DOMAIN}" -d "${WWW_DOMAIN}" \
+  --email "${CERTBOT_EMAIL}" \
+  --agree-tos --no-eff-email \
+  --redirect --non-interactive \
+  --keep-until-expiring
 
 # ------------------------------------------------------------------------------
 # 6. Firewall (UFW): permitir SSH y Nginx, denegar el resto
