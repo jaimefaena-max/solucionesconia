@@ -58,9 +58,11 @@ Eso es todo. El script se encarga de:
 
 1. Instalar **Nginx** y **Certbot** (solo si faltan).
 2. Copiar el sitio a `/var/www/solucionesconia.cl` (excluyendo `.git`, `deploy.sh` y este README).
-3. Ajustar permisos (`www-data`, directorios 755, archivos 644).
-4. Crear y activar el virtual host con gzip, cache de estáticos y headers de seguridad.
+3. Ajustar permisos endurecidos (`root:root`, directorios 755, archivos 644 — Nginx solo lee).
+4. Crear y activar el virtual host con gzip, cache de estáticos y headers de seguridad
+   (HSTS, nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy).
 5. Emitir el certificado **SSL de Let's Encrypt** con redirección automática HTTP → HTTPS.
+6. Configurar el firewall **UFW** (permite solo SSH y Nginx).
 
 ### Actualizar el sitio (deploys posteriores)
 
@@ -75,5 +77,8 @@ timer de Certbot.
 
 ## Estado
 
-Landing page con diseño, copy y SEO aplicados — lista para despliegue en producción.
-Pendiente: subir `assets/favicon.png` y `assets/og-image.jpg` (referenciados en el HTML).
+Producción — auditoría de seguridad aplicada (headers, permisos endurecidos, firewall).
+Todos los assets referenciados existen (`assets/favicon.svg`, `assets/og-image.jpg`).
+
+Mejoras futuras planificadas: precompilar Tailwind CSS (eliminar CDN runtime),
+iconos Lucide como SVG inline, compresión de `og-image.jpg`, `robots.txt` + `sitemap.xml`.

@@ -63,8 +63,8 @@ rsync -av --delete \
 # ------------------------------------------------------------------------------
 # 3. Permisos correctos
 # ------------------------------------------------------------------------------
-echo "==> Ajustando permisos..."
-chown -R www-data:www-data "${WEB_ROOT}"
+echo "==> Ajustando permisos (root:root, solo lectura para Nginx)..."
+chown -R root:root "${WEB_ROOT}"
 find "${WEB_ROOT}" -type d -exec chmod 755 {} \;
 find "${WEB_ROOT}" -type f -exec chmod 644 {} \;
 
@@ -80,23 +80,29 @@ server {
 
     root ${WEB_ROOT};
     index index.html;
+    server_tokens off;
 
     # Compresión
     gzip on;
-    gzip_types text/plain text/css application/javascript image/svg+xml;
+    gzip_types text/plain text/css application/javascript image/svg+xml application/json;
     gzip_min_length 256;
 
-    # Cache agresivo para estáticos (CSS/JS/imágenes)
-    location ~* \.(css|js|png|jpg|jpeg|webp|svg|ico|woff2?)\$ {
-        expires 30d;
-        add_header Cache-Control "public, max-age=2592000";
-        try_files \$uri =404;
-    }
-
-    # Seguridad básica
+    # Seguridad (heredados por locations sin add_header propio)
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    # Cache agresivo para estáticos. Los headers de seguridad se repiten
+    # a propósito: un location con add_header propio NO hereda los del server.
+    location ~* \.(css|js|png|jpg|jpeg|webp|svg|ico|woff2?)\$ {
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        try_files \$uri =404;
+    }
 
     location / {
         try_files \$uri \$uri/ =404;
@@ -129,6 +135,19 @@ else
     --email "${CERTBOT_EMAIL}" \
     --agree-tos --no-eff-email \
     --redirect --non-interactive
+fi
+
+# ------------------------------------------------------------------------------
+# 6. Firewall (UFW): permitir SSH y Nginx, denegar el resto
+# ------------------------------------------------------------------------------
+if command -v ufw >/dev/null 2>&1; then
+  echo "==> Configurando firewall (UFW)..."
+  ufw allow OpenSSH >/dev/null
+  ufw allow 'Nginx Full' >/dev/null
+  ufw --force enable
+  ufw status verbose
+else
+  echo "==> UFW no está disponible; omitiendo configuración de firewall."
 fi
 
 echo ""
