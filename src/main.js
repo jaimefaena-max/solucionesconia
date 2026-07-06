@@ -8,4 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
       mobileMenu.classList.toggle("hidden");
     });
   }
+
+  if (window.lucide) {
+    lucide.createIcons();
+  }
 });
