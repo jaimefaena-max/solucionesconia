@@ -129,12 +129,19 @@ systemctl reload nginx
 # existe y es válido lo reutiliza, y re-instala el bloque SSL en el vhost
 # (necesario porque la sección 4 reescribe el archivo y borra el bloque 443).
 echo "==> Configurando SSL con Certbot..."
-certbot --nginx \
-  -d "${DOMAIN}" -d "${WWW_DOMAIN}" \
-  --email "${CERTBOT_EMAIL}" \
-  --agree-tos --no-eff-email \
-  --redirect --non-interactive \
-  --keep-until-expiring --expand
+issue_cert() {
+  certbot --nginx "$@" \
+    --email "${CERTBOT_EMAIL}" \
+    --agree-tos --no-eff-email \
+    --redirect --non-interactive \
+    --keep-until-expiring --expand
+}
+
+if ! issue_cert -d "${DOMAIN}" -d "${WWW_DOMAIN}"; then
+  echo "==> AVISO: validación con ${WWW_DOMAIN} falló (¿falta su registro DNS?)."
+  echo "==> Reintentando solo con ${DOMAIN} para no dejar el sitio sin HTTPS..."
+  issue_cert -d "${DOMAIN}"
+fi
 
 # ------------------------------------------------------------------------------
 # 6. Firewall (UFW): permitir SSH y Nginx, denegar el resto
