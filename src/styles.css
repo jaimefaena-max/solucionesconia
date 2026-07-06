@@ -1,0 +1,13 @@
+/* Estilos personalizados de Soluciones con IA (complementan Tailwind CDN) */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+}
