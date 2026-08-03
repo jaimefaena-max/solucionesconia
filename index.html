@@ -48,12 +48,15 @@
   <!-- Vendedor IA — Optimización de latencia (DNS + TLS) -->
   <link rel="preconnect" href="https://admin.solucionesconia.cl" />
 
-  <!-- LinkedIn Insight Tag — Soluciones con IA (B2B) -->
+  <!-- LinkedIn Insight Tag — Soluciones con IA (B2B)
+       $VITE_LINKEDIN_PARTNER_ID se reemplaza en tiempo de despliegue
+       (ver deploy.sh) desde la variable de entorno del servidor. -->
   <script type="text/javascript">
-    _linkedin_partner_id = "PARTNER_ID_REAL";
+    _linkedin_partner_id = "$VITE_LINKEDIN_PARTNER_ID";
     window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
     window._linkedin_data_partner_ids.push(_linkedin_partner_id);
   </script>
+
   <script type="text/javascript">
     (function (l) {
       if (!l) {
@@ -69,8 +72,9 @@
   </script>
   <noscript>
     <img height="1" width="1" style="display:none;" alt=""
-      src="https://px.ads.linkedin.com/collect/?pid=PARTNER_ID_REAL&fmt=gif" />
+      src="https://px.ads.linkedin.com/collect/?pid=$VITE_LINKEDIN_PARTNER_ID&fmt=gif" />
   </noscript>
+
 </head>
 
 

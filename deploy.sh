@@ -58,11 +58,36 @@ rsync -av --delete \
   --exclude '.gitattributes' \
   --exclude 'deploy.sh' \
   --exclude 'README.md' \
+  --exclude '.env' \
+  --exclude '.env.*' \
   "${REPO_DIR}/" "${WEB_ROOT}/"
+
+
+# ------------------------------------------------------------------------------
+# 2.1. Cargar variables de entorno sensibles y proteger las credenciales
+# ------------------------------------------------------------------------------
+# index.html usa el placeholder $VITE_LINKEDIN_PARTNER_ID. El valor REAL se
+# inyecta en tiempo de despliegue desde ${REPO_DIR}/.env (archivo NO versionado:
+# está en .gitignore y solo existe en el servidor). Así el código fuente queda
+# libre de credenciales.
+if [ -f "${REPO_DIR}/.env" ]; then
+  echo "==> Cargando variables de entorno desde ${REPO_DIR}/.env..."
+  set -a
+  # shellcheck disable=SC1091
+  source "${REPO_DIR}/.env"
+  set +a
+else
+  echo "==> ADVERTENCIA: no existe ${REPO_DIR}/.env."
+  echo "==> La telemetría B2B (LinkedIn) quedará desactivada (placeholder vacío)."
+fi
+
+echo "==> Inyectando VITE_LINKEDIN_PARTNER_ID en index.html..."
+sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:-}/g" "${WEB_ROOT}/index.html"
 
 # ------------------------------------------------------------------------------
 # 3. Permisos correctos
 # ------------------------------------------------------------------------------
+
 echo "==> Ajustando permisos (root:root, solo lectura para Nginx)..."
 chown -R root:root "${WEB_ROOT}"
 find "${WEB_ROOT}" -type d -exec chmod 755 {} \;
