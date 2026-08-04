@@ -14,6 +14,11 @@ desktop.ini
 .env.local
 .env.*.local
 
+# Datos de clientes (PII: cédulas, documentos tributarios y legales).
+# NUNCA se versionan — el repo se publica en GitHub. El contenido de cada
+# cliente se aprovisiona fuera de banda en el entorno que lo sirve.
+Clientes/
+
 # Editores / IDEs
 .vscode/
 .idea/
