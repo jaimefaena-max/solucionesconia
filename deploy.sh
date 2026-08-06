@@ -118,6 +118,13 @@ server {
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    # CSP (Fase 4 · I8): fija los orígenes que la landing realmente usa —
+    # el widget Vendedor IA (admin.solucionesconia.cl), Tailwind Play CDN,
+    # lucide (unpkg), Google Fonts y el Insight Tag de LinkedIn. Bloquea
+    # cualquier otro script/conexión y el framing de terceros. 'unsafe-eval'
+    # es requisito del JIT de Tailwind CDN; al migrar Tailwind a build (ver I8),
+    # quitarlo y sustituir 'unsafe-inline' por nonces.
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com; frame-src https://admin.solucionesconia.cl; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
 
     # Cache agresivo para estáticos. Los headers de seguridad se repiten
     # a propósito: un location con add_header propio NO hereda los del server.
