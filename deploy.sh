@@ -107,6 +107,16 @@ server {
     index index.html;
     server_tokens off;
 
+    # Dotfiles: .env, .git, .htpasswd, .DS_Store, etc. El lookahead exceptua
+    # /.well-known/ — certbot la necesita para el reto HTTP-01 de renovacion.
+    # Va ARRIBA a proposito: nginx evalua los location regex en orden de fichero
+    # y este debe ganarle al de estaticos (un /.oculto.css caeria ahi si no).
+    location ~ /\.(?!well-known).* {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
     # Compresión
     gzip on;
     gzip_types text/plain text/css application/javascript image/svg+xml application/json;
