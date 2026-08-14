@@ -31,19 +31,25 @@
 
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 
-  <!-- Tailwind CSS vía CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/src/config.js"></script>
+  <!-- Tailwind CSS compilado localmente (build estricto con purga).
+       Ya NO se carga cdn.tailwindcss.com: el CSS se genera con
+       `npm run build` a /dist/style.css. La config de marca vive en
+       tailwind.config.js (antes en el difunto src/config.js). -->
+  <link rel="stylesheet" href="/dist/style.css" />
 
-  <!-- Lucide Icons vía CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lucide Icons vía CDN, VERSIÓN FIJADA (antes @latest, que podía romper el
+       sitio con cualquier cambio mayor upstream sin aviso). -->
+  <script src="https://unpkg.com/lucide@1.31.0"></script>
 
   <!-- Tipografía -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/src/styles.css" />
+  <!-- El CSS personalizado (antes en /src/styles.css) se trasladó a
+       src/input.css y se compila dentro de /dist/style.css; ya no hace falta
+       un <link> aparte. -->
+  <!-- (styles.css consolidado en dist/style.css) -->
 
   <!-- Vendedor IA — Optimización de latencia (DNS + TLS) -->
   <link rel="preconnect" href="https://admin.solucionesconia.cl" />

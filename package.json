@@ -1,0 +1,26 @@
+{
+  "name": "agencia_solucionesconia",
+  "version": "1.0.0",
+  "description": "Repositorio maestro de **Soluciones con IA** — agencia de automatización B2B para Pymes chilenas.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./dist/style.css --minify",
+    "watch": "tailwindcss -i ./src/input.css -o ./dist/style.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaimefaena-max/solucionesconia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jaimefaena-max/solucionesconia/issues"
+  },
+  "homepage": "https://github.com/jaimefaena-max/solucionesconia#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

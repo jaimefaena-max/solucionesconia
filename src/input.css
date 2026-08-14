@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS personalizado de Soluciones con IA ─────────────────────────────────
+   Trasladado desde src/styles.css: lo que Tailwind no cubre por utilidades.
+   Va DESPUÉS de las directivas para que `utilities` no lo pise por especificidad
+   ni por orden en la cascada. */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: #f8fafc;
+}
+
+/* Gradiente del hero: dark → azul institucional → cian. CSS puro porque un
+   linear-gradient de 3 paradas con estos valores exactos no es una utilidad
+   estándar de Tailwind. */
+.gradient-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #06b6d4 100%);
+}
+
+/* Ancla los saltos de sección debajo del header fijo */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
