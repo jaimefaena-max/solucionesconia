@@ -47,7 +47,24 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 2. Copiar el sitio al web root
+# 2. Compilar el CSS de Tailwind ANTES de copiar
+# ------------------------------------------------------------------------------
+# Desde la migración de Tailwind CDN a build local, index.html enlaza
+# /dist/style.css. Ese fichero NO está en git (dist/ va en .gitignore), así que
+# hay que generarlo aquí; sin este paso el sitio se serviría SIN estilos.
+# `npm ci` (no `install`) respeta package-lock.json al pie de la letra → build
+# reproducible. `set -euo pipefail` (cabecera) aborta el deploy si el build falla,
+# antes de tocar el web root: nunca se publica un dist a medias.
+echo "==> Compilando CSS (Tailwind build local)..."
+if ! command -v npm >/dev/null 2>&1; then
+  echo "ERROR: npm no está instalado en este host; no se puede compilar el CSS." >&2
+  exit 1
+fi
+( cd "${REPO_DIR}" && npm ci && npm run build )
+echo "==> CSS compilado en ${REPO_DIR}/dist/style.css"
+
+# ------------------------------------------------------------------------------
+# 2.1. Copiar el sitio al web root
 # ------------------------------------------------------------------------------
 echo "==> Copiando archivos a ${WEB_ROOT}..."
 mkdir -p "${WEB_ROOT}"
@@ -60,6 +77,11 @@ rsync -av --delete \
   --exclude 'README.md' \
   --exclude '.env' \
   --exclude '.env.*' \
+  --exclude 'node_modules' \
+  --exclude 'package.json' \
+  --exclude 'package-lock.json' \
+  --exclude 'tailwind.config.js' \
+  --exclude 'src/input.css' \
   "${REPO_DIR}/" "${WEB_ROOT}/"
 
 
@@ -129,12 +151,14 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
     # CSP (Fase 4 · I8): fija los orígenes que la landing realmente usa —
-    # el widget Vendedor IA (admin.solucionesconia.cl), Tailwind Play CDN,
-    # lucide (unpkg), Google Fonts y el Insight Tag de LinkedIn. Bloquea
-    # cualquier otro script/conexión y el framing de terceros. 'unsafe-eval'
-    # es requisito del JIT de Tailwind CDN; al migrar Tailwind a build (ver I8),
-    # quitarlo y sustituir 'unsafe-inline' por nonces.
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com; frame-src https://admin.solucionesconia.cl; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
+    # el widget Vendedor IA (admin.solucionesconia.cl), lucide (unpkg), Google
+    # Fonts y el Insight Tag de LinkedIn. Bloquea cualquier otro script/conexión
+    # y el framing de terceros.
+    # ENDURECIDO al migrar Tailwind a build local: se retiran de script-src el
+    # origen https://cdn.tailwindcss.com Y 'unsafe-eval' (que solo hacía falta
+    # para el JIT del CDN de Tailwind). Pendiente aún: sustituir 'unsafe-inline'
+    # por nonces en los scripts inline (LinkedIn Insight Tag).
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com; frame-src https://admin.solucionesconia.cl; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
 
     # Cache agresivo para estáticos. Los headers de seguridad se repiten
     # a propósito: un location con add_header propio NO hereda los del server.

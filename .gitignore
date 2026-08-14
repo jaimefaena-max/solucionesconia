@@ -1,6 +1,8 @@
 # Dependencias
 node_modules/
-package-lock.json
+# package-lock.json SÍ se versiona: es lo que garantiza que el build de Tailwind
+# use la MISMA versión exacta en cada máquina (dev, VPS, CI). Ignorarlo dejaba el
+# rango ^3.4.x libre y el CSS compilado podía variar entre despliegues.
 yarn.lock
 pnpm-lock.yaml
 
