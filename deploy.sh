@@ -229,6 +229,34 @@ else
   echo "==> UFW no está disponible; omitiendo configuración de firewall."
 fi
 
+# ------------------------------------------------------------------------------
+# 7. Purga de caché de Cloudflare (Edge)
+# ------------------------------------------------------------------------------
+# El Edge cachea los estáticos (main.js, style.css) con TTL de 30 días; sin purga,
+# los visitantes ven assets viejos tras cada deploy. Aquí se purga TODO el zone.
+#
+# ZERO TRUST: el Zone ID y el Token NUNCA se hardcodean — se leen del entorno
+# (${REPO_DIR}/.env, cargado arriba). Guardas ${VAR:-} porque `set -u` abortaría
+# ante una variable no definida. Si faltan, se omite la purga con aviso: no se
+# aborta un despliegue que ya fue exitoso (nginx recargado).
+if [ -n "${CLOUDFLARE_ZONE_ID:-}" ] && [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+  echo "==> Purgando caché de Cloudflare..."
+  cf_http=$(curl -s -o /tmp/cf_purge.json -w '%{http_code}' -X POST \
+    "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+    -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+    -H "Content-Type: application/json" \
+    --data '{"purge_everything":true}') || cf_http="000"
+
+  if [ "${cf_http}" = "200" ]; then
+    echo "==> ✅ Caché de Cloudflare purgada correctamente (HTTP 200)."
+  else
+    echo "==> ⚠️  Purga de Cloudflare FALLÓ (HTTP ${cf_http}). Verifica CLOUDFLARE_ZONE_ID / CLOUDFLARE_API_TOKEN." >&2
+    cat /tmp/cf_purge.json 2>/dev/null >&2 || true
+  fi
+else
+  echo "==> Purga de Cloudflare omitida: CLOUDFLARE_ZONE_ID / CLOUDFLARE_API_TOKEN no definidos en .env."
+fi
+
 echo ""
 echo "=============================================================="
 echo "  ✅ Despliegue completo: https://${DOMAIN}"
