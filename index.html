@@ -87,11 +87,15 @@
 
     <!-- ── Header (optimizado para conversión móvil: logo + avatar IA + CTA) ── -->
     <header
-      class="w-full flex justify-between items-center px-4 py-3"
+      class="w-full flex justify-between items-center px-4 sm:px-8 py-4"
       style="position:fixed; top:0; left:0; right:0; z-index:50; gap:12px; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06);">
-      <!-- Logo corporativo (lockup completo) -->
+      <!-- Logo corporativo. Tamaño fijado por clase (h-9) Y por style inline: el
+           inline es un fallback a prueba de caché (si un dist/style.css viejo
+           quedara servido por el CDN sin la clase .h-9, el alto igual queda
+           acotado y el logo no se agranda). -->
       <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex items-center" style="flex:0 0 auto;">
-        <img src="/assets/premium/LOGO.jpeg" alt="Soluciones con IA" class="h-9 w-auto" style="border-radius:6px;" />
+        <img src="/assets/premium/LOGO.jpeg" alt="Soluciones con IA" class="h-9 w-auto"
+          style="height:36px; width:auto; display:block; border-radius:6px;" />
       </a>
 
       <!-- Bloque CTA con avatar de asistente IA -->
