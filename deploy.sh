@@ -160,7 +160,10 @@ server {
     # origen https://cdn.tailwindcss.com Y 'unsafe-eval' (que solo hacía falta
     # para el JIT del CDN de Tailwind). Pendiente aún: sustituir 'unsafe-inline'
     # por nonces en los scripts inline (LinkedIn Insight Tag).
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com; frame-src https://admin.solucionesconia.cl; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
+    # Cloudflare Web Analytics: el beacon se sirve desde static.cloudflareinsights.com
+    # (script-src) y reporta RUM a cloudflareinsights.com (connect-src). Ambos
+    # hosts se listan para que la CSP no bloquee ni la carga ni el envío.
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com https://static.cloudflareinsights.com https://cloudflareinsights.com; frame-src https://admin.solucionesconia.cl; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
 
     # Cache agresivo para estáticos. Los headers de seguridad se repiten
     # a propósito: un location con add_header propio NO hereda los del server.
