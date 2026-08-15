@@ -99,12 +99,14 @@ if [ -f "${REPO_DIR}/.env" ]; then
   source "${REPO_DIR}/.env"
   set +a
 else
-  echo "==> ADVERTENCIA: no existe ${REPO_DIR}/.env."
-  echo "==> La telemetría B2B (LinkedIn) quedará desactivada (placeholder vacío)."
+  echo "ERROR: no existe ${REPO_DIR}/.env; VITE_LINKEDIN_PARTNER_ID es obligatorio." >&2
+  echo "       Crea el .env en el servidor con la variable definida y reintenta." >&2
+  echo "       Se ABORTA el deploy (fail-fast): no se publica con la telemetría B2B inerte." >&2
+  exit 1
 fi
 
 echo "==> Inyectando VITE_LINKEDIN_PARTNER_ID en index.html..."
-sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:-}/g" "${WEB_ROOT}/index.html"
+sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:?Error: VITE_LINKEDIN_PARTNER_ID no está definido; se aborta el deploy}/g" "${WEB_ROOT}/index.html"
 
 # ------------------------------------------------------------------------------
 # 3. Permisos correctos
