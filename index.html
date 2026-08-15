@@ -81,187 +81,240 @@
 
 </head>
 
+<body style="background:#0F172A; color:#F8FAFC;">
 
+  <div style="min-height:100vh; position:relative;">
 
-<body class="bg-base text-slate-800 antialiased">
+    <!-- ── Header ───────────────────────────────────────────────────────── -->
+    <header
+      style="position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px clamp(20px,5vw,72px); backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06);">
+      <div style="display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-.01em; font-size:16px;">
+        <span style="width:9px; height:9px; border-radius:50%; background:#06B6D4; box-shadow:0 0 12px rgba(6,182,212,.9);"></span>
+        Soluciones con IA
+      </div>
+      <a href="#diagnostico" class="sc-nav-cta"
+        style="display:inline-flex; align-items:center; min-height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(255,255,255,.14); color:#F8FAFC; font-size:14px; font-weight:600;">Agenda
+        tu diagnóstico</a>
+    </header>
 
-  <!-- Header -->
-  <header class="fixed top-0 inset-x-0 z-50 bg-base/80 backdrop-blur-md border-b border-slate-200/70">
-    <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 sm:px-8 py-4"
-      aria-label="Navegación principal">
-      <a href="#inicio" class="flex items-center gap-2" aria-label="Soluciones con IA - Inicio">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-          class="w-8 h-8 text-primary hover:scale-110 transition-transform duration-300">
-          <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path>
-          <path d="M9 13a4.5 4.5 0 0 0 3-4"></path>
-          <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path>
-          <path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path>
-          <path d="M6 18a4 4 0 0 1-1.967-.516"></path>
-          <path d="M12 13h4"></path>
-          <path d="M12 18h6a2 2 0 0 1 2 2v1"></path>
-          <path d="M12 8h8"></path>
-          <path d="M16 8V5a2 2 0 0 1 2-2"></path>
-          <circle cx="16" cy="13" r=".5"></circle>
-          <circle cx="18" cy="3" r=".5"></circle>
-          <circle cx="20" cy="21" r=".5"></circle>
-          <circle cx="20" cy="8" r=".5"></circle>
-        </svg>
-        <span class="text-xl font-extrabold text-dark tracking-tight">S<span class="text-accent">.</span>conIA</span>
-      </a>
+    <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+    <section id="inicio"
+      style="position:relative; min-height:100vh; display:flex; align-items:center; overflow:hidden; padding:140px clamp(20px,5vw,72px) 96px;">
+      <div data-parallax="0.18"
+        style="position:absolute; inset:-8% 0 -8% 0; background-image:url('/assets/premium/Imagen_pagina.webp'); background-size:cover; background-position:65% center; will-change:transform;">
+      </div>
+      <div
+        style="position:absolute; inset:0; background:linear-gradient(100deg, rgba(15,23,42,.96) 0%, rgba(15,23,42,.9) 34%, rgba(15,23,42,.55) 62%, rgba(30,58,138,.42) 100%);">
+      </div>
+      <div
+        style="position:absolute; inset:0; opacity:.5; background-image:radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size:3px 3px; mix-blend-mode:overlay; pointer-events:none;">
+      </div>
 
-      <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
-        <li><a href="#servicios" class="hover:text-primary transition">Servicios</a></li>
-        <li><a href="#nosotros" class="hover:text-primary transition">Nosotros</a></li>
-        <li><a href="#contacto" class="hover:text-primary transition">Contacto</a></li>
-      </ul>
-
-      <a href="#contacto"
-        class="hidden md:inline-block bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
-        Agenda una charla sin costo
-      </a>
-
-      <button id="menu-toggle" class="md:hidden text-dark text-2xl leading-none" aria-label="Abrir menú">
-        ☰
-      </button>
-    </nav>
-
-    <div id="mobile-menu" class="hidden md:hidden px-6 pb-5">
-      <ul class="flex flex-col gap-4 text-sm font-medium">
-        <li><a href="#servicios" class="hover:text-primary transition">Servicios</a></li>
-        <li><a href="#nosotros" class="hover:text-primary transition">Nosotros</a></li>
-        <li><a href="#contacto" class="hover:text-primary transition">Contacto</a></li>
-        <li>
-          <a href="#contacto"
-            class="inline-block bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition">
-            Agenda una charla sin costo
-          </a>
-        </li>
-      </ul>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section id="inicio" class="hero-premium text-white pt-32 sm:pt-40 pb-24 sm:pb-32 px-6 sm:px-8">
-      <div class="max-w-5xl mx-auto text-center">
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
-          Simplificamos tu negocio con Inteligencia Artificial
-        </h1>
-        <p class="mt-6 sm:mt-8 text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed">
-          Automatizamos tus procesos manuales y asistentes virtuales para que vuelvas a liderar
-          tu Pyme. Eficiencia, orden y tiempo libre en un solo lugar.
-        </p>
-        <div class="mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#contacto"
-            class="bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3.5 rounded-full shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 transition-all duration-300">
-            Agenda una charla sin costo
-          </a>
-          <a href="#servicios"
-            class="border border-white/30 hover:bg-white/10 text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-300">
-            Ver servicios
-          </a>
+      <div style="position:relative; width:100%; max-width:1280px; margin:0 auto;">
+        <div style="max-width:640px;">
+          <p data-reveal
+            style="display:inline-flex; align-items:center; gap:10px; margin:0 0 26px; padding:8px 16px; border-radius:999px; border:1px solid rgba(6,182,212,.32); background:rgba(6,182,212,.08); color:#A5F3FC; font-size:13px; font-weight:600; letter-spacing:.02em; text-transform:uppercase;">
+            <span
+              style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.6s ease-in-out infinite;"></span>
+            Automatización con IA para Pymes
+          </p>
+          <h1 data-reveal
+            style="margin:0 0 24px; font-size:clamp(44px,7.4vw,86px); line-height:1.02; letter-spacing:-.035em; font-weight:800; text-wrap:balance;">
+            Tu negocio,<br /><span style="color:#67E8F9;">funcionando solo.</span>
+          </h1>
+          <p data-reveal
+            style="margin:0 0 40px; max-width:520px; font-size:clamp(17px,2vw,21px); line-height:1.55; font-weight:400; color:rgba(248,250,252,.76); text-wrap:pretty;">
+            Recupera tu tiempo. Nosotros automatizamos ventas, atención y gestión con agentes de IA que trabajan por ti,
+            24/7.
+          </p>
+          <div data-reveal style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:28px;">
+            <a href="#diagnostico" class="sc-btn-primary"
+              style="display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:0 32px; border-radius:999px; background:#06B6D4; color:#04202B; font-size:16px; font-weight:700; letter-spacing:-.01em; box-shadow:0 0 0 1px rgba(255,255,255,.14) inset, 0 14px 44px rgba(6,182,212,.36);">Agenda
+              tu diagnóstico</a>
+            <a href="#agentes" class="sc-btn-ghost"
+              style="display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:0 30px; border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.03); color:#F8FAFC; font-size:16px; font-weight:600; backdrop-filter:blur(8px);">Ver
+              cómo funciona</a>
+          </div>
+          <p data-reveal style="margin:0; font-size:14px; font-weight:500; color:rgba(248,250,252,.5);">Sin permanencia ·
+            Implementación en semanas, no meses</p>
         </div>
       </div>
     </section>
 
-    <!-- Servicios -->
-    <section id="servicios" class="py-24 sm:py-32 px-6 sm:px-8 bg-base">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-center text-dark tracking-tight">¿En qué te aliviamos el día?
-        </h2>
-        <p class="mt-4 text-center text-slate-500 text-lg max-w-2xl mx-auto">
-          Nada de tecnología complicada. Solo menos carga para ti y tu equipo.
-        </p>
+    <!-- ── Agentes ──────────────────────────────────────────────────────── -->
+    <section id="agentes"
+      style="position:relative; padding:clamp(88px,12vw,148px) clamp(20px,5vw,72px); background:linear-gradient(180deg, #0F172A 0%, #101B36 100%);">
+      <div style="max-width:1280px; margin:0 auto;">
+        <div style="max-width:660px; margin-bottom:clamp(48px,6vw,76px);">
+          <h2 data-reveal
+            style="margin:0 0 18px; font-size:clamp(32px,4.6vw,54px); line-height:1.08; letter-spacing:-.03em; font-weight:700; text-wrap:balance;">
+            Un equipo de IA para cada frente</h2>
+          <p data-reveal
+            style="margin:0; font-size:clamp(16px,1.8vw,19px); line-height:1.55; color:rgba(248,250,252,.66);">Cada
+            agente se ocupa de una parte del trabajo pesado.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:clamp(18px,2.2vw,26px);">
 
-        <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          <article
-            class="bg-white rounded-2xl p-8 sm:p-9 shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-              class="w-10 h-10 text-accent hover:scale-110 transition-transform duration-300">
-              <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path>
-              <path d="M7 11h10"></path>
-              <path d="M7 15h6"></path>
-              <path d="M7 7h8"></path>
-            </svg>
-            <h3 class="mt-6 text-xl font-semibold text-dark">Tu Equipo Atendiendo 24/7</h3>
-            <p class="mt-3 text-slate-500 leading-relaxed">
-              Un asistente con IA responde tus clientes por WhatsApp a toda hora, incluso cuando duermes.
-              Tú dejas de estar pegado al celular respondiendo lo mismo mil veces.
-            </p>
+          <article data-reveal class="sc-card"
+            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
+            <div
+              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
+              <div style="width:16px; height:16px; border:1.6px solid #67E8F9; border-radius:50%;"></div>
+            </div>
+            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Vendedor 24/7</h3>
+            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Responde, califica y
+              agenda mientras duermes.</p>
+            <div
+              style="margin-top:6px; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
+              <span
+                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
+              Tiempo de respuesta: &lt;30s
+            </div>
           </article>
 
-          <article
-            class="bg-white rounded-2xl p-8 sm:p-9 shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-              class="w-10 h-10 text-accent hover:scale-110 transition-transform duration-300">
-              <path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"></path>
-            </svg>
-            <h3 class="mt-6 text-xl font-semibold text-dark">Tu Negocio Trabajando Solo</h3>
-            <p class="mt-3 text-slate-500 leading-relaxed">
-              Cotizaciones, agendamiento y seguimientos que se hacen sin que muevas un dedo.
-              Menos planillas, menos olvidos, más tiempo para ti.
-            </p>
+          <article data-reveal class="sc-card"
+            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
+            <div
+              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
+              <div style="width:16px; height:16px; border:1.6px solid #67E8F9; border-radius:4px;"></div>
+            </div>
+            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Atención sin espera</h3>
+            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Cada cliente atendido al
+              instante, sin colas.</p>
+            <div
+              style="margin-top:6px; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
+              <span
+                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
+              Consultas resueltas hoy: 128
+            </div>
           </article>
 
-          <article
-            class="bg-white rounded-2xl p-8 sm:p-9 shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 sm:col-span-2 lg:col-span-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-              class="w-10 h-10 text-accent hover:scale-110 transition-transform duration-300">
-              <path d="M16 7h6v6"></path>
-              <path d="m22 7-8.5 8.5-5-5L2 17"></path>
-            </svg>
-            <h3 class="mt-6 text-xl font-semibold text-dark">Tus Ventas en Números Claros</h3>
-            <p class="mt-3 text-slate-500 leading-relaxed">
-              Sabes al toque cuánto vendiste y qué está funcionando, sin planillas eternas.
-              Todo en un panel simple, hecho para leerse en un minuto.
-            </p>
+          <article data-reveal class="sc-card"
+            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
+            <div
+              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
+              <div style="width:16px; height:16px; border:1.6px solid #67E8F9; border-radius:2px 12px 2px 12px;"></div>
+            </div>
+            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Gestión al día</h3>
+            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Cobros, recordatorios y
+              reportes, en piloto automático.</p>
+            <div
+              style="margin-top:6px; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
+              <span
+                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
+              Tareas en piloto automático: 41
+            </div>
           </article>
+
         </div>
       </div>
     </section>
 
-    <!-- Nosotros -->
-    <section id="nosotros" class="py-24 sm:py-32 px-6 sm:px-8">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl sm:text-4xl font-bold text-dark tracking-tight">No somos un proveedor más. Somos tu socio
-          técnico.</h2>
-        <p class="mt-6 text-slate-500 text-lg leading-relaxed">
-          Somos chilenos y sabemos lo que es hacer malabares con sueldos, clientes y tiempo que no alcanza.
-          Por eso no te dejamos solo con un software: nos sumamos a tu equipo, hablamos tu idioma
-          y resolvemos contigo, no desde afuera.
-        </p>
+    <!-- ── Antes / Después ──────────────────────────────────────────────── -->
+    <section id="comparativa"
+      style="position:relative; padding:clamp(88px,12vw,148px) clamp(20px,5vw,72px); background:#101B36; overflow:hidden;">
+      <div
+        style="position:absolute; top:-20%; right:-10%; width:60vw; height:60vw; border-radius:50%; background:radial-gradient(circle, rgba(30,58,138,.5) 0%, transparent 66%); pointer-events:none;">
+      </div>
+      <div style="position:relative; max-width:1160px; margin:0 auto;">
+        <h2 data-reveal
+          style="margin:0 0 clamp(44px,6vw,72px); font-size:clamp(32px,4.6vw,54px); line-height:1.08; letter-spacing:-.03em; font-weight:700; max-width:600px; text-wrap:balance;">
+          Tu negocio, antes y después</h2>
+        <div
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:clamp(18px,2.4vw,30px); align-items:start;">
+
+          <div data-reveal
+            style="padding:clamp(26px,3vw,40px); border-radius:22px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.02);">
+            <p
+              style="margin:0 0 26px; font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(248,250,252,.38);">
+              Sin IA</p>
+            <div style="display:flex; flex-direction:column; gap:20px;">
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <span style="flex:none; margin-top:9px; width:14px; height:1.5px; background:rgba(248,250,252,.28);"></span>
+                <p style="margin:0; font-size:17px; line-height:1.5; color:rgba(248,250,252,.5);">Respondes mensajes a
+                  medianoche</p>
+              </div>
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <span style="flex:none; margin-top:9px; width:14px; height:1.5px; background:rgba(248,250,252,.28);"></span>
+                <p style="margin:0; font-size:17px; line-height:1.5; color:rgba(248,250,252,.5);">Se pierden clientes que
+                  nadie atendió</p>
+              </div>
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <span style="flex:none; margin-top:9px; width:14px; height:1.5px; background:rgba(248,250,252,.28);"></span>
+                <p style="margin:0; font-size:17px; line-height:1.5; color:rgba(248,250,252,.5);">El día se va en tareas
+                  repetitivas</p>
+              </div>
+            </div>
+          </div>
+
+          <div data-reveal
+            style="padding:clamp(26px,3vw,40px); border-radius:22px; border:1px solid rgba(6,182,212,.26); background:linear-gradient(160deg, rgba(6,182,212,.1) 0%, rgba(255,255,255,.03) 100%); backdrop-filter:blur(18px); box-shadow:0 24px 70px rgba(4,12,28,.5), 0 0 50px rgba(6,182,212,.1);">
+            <p
+              style="margin:0 0 26px; font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#67E8F9;">
+              Con IA</p>
+            <div style="display:flex; flex-direction:column; gap:20px;">
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <span
+                  style="flex:none; margin-top:9px; width:14px; height:1.5px; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,.8);"></span>
+                <p style="margin:0; font-size:17px; line-height:1.5; font-weight:500; color:#F8FAFC;">Tus agentes
+                  responden solos, al instante</p>
+              </div>
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <span
+                  style="flex:none; margin-top:9px; width:14px; height:1.5px; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,.8);"></span>
+                <p style="margin:0; font-size:17px; line-height:1.5; font-weight:500; color:#F8FAFC;">Ningún cliente
+                  queda sin respuesta</p>
+              </div>
+              <div style="display:flex; gap:14px; align-items:flex-start;">
+                <span
+                  style="flex:none; margin-top:9px; width:14px; height:1.5px; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,.8);"></span>
+                <p style="margin:0; font-size:17px; line-height:1.5; font-weight:500; color:#F8FAFC;">Tú decides; el
+                  sistema ejecuta</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <p data-reveal
+          style="margin:clamp(44px,6vw,68px) 0 0; max-width:720px; font-size:clamp(20px,2.6vw,28px); line-height:1.35; letter-spacing:-.02em; font-weight:600; color:rgba(248,250,252,.86); text-wrap:pretty;">
+          La diferencia no es trabajar más. Es dejar de cargar con todo.</p>
       </div>
     </section>
 
-    <!-- Contacto -->
-    <section id="contacto" class="py-24 sm:py-32 px-6 sm:px-8 bg-dark text-white">
-      <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">¿Listo para trabajar menos y vender más?</h2>
-        <p class="mt-4 text-slate-300 text-lg leading-relaxed">
-          30 minutos, sin costo y sin compromiso. Te mostramos exactamente dónde tu Pyme
-          está perdiendo tiempo y cómo recuperarlo con IA.
-        </p>
-        <a href="mailto:contacto@solucionesconia.cl"
-          class="mt-10 inline-block bg-accent hover:bg-accent-dark text-white font-semibold px-8 py-3.5 rounded-full shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 transition-all duration-300">
-          Agenda tu diagnóstico gratuito de eficiencia
-        </a>
+    <!-- ── CTA final ────────────────────────────────────────────────────── -->
+    <section id="diagnostico"
+      style="position:relative; padding:clamp(96px,13vw,168px) clamp(20px,5vw,72px); background:#0F172A; overflow:hidden; text-align:center;">
+      <div
+        style="position:absolute; bottom:-42%; left:50%; transform:translateX(-50%); width:min(1100px,120vw); height:min(1100px,120vw); border-radius:50%; background:radial-gradient(circle, rgba(6,182,212,.24) 0%, rgba(30,58,138,.14) 42%, transparent 68%); pointer-events:none;">
+      </div>
+      <div style="position:relative; max-width:780px; margin:0 auto; display:flex; flex-direction:column; align-items:center;">
+        <h2 data-reveal
+          style="margin:0 0 22px; font-size:clamp(34px,5.4vw,64px); line-height:1.05; letter-spacing:-.035em; font-weight:800; text-wrap:balance;">
+          Menos carga para ti. Más negocio funcionando.</h2>
+        <p data-reveal
+          style="margin:0 0 40px; max-width:560px; font-size:clamp(17px,2vw,20px); line-height:1.55; color:rgba(248,250,252,.7); text-wrap:pretty;">
+          Agenda un diagnóstico gratuito y te mostramos exactamente qué se puede automatizar en tu Pyme.</p>
+        <a data-reveal href="mailto:contacto@solucionesconia.cl" class="sc-btn-primary"
+          style="display:inline-flex; align-items:center; justify-content:center; min-height:64px; padding:0 44px; border-radius:999px; background:#06B6D4; color:#04202B; font-size:18px; font-weight:700; letter-spacing:-.01em; box-shadow:0 0 0 1px rgba(255,255,255,.16) inset, 0 18px 60px rgba(6,182,212,.42);">Quiero
+          mi diagnóstico</a>
+        <p data-reveal style="margin:24px 0 0; font-size:14px; font-weight:500; color:rgba(248,250,252,.48);">
+          Conversación de 30 minutos. Cero compromiso.</p>
       </div>
     </section>
-  </main>
 
-  <footer class="py-10 px-6 sm:px-8 bg-dark text-slate-400 text-sm text-center border-t border-white/10">
-    <p>&copy; 2026 Soluciones con IA. Todos los derechos reservados. Santiago, Chile.</p>
-  </footer>
+    <!-- ── Footer ───────────────────────────────────────────────────────── -->
+    <footer
+      style="padding:32px clamp(20px,5vw,72px); border-top:1px solid rgba(255,255,255,.06); display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; font-size:13px; color:rgba(248,250,252,.42);">
+      <span>Soluciones con IA · Automatización para Pymes en Chile</span>
+      <span>solucionesconia.cl</span>
+    </footer>
+
+  </div>
 
   <script src="/src/main.js"></script>
 
   <!-- Vendedor IA — Solucionesconia (chat B2B, Zero Trust) -->
   <script defer crossorigin="anonymous" src="https://admin.solucionesconia.cl/widget/vendedor-ia.js"></script>
 </body>
-
 
 </html>

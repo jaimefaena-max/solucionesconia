@@ -3,45 +3,129 @@
 @tailwind utilities;
 
 /* ── CSS personalizado de Soluciones con IA ─────────────────────────────────
-   Trasladado desde src/styles.css: lo que Tailwind no cubre por utilidades.
-   Va DESPUÉS de las directivas para que `utilities` no lo pise por especificidad
-   ni por orden en la cascada. */
+   Landing "dark premium". El <head> está congelado (inyección de analítica),
+   así que estos estilos NO van en un <style> suelto: entran por el pipeline
+   (`npm run build`) y salen en /dist/style.css, que el head ya enlaza.
+   Va DESPUÉS de las directivas para que `utilities` no lo pise por
+   especificidad ni por orden en la cascada. */
 
 html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #0f172a;
+}
+
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background-color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Gradiente del hero: dark → azul institucional → cian. CSS puro porque un
-   linear-gradient de 3 paradas con estos valores exactos no es una utilidad
-   estándar de Tailwind. */
-.gradient-hero {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #06b6d4 100%);
+a {
+  color: #06b6d4;
+  text-decoration: none;
 }
 
-/* Hero con asset visual premium de fondo + overlay del gradiente de marca.
-   El gradiente va PRIMERO en la pila (capa superior) con alfa alto para
-   oscurecer la foto y garantizar el contraste AA del titular blanco; la imagen
-   asoma debajo, sutil. Ruta ABSOLUTA (/assets/…) porque dist/style.css se sirve
-   desde /dist/ y una ruta relativa apuntaría al sitio equivocado; es la misma
-   convención que favicon y og-image. */
-.hero-premium {
-  background-image:
-    linear-gradient(135deg,
-      rgba(15, 23, 42, 0.92) 0%,
-      rgba(30, 58, 138, 0.82) 55%,
-      rgba(6, 182, 212, 0.70) 100%),
-    url("/assets/premium/Imagen_pagina.webp");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+a:hover {
+  color: #67e8f9;
 }
 
 /* Ancla los saltos de sección debajo del header fijo */
 section[id] {
   scroll-margin-top: 5.5rem;
+}
+
+/* ── Animaciones de entrada (IntersectionObserver en src/main.js) ────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+/* ── Estados :hover ─────────────────────────────────────────────────────────
+   El diseño original los declaraba con un atributo `style-hover`, que NO
+   existe en HTML: el navegador lo ignora y el hover se pierde. Aquí van como
+   CSS real para que funcionen y el marcado valide. */
+.sc-nav-cta:hover {
+  border-color: rgba(6, 182, 212, 0.6);
+  color: #67e8f9;
+}
+
+.sc-btn-primary {
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.sc-btn-primary:hover {
+  background: #22d3ee;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 18px 56px rgba(6, 182, 212, 0.5);
+}
+
+.sc-btn-ghost {
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.sc-btn-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.sc-card {
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.sc-card:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow:
+    0 24px 70px rgba(4, 12, 28, 0.6),
+    0 0 40px rgba(6, 182, 212, 0.12);
+}
+
+/* ── Accesibilidad: respetar la preferencia de movimiento reducido ───────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  [data-parallax] {
+    transform: none !important;
+  }
+
+  * {
+    animation: none !important;
+  }
 }
