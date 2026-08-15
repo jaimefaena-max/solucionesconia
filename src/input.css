@@ -23,6 +23,24 @@ body {
   background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #06b6d4 100%);
 }
 
+/* Hero con asset visual premium de fondo + overlay del gradiente de marca.
+   El gradiente va PRIMERO en la pila (capa superior) con alfa alto para
+   oscurecer la foto y garantizar el contraste AA del titular blanco; la imagen
+   asoma debajo, sutil. Ruta ABSOLUTA (/assets/…) porque dist/style.css se sirve
+   desde /dist/ y una ruta relativa apuntaría al sitio equivocado; es la misma
+   convención que favicon y og-image. */
+.hero-premium {
+  background-image:
+    linear-gradient(135deg,
+      rgba(15, 23, 42, 0.92) 0%,
+      rgba(30, 58, 138, 0.82) 55%,
+      rgba(6, 182, 212, 0.70) 100%),
+    url("/assets/premium/Imagen_pagina.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* Ancla los saltos de sección debajo del header fijo */
 section[id] {
   scroll-margin-top: 5.5rem;
