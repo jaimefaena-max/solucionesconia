@@ -120,10 +120,73 @@ bundle **no** lee estos atributos; sería una mejora de su API pública.
 
 ---
 
-## 4. Checklist de aceptación (para el PR en `zasa-orchestrator`)
+## 4. Requisitos de Red y Seguridad Backend (CORS)
+
+**Prioridad: BLOQUEANTE.** Sin esto, el chat no funciona en producción.
+
+### 4.1. Síntoma verificado en producción
+
+Prueba end-to-end desde el widget montado en `https://solucionesconia.cl`: se
+escribió "hola" y se envió. El navegador disparó el POST a
+`https://admin.solucionesconia.cl/api/sales-agent/chat` y **falló con
+`TypeError: Failed to fetch`**. La UI mostró *"No pude conectar con Sofía"*.
+
+Mensaje de consola (causa raíz):
+
+```
+Access to fetch at 'https://admin.solucionesconia.cl/api/sales-agent/chat'
+from origin 'https://solucionesconia.cl' has been blocked by CORS policy:
+Response to preflight request doesn't pass access control check:
+No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+
+Además, un `OPTIONS` directo a `/api/sales-agent/chat` responde **405 Method Not
+Allowed** → el preflight no está manejado. El request **nunca alcanza el handler
+del agente ni la capa de auth**: muere en el preflight. (No es un problema de
+token/sesión — es CORS puro.)
+
+### 4.2. Política CORS obligatoria (endpoint `/api/sales-agent/chat` y relacionados)
+
+El backend (`zasa-orchestrator`, `admin.solucionesconia.cl`) DEBE:
+
+1. **Manejar el preflight `OPTIONS`** respondiendo **200 o 204** (hoy da 405).
+2. Emitir la cabecera **`Access-Control-Allow-Origin: https://solucionesconia.cl`**
+   — el **origen exacto**. **Prohibido `*`**: es incompatible con credenciales.
+3. Emitir **`Access-Control-Allow-Credentials: true`** (el widget usa
+   `credentials: "include"` con cookies `httpOnly`; sin esta cabecera el navegador
+   descarta la respuesta).
+4. Emitir **`Access-Control-Allow-Methods: POST, GET, OPTIONS`**.
+5. Emitir **`Access-Control-Allow-Headers: Content-Type`** (los headers que el
+   widget envía en el preflight).
+6. Repetir `Access-Control-Allow-Origin` **y** `Access-Control-Allow-Credentials`
+   **también en la respuesta del POST real**, no solo en el preflight.
+
+Ejemplo de respuesta esperada al `OPTIONS`:
+
+```http
+HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: https://solucionesconia.cl
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Headers: Content-Type
+Vary: Origin
+```
+
+> **Nota de seguridad (Zero Trust):** mantener la allow-list de orígenes **cerrada**
+> a los dominios propios (`https://solucionesconia.cl` y, si aplica,
+> `https://www.solucionesconia.cl`). No reflejar el `Origin` entrante sin validar
+> contra la allow-list, y no usar `*` — ambos, combinados con
+> `Allow-Credentials: true`, exponen las cookies de sesión a orígenes arbitrarios.
+
+---
+
+## 5. Checklist de aceptación (para el PR en `zasa-orchestrator`)
 
 - [ ] Avatar circular con imagen (asset con licencia/consentimiento verificado).
 - [ ] Launcher `fixed` en `bottom:24px / right:24px / z-index:9999`, persistente en scroll.
 - [ ] LED verde con `animate-pulse` sobre el avatar.
 - [ ] Verificado en móvil (sin desbordes; safe-area si aplica).
 - [ ] Sin regresión en la carga del widget en `solucionesconia.cl`.
+- [ ] **`OPTIONS /api/sales-agent/chat` responde 200/204 (no 405).**
+- [ ] **CORS: `Access-Control-Allow-Origin: https://solucionesconia.cl` + `Allow-Credentials: true` en preflight Y en el POST.**
+- [ ] **Verificado end-to-end: enviar "hola" desde el widget devuelve 200 + JSON del agente.**
