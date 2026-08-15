@@ -76,31 +76,6 @@ section[id] {
   color: #67e8f9;
 }
 
-/* Menú de navegación del header (dark). Se oculta en móvil: los inline styles
-   no soportan @media, así que la responsividad vive aquí. */
-.sc-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
-
-.sc-nav-link {
-  color: rgba(248, 250, 252, 0.72);
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.sc-nav-link:hover {
-  color: #67e8f9;
-}
-
-@media (max-width: 720px) {
-  .sc-nav-links {
-    display: none;
-  }
-}
-
 .sc-btn-primary {
   transition:
     background-color 0.3s ease,
