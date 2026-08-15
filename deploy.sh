@@ -165,7 +165,7 @@ server {
     # hosts se listan para que la CSP no bloquee ni la carga ni el envío.
     # Cal.com (agendamiento B2B): app.cal.com sirve el iframe del calendario
     # (frame-src), su script de embed (script-src) y su API (connect-src).
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl https://static.cloudflareinsights.com https://app.cal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com https://static.cloudflareinsights.com https://cloudflareinsights.com https://app.cal.com; frame-src https://admin.solucionesconia.cl https://app.cal.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl https://static.cloudflareinsights.com https://cal.com https://app.cal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com https://static.cloudflareinsights.com https://cloudflareinsights.com https://cal.com https://app.cal.com; frame-src https://admin.solucionesconia.cl https://cal.com https://app.cal.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
 
     # Cache agresivo para estáticos. Los headers de seguridad se repiten
     # a propósito: un location con add_header propio NO hereda los del server.
