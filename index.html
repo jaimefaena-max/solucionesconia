@@ -18,6 +18,41 @@
     })();
   </script>
 
+  <!-- ── AUTODESTRUCCIÓN DE SERVICE WORKERS (2026-08-17) ──────────────────────
+       Desregistra cualquier SW zombie que intercepte la red y sirva HTML/JS
+       antiguos desde la caché local; vacía las storages del origen y borra el
+       Cache Storage. Síncrono en el head; nunca rompe el arranque. Si un SW
+       controlaba la página, libera el control con una única recarga. -->
+  <script>
+    (function () {
+      try {
+        var yaRecargado = false;
+        try { yaRecargado = sessionStorage.getItem('__sw_purge_reloaded') === '1'; } catch (e) { }
+        var controlaba = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+        // Limpieza de storages del origen.
+        try { localStorage.clear(); } catch (e) { }
+        try { sessionStorage.clear(); } catch (e) { }
+        // Vaciado del Cache Storage API.
+        if ('caches' in window) {
+          caches.keys().then(function (nombres) {
+            nombres.forEach(function (nombre) { caches.delete(nombre); });
+          }).catch(function () { });
+        }
+        // Desregistro de TODOS los Service Workers activos.
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (reg) { reg.unregister(); });
+          }).catch(function () { });
+        }
+        // Libera el control del SW con UNA recarga (bandera evita el bucle).
+        if (controlaba && !yaRecargado) {
+          try { sessionStorage.setItem('__sw_purge_reloaded', '1'); } catch (e) { }
+          window.location.reload();
+        }
+      } catch (e) { /* la limpieza nunca debe romper el arranque */ }
+    })();
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
