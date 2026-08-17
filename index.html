@@ -2,6 +2,22 @@
 <html lang="es-CL">
 
 <head>
+  <!-- Autolimpieza defensiva del Vendedor IA (2026-08-17): elimina por la
+       fuerza cualquier nodo residual del widget (avatar, contenedor o anclaje
+       [data-solucionesconia]) que una caché de cliente o un bundle viejo deje en
+       el header. Síncrono en el head; se re-ejecuta al completarse el DOM y en
+       load porque <header> aún no existe durante el parseo de este script. -->
+  <script>
+    (function () {
+      var purgeSofia = function () {
+        document.querySelectorAll('header img[alt*="Sofía"], header div[class*="sofia"], header [data-solucionesconia]').forEach(function (el) { el.remove(); });
+      };
+      purgeSofia();
+      document.addEventListener('DOMContentLoaded', purgeSofia);
+      window.addEventListener('load', purgeSofia);
+    })();
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
