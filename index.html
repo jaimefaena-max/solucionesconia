@@ -18,23 +18,6 @@
     })();
   </script>
 
-  <!-- ── EMERGENCIA TEMPORAL (2026-08-17): destrucción forzada de Service
-       Workers antiguos y limpieza del almacenamiento local del cliente.
-       ELIMINAR tras confirmación visual del operador. -->
-  <script>
-    (function () {
-      try {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function (regs) {
-            regs.forEach(function (reg) { reg.unregister(); });
-          });
-        }
-        localStorage.clear();
-        sessionStorage.clear();
-      } catch (e) { /* la limpieza nunca debe romper el arranque */ }
-    })();
-  </script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
