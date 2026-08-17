@@ -85,7 +85,9 @@
 
   <div style="min-height:100vh; position:relative;">
 
-    <!-- ── Header (optimizado para conversión móvil: logo + CTA de agendamiento; sin avatar IA) ── -->
+    <!-- ── Header (PURGADO 2026-08-17: solo logo corporativo; sin CTA, sin avatar
+         IA y sin anclajes del Vendedor IA — el launcher lo monta el SDK en
+         document.body bottom-right) ── -->
     <header
       class="w-full flex justify-between items-center px-4 sm:px-8 py-4"
       style="position:fixed; top:0; left:0; right:0; z-index:50; gap:12px; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06);">
@@ -98,13 +100,6 @@
           style="height:36px; width:auto; display:block; border-radius:6px;" />
       </a>
 
-      <!-- CTA de agendamiento. SIN anclajes del Vendedor IA: el widget (Sofía)
-           se inyecta de forma autónoma en document.body desde el script defer
-           vendedor-ia.js al final del body; el header no debe contener copias
-           estáticas de su launcher. -->
-      <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20mi%20diagn%C3%B3stico%20gratuito" data-open-scheduler class="sc-nav-cta"
-        style="display:inline-flex; align-items:center; white-space:nowrap; min-height:44px; padding:0 18px; border-radius:999px; border:1px solid rgba(255,255,255,.14); color:#F8FAFC; font-size:14px; font-weight:600;">Agenda
-        tu diagnóstico</a>
     </header>
 
     <!-- ── Hero ─────────────────────────────────────────────────────────── -->
