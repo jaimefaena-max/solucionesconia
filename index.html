@@ -365,9 +365,9 @@
        Sin crossorigin: el bundle no envía Access-Control-Allow-Origin, y con
        crossorigin="anonymous" el navegador bloqueaba su ejecución (CORS). Un
        <script src> normal ejecuta cross-origin sin exigir headers CORS.
-       ?v=dc00c63 = cache-buster: la URL con query es nueva para CDN y
-       navegador, invalidando la caché tenaz del bundle antiguo. -->
-  <script defer src="https://admin.solucionesconia.cl/widget/vendedor-ia.js?v=dc00c63"></script>
+       ?v=TIMESTAMP_20260817_FINAL_FIX = cache-buster definitivo: URL 100% nueva
+       (cache-miss absoluto en CDN y navegador) + Cache-Control no-store en nginx. -->
+  <script defer src="https://admin.solucionesconia.cl/widget/vendedor-ia.js?v=TIMESTAMP_20260817_FINAL_FIX"></script>
 </body>
 
 </html>
