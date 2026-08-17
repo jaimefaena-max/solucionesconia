@@ -56,6 +56,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- ── ANULACIÓN DE CACHÉ (2026-08-17) ─────────────────────────────────────
+       Directivas estrictas para forzar el DOM fresco en clientes con caché de
+       ISP/móvil o Service Workers retenidos. -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
+
   <title>Soluciones con IA | Tu socio para simplificar y automatizar tu Pyme</title>
   <meta name="description"
     content="¿Tu Pyme te quita el tiempo? En Soluciones con IA automatizamos ventas, atención y gestión para que tu negocio trabaje solo. ¡Agenda tu diagnóstico!" />
