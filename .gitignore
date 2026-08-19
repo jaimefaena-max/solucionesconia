@@ -42,3 +42,6 @@ build/
 # Rotacion de API_SECRET_TOKEN (2026-08-12) — nunca commitear
 .nuevo_api_secret.txt
 .zasa_estado_auditoria.md
+
+# Archivos de contexto de sesión de Claude Code — no versionar
+*.claudecode_session*
