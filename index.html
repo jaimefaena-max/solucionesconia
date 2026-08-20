@@ -199,10 +199,28 @@
            `.h-11` no existe en dist/style.css hasta el siguiente build; si un
            CSS viejo quedara servido por el CDN, el alto igual queda acotado por
            el inline y el logo no se agranda sin control. Mantener AMBOS
-           sincronizados. -->
+           sincronizados.
+
+           PNG CON ALFA (2026-08-20): sustituye a LOGO.jpeg, que era un mockup de
+           1899x1229 (403 KB) con la marca renderizada sobre una pared oscura. Ese
+           fondo opaco se leía como una tarjeta pegada sobre el header translúcido
+           y obligaba a disimularlo con `border-radius`, ya retirado: con canal
+           alfa no hay caja que redondear.
+
+           `width`/`height` llevan el tamaño INTRÍNSECO (110x80), no el de
+           pantalla. Es lo que el navegador usa para reservar el hueco antes de
+           descargar la imagen (aspect-ratio 1.375) y evitar el salto de layout;
+           el tamaño real lo imponen la clase y el inline. Al recortarse los
+           márgenes muertos del mockup el ratio pasó de 1.545 a 1.375, así que
+           estos dos números deben cambiar si el asset se regenera.
+
+           `srcset` sirve el @2x en pantallas de alta densidad; el `src` queda
+           como respaldo para navegadores que lo ignoren. -->
       <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex items-center" style="flex:0 0 auto;">
-        <img src="/assets/premium/LOGO.jpeg" alt="Soluciones con IA" class="h-11 w-auto"
-          style="height:44px; width:auto; display:block; border-radius:6px;" />
+        <img src="/assets/premium/LOGO.png"
+          srcset="/assets/premium/LOGO.png 1x, /assets/premium/LOGO@2x.png 2x"
+          alt="Soluciones con IA" width="110" height="80" class="h-11 w-auto"
+          style="height:44px; width:auto; display:block;" />
       </a>
     </header>
 
