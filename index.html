@@ -2,22 +2,6 @@
 <html lang="es-CL">
 
 <head>
-  <!-- Autolimpieza defensiva del Vendedor IA (2026-08-17): elimina por la
-       fuerza cualquier nodo residual del widget (avatar, contenedor o anclaje
-       [data-solucionesconia]) que una caché de cliente o un bundle viejo deje en
-       el header. Síncrono en el head; se re-ejecuta al completarse el DOM y en
-       load porque <header> aún no existe durante el parseo de este script. -->
-  <script>
-    (function () {
-      var purgeSofia = function () {
-        document.querySelectorAll('header img[alt*="Sofía"], header div[class*="sofia"], header [data-solucionesconia]').forEach(function (el) { el.remove(); });
-      };
-      purgeSofia();
-      document.addEventListener('DOMContentLoaded', purgeSofia);
-      window.addEventListener('load', purgeSofia);
-    })();
-  </script>
-
   <!-- ── AUTODESTRUCCIÓN DE SERVICE WORKERS (2026-08-17) ──────────────────────
        Desregistra cualquier SW zombie que intercepte la red y sirva HTML/JS
        antiguos desde la caché local; vacía las storages del origen y borra el
@@ -405,8 +389,9 @@
        su `position: fixed; bottom: 20px; right: 20px` no lo puede constreñir
        ningún ancestro. Pero el script anidado dentro de un contenedor sigue
        siendo un error: deja el arranque a merced del orden de render de esa
-       sección y reabre la clase de fallo que obligó a añadir la autolimpieza
-       `purgeSofia` del <head> (nodos del widget residuales en el <header>).
+       sección, y es la clase de fallo que en agosto de 2026 dejó nodos del
+       widget colgando del <header> y obligó a mantener una autolimpieza
+       defensiva en el <head> (retirada al confirmarse innecesaria).
 
        Sin `crossorigin`: el bundle no envía Access-Control-Allow-Origin, y con
        crossorigin="anonymous" el navegador bloqueaba su ejecución (CORS). Un
