@@ -177,7 +177,39 @@ server {
         try_files \$uri =404;
     }
 
+    # ── HTML: SIEMPRE revalidar contra el servidor ─────────────────────────
+    # 🔴 EL BUG QUE ESTO ARREGLA. index.html se servía SIN cabecera
+    # Cache-Control. Sin ella —y sin Expires— el navegador aplica CACHÉ
+    # HEURÍSTICA: guarda el documento en torno al 10 % del tiempo transcurrido
+    # desde su Last-Modified. Resultado: clientes viendo durante horas una
+    # landing anterior, con el header viejo (CTA + avatar del Vendedor IA) que
+    # se purgó el 2026-08-17, y el launcher de Sofía anclado al <header> en vez
+    # de flotando abajo a la derecha.
+    #
+    # ⚠️ LAS META http-equiv DEL HTML NO SIRVEN PARA ESTO. index.html declara
+    # <meta http-equiv="Cache-Control" content="no-cache, no-store, ...">, pero
+    # los navegadores IGNORAN esa meta al decidir la caché HTTP: solo honran
+    # unas pocas pragma (Content-Type, Refresh, CSP...). La landing "creía" ser
+    # no-cacheable y en realidad sí lo era. La única vía es esta cabecera.
+    #
+    # `no-cache` (no `no-store`) es deliberado: permite conservar la copia y
+    # revalidarla con If-None-Match/If-Modified-Since, así que lo normal es un
+    # 304 barato en lugar de reenviar el documento entero. Los estáticos con
+    # hash siguen con su caché agresiva de 30 días (location de arriba).
+    # ⚠️ Los SEIS headers de seguridad se repiten AQUÍ obligatoriamente: al
+    # declarar un add_header propio, este location DEJA DE HEREDAR los del
+    # server (nginx reemplaza, no fusiona). Omitir uno solo —en particular la
+    # CSP— convertiría este arreglo de caché en una regresión de seguridad
+    # sobre el documento HTML, que es justo donde más importa. Cualquier cambio
+    # en el bloque del server debe replicarse aquí.
     location / {
+        add_header Cache-Control "no-cache, must-revalidate" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://snap.licdn.com https://admin.solucionesconia.cl https://static.cloudflareinsights.com https://cal.com https://app.cal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://admin.solucionesconia.cl https://px.ads.linkedin.com https://static.cloudflareinsights.com https://cloudflareinsights.com https://cal.com https://app.cal.com; frame-src https://admin.solucionesconia.cl https://cal.com https://app.cal.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
         try_files \$uri \$uri/ =404;
     }
 }
