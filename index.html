@@ -171,21 +171,39 @@
 
   <div style="min-height:100vh; position:relative;">
 
-    <!-- ── Header (PURGADO 2026-08-17: solo logo corporativo; sin CTA, sin avatar
-         IA y sin anclajes del Vendedor IA — el launcher lo monta el SDK en
-         document.body bottom-right) ── -->
-    <header
-      class="w-full flex justify-between items-center px-4 sm:px-8 py-4"
-      style="position:fixed; top:0; left:0; right:0; z-index:50; gap:12px; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06);">
-      <!-- Logo corporativo. Tamaño fijado por clase (h-9) Y por style inline: el
-           inline es un fallback a prueba de caché (si un dist/style.css viejo
-           quedara servido por el CDN sin la clase .h-9, el alto igual queda
-           acotado y el logo no se agranda). -->
-      <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex items-center" style="flex:0 0 auto;">
-        <img src="/assets/premium/LOGO.jpeg" alt="Soluciones con IA" class="h-9 w-auto"
-          style="height:36px; width:auto; display:block; border-radius:6px;" />
-      </a>
+    <!-- ── Header ────────────────────────────────────────────────────────────
+         PURGADO 2026-08-17: solo el logo corporativo. Sin CTA, sin avatar de IA
+         y sin anclajes del Vendedor IA — el launcher lo monta el SDK por su
+         cuenta, flotando abajo a la derecha.
 
+         ⚠️ NO REINTRODUCIR AQUÍ NINGÚN NODO DEL WIDGET. Este header lleva
+         `backdrop-filter`, que lo convierte en CONTAINING BLOCK de sus
+         descendientes `position: fixed`: cualquier elemento del widget colgado
+         de aquí resolvería su `bottom/right` contra la caja del header —fija
+         arriba y de ~77px— y aparecería en la barra superior en vez de flotar
+         sobre el viewport. Es exactamente el fallo que se vio en agosto.
+
+         Limpieza 2026-08-20: se retiran `justify-between` y `gap:12px`, restos
+         de cuando el header tenía un segundo hijo (el CTA). Con un único hijo
+         no hacían nada; `justify-start` es además el valor por defecto de flex,
+         así que la maquetación no cambia ni siquiera si el CDN sirviera un CSS
+         antiguo sin esa clase. -->
+    <header
+      class="w-full flex justify-start items-center px-4 sm:px-8 py-4"
+      style="position:fixed; top:0; left:0; right:0; z-index:50; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06);">
+      <!-- Logo corporativo, 44px (2026-08-20: sube desde 36px para darle más
+           presencia ahora que es el único elemento de la barra).
+
+           El tamaño se fija por clase (h-11) Y por style inline a propósito: el
+           inline es un fallback a prueba de caché. Tailwind purga, así que
+           `.h-11` no existe en dist/style.css hasta el siguiente build; si un
+           CSS viejo quedara servido por el CDN, el alto igual queda acotado por
+           el inline y el logo no se agranda sin control. Mantener AMBOS
+           sincronizados. -->
+      <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex items-center" style="flex:0 0 auto;">
+        <img src="/assets/premium/LOGO.jpeg" alt="Soluciones con IA" class="h-11 w-auto"
+          style="height:44px; width:auto; display:block; border-radius:6px;" />
+      </a>
     </header>
 
     <!-- ── Hero ─────────────────────────────────────────────────────────── -->
