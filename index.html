@@ -2,36 +2,71 @@
 <html lang="es-CL">
 
 <head>
-  <!-- ── AUTODESTRUCCIÓN DE SERVICE WORKERS (2026-08-17) ──────────────────────
+  <!-- ── AUTODESTRUCCIÓN DE SERVICE WORKERS (2026-08-17 · endurecido 2026-08-20) ──
        Desregistra cualquier SW zombie que intercepte la red y sirva HTML/JS
-       antiguos desde la caché local; vacía las storages del origen y borra el
-       Cache Storage. Síncrono en el head; nunca rompe el arranque. Si un SW
-       controlaba la página, libera el control con una única recarga. -->
+       antiguos desde su caché, y vacía el Cache Storage. Síncrono en el head;
+       nunca rompe el arranque. Si un SW controlaba la página, libera el control
+       con UNA sola recarga.
+
+       🔴 DOS FALLOS CORREGIDOS (2026-08-20)
+
+       1. BUCLE INFINITO DE RECARGA cuando el almacenamiento está restringido.
+          La guarda anti-bucle vive en sessionStorage y los fallos se tragaban
+          en silencio, así que en modo privado estricto, con almacenamiento
+          particionado o dentro de un navegador embebido, la bandera NUNCA
+          persistía: `yaRecargado` era siempre false y la página se recargaba
+          sin fin — pantalla en negro permanente para ese visitante. Ahora la
+          recarga exige CONFIRMAR por relectura que la bandera quedó escrita:
+          sin almacenamiento no hay bandera, y sin bandera no hay recarga. El
+          modo de fallo pasa de «bucle infinito» a «no se recarga», que como
+          mucho deja un SW vivo un rato más.
+
+       2. La bandera se AUTODESTRUÍA. El `sessionStorage.clear()` borraba la
+          misma clave que se acababa de leer dos líneas antes, dejando la guarda
+          sirviendo sólo dentro de una cadena de recarga. Se elimina: aquí no
+          hay nada del origen que convenga borrar.
+
+       3. `localStorage.clear()` incondicional en CADA carga. Barría el estado
+          local de cualquier visitante en cada visita —incluido el del widget—
+          para resolver un problema que era de Cache Storage, no de
+          localStorage. Se elimina: se purga lo que sirve HTML viejo (el SW y
+          su Cache Storage), no los datos del usuario. -->
   <script>
     (function () {
       try {
+        // Se lee ANTES de tocar nada. Si el almacenamiento no está disponible
+        // queda en false, y de eso se encarga la comprobación de persistencia.
         var yaRecargado = false;
         try { yaRecargado = sessionStorage.getItem('__sw_purge_reloaded') === '1'; } catch (e) { }
+
         var controlaba = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
-        // Limpieza de storages del origen.
-        try { localStorage.clear(); } catch (e) { }
-        try { sessionStorage.clear(); } catch (e) { }
-        // Vaciado del Cache Storage API.
+
+        // Vaciado del Cache Storage API: es donde el SW guarda el HTML/JS viejo
+        // que provoca el problema. No se tocan localStorage ni sessionStorage.
         if ('caches' in window) {
           caches.keys().then(function (nombres) {
             nombres.forEach(function (nombre) { caches.delete(nombre); });
           }).catch(function () { });
         }
+
         // Desregistro de TODOS los Service Workers activos.
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistrations().then(function (regs) {
             regs.forEach(function (reg) { reg.unregister(); });
           }).catch(function () { });
         }
-        // Libera el control del SW con UNA recarga (bandera evita el bucle).
+
+        // Recarga ÚNICA, y sólo si la bandera quedó REALMENTE persistida.
+        // La relectura es la clave: `setItem` puede no lanzar y aun así no
+        // guardar nada (cuotas a cero, almacenamiento particionado). Confiar en
+        // que no lanzó era justo lo que abría el bucle.
         if (controlaba && !yaRecargado) {
-          try { sessionStorage.setItem('__sw_purge_reloaded', '1'); } catch (e) { }
-          window.location.reload();
+          var persistida = false;
+          try {
+            sessionStorage.setItem('__sw_purge_reloaded', '1');
+            persistida = sessionStorage.getItem('__sw_purge_reloaded') === '1';
+          } catch (e) { }
+          if (persistida) { window.location.reload(); }
         }
       } catch (e) { /* la limpieza nunca debe romper el arranque */ }
     })();
