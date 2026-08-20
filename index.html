@@ -395,12 +395,26 @@
 
   <script src="/src/main.js"></script>
 
-  <!-- Vendedor IA — Solucionesconia (chat B2B, Zero Trust).
-       Sin crossorigin: el bundle no envía Access-Control-Allow-Origin, y con
+  <!-- ── Vendedor IA — Sofía (chat B2B, Zero Trust) ─────────────────────────
+       ⚠️ ESTA ETIQUETA VA AL FINAL DEL <body>, COMO ÚLTIMO HIJO. No moverla al
+       <header>, a la barra de navegación ni dentro de ninguna sección: es un
+       invariante, no una casualidad de formato.
+
+       El widget se ancla solo (`documentElement.appendChild`, vendedor-ia.tsx)
+       y vive en Shadow DOM con `all: initial` + `isolation: isolate`, así que
+       su `position: fixed; bottom: 20px; right: 20px` no lo puede constreñir
+       ningún ancestro. Pero el script anidado dentro de un contenedor sigue
+       siendo un error: deja el arranque a merced del orden de render de esa
+       sección y reabre la clase de fallo que obligó a añadir la autolimpieza
+       `purgeSofia` del <head> (nodos del widget residuales en el <header>).
+
+       Sin `crossorigin`: el bundle no envía Access-Control-Allow-Origin, y con
        crossorigin="anonymous" el navegador bloqueaba su ejecución (CORS). Un
        <script src> normal ejecuta cross-origin sin exigir headers CORS.
-       vendedor-ia-v17.js = auditoría de clases internas (0 globales) +
-       isolation:isolate en .saw (anti-fuga de stacking context). -->
+
+       `defer` es deliberado: no bloquea el parseo y garantiza que el DOM esté
+       completo antes de montar (el bundle pesa ~1,1 MB).
+       ───────────────────────────────────────────────────────────────────── -->
   <script defer src="https://admin.solucionesconia.cl/widget/vendedor-ia-v17.js?v=TIMESTAMP_20260817_FINAL_FIX"></script>
 </body>
 
