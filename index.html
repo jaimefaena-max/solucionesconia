@@ -188,9 +188,14 @@
          no hacían nada; `justify-start` es además el valor por defecto de flex,
          así que la maquetación no cambia ni siquiera si el CDN sirviera un CSS
          antiguo sin esa clase. -->
+    <!-- 2026-08-25 · La barra deja de tener un solo elemento: entra el acceso de
+         clientes a la derecha, así que `justify-start` pasa a `justify-between`.
+         Se cambia en la clase Y en el inline por la misma razón documentada abajo
+         para el logo: `.justify-between` YA existe en dist/style.css, pero el
+         inline garantiza el reparto aunque un CSS viejo quedara en caché del CDN. -->
     <header
-      class="w-full flex justify-start items-center px-4 sm:px-8 py-4"
-      style="position:fixed; top:0; left:0; right:0; z-index:50; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06);">
+      class="w-full flex justify-between items-center px-4 sm:px-8 py-4"
+      style="position:fixed; top:0; left:0; right:0; z-index:50; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06); justify-content:space-between;">
       <!-- Logo corporativo, 44px (2026-08-20: sube desde 36px para darle más
            presencia ahora que es el único elemento de la barra).
 
@@ -221,6 +226,46 @@
           srcset="/assets/premium/LOGO.png 1x, /assets/premium/LOGO@2x.png 2x"
           alt="Soluciones con IA" width="110" height="80" class="h-11 w-auto"
           style="height:44px; width:auto; display:block;" />
+      </a>
+
+      <!-- ── Acceso de clientes (Fase 1 · 2026-08-25) ──────────────────────────
+           POR QUÉ ES GHOST Y NO PRIMARY. El CTA primario de la página es «Agenda
+           tu diagnóstico»: es el objetivo de conversión y no debe competir con
+           nada. Un botón cyan en la barra le robaría la mirada al visitante que
+           todavía no es cliente, que es la inmensa mayoría del tráfico. El ghost
+           queda visible para quien lo busca —arriba a la derecha, donde el ojo lo
+           espera— sin disputar la jerarquía.
+
+           SU VALOR REAL NO ES EL TRÁFICO, ES LA PRUEBA SOCIAL. Con la cartera
+           actual el volumen de accesos es irrelevante en analítica; lo que este
+           botón compra es que un prospecto lea «tienen clientes de verdad, con
+           sistemas de verdad» en el primer vistazo.
+
+           TAMAÑOS CON clamp() Y NO CON CLASES RESPONSIVAS. Tailwind purga: una
+           clase nueva como `sm:px-5` NO existiría en dist/style.css hasta el
+           siguiente build, y el deploy sube el CSS ya compilado. Con clamp() el
+           botón es responsivo sin depender de ningún rebuild ni de la caché del
+           CDN — misma filosofía de respaldo inline que el logo.
+
+           🔗 DESTINO (Fase 3 · 2026-08-25): apunta a /acceso, la pantalla de
+           login unificada. Antes iba directo a /vip/forte-spa/, lo que tenía dos
+           defectos: llevaba a TODO visitante al portal de UN cliente concreto, y
+           disparaba el cuadro nativo de Basic Auth del navegador — justo lo
+           contrario de la impresión premium que este botón busca crear.
+
+           Se RETIRA `rel="nofollow"`: tenía sentido cuando el destino era un 401,
+           donde el crawler gastaba presupuesto en una puerta cerrada. /acceso
+           responde 200 y es una página legítima del sitio; el `noindex` que lleva
+           en su propia cabecera basta para mantenerla fuera de resultados. -->
+      <a href="/acceso" class="sc-btn-ghost"
+        aria-label="Portal Clientes — acceso al área privada"
+        style="display:inline-flex; align-items:center; gap:8px; flex:0 0 auto; min-height:40px; padding:0 clamp(14px,3vw,20px); border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.03); color:#F8FAFC; font-size:clamp(13px,2.4vw,14px); font-weight:600; letter-spacing:-.01em; white-space:nowrap; backdrop-filter:blur(8px); text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"
+          style="width:15px; height:15px; flex:0 0 auto;">
+          <rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        Portal Clientes
       </a>
     </header>
 

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- noindex, follow: una pantalla de login no aporta nada en resultados de
+       búsqueda y compite con páginas que sí venden. `follow` se conserva para
+       no cortar el flujo de enlaces hacia la landing. -->
+  <meta name="robots" content="noindex, follow" />
+  <title>Portal Clientes · Soluciones con IA</title>
+  <meta name="description" content="Acceso al portal privado de clientes de Soluciones con IA." />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <!-- Design System v2: la MISMA hoja compilada que usa la landing. De aquí
+       salen `sc-btn-primary` y su hover, el reset y el fondo #0f172a. Enlazarla
+       —en vez de copiar estilos— es lo que garantiza que el botón de esta
+       pantalla envejezca igual que los de la home. -->
+  <link rel="stylesheet" href="/dist/style.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Inter (cuerpo, igual que la landing) + JetBrains Mono, que es la voz del
+       portal VIP. La mezcla es deliberada: esta página es el PUENTE entre la
+       web comercial y el expediente privado, y debe reconocerse en las dos. -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      /* Cyan del Design System v2 — el mismo del CTA primario de la home. */
+      --accent: #06b6d4;
+      --accent-2: #22d3ee;
+      --glass: rgba(255, 255, 255, .045);
+      --stroke: rgba(255, 255, 255, .10);
+      --ink: #f8fafc;
+      --ink-soft: rgba(248, 250, 252, .62);
+      --ink-faint: rgba(248, 250, 252, .40);
+      --error: #fda4af;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    /* MOBILE FIRST: todo lo de abajo es la base de móvil; las únicas media
+       queries suben tamaños en pantallas grandes, nunca al revés. */
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      /* dvh evita el salto de la barra del navegador en móvil */
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Aurora de fondo: es lo que da el acabado premium del portal VIP sin
+       cargar una sola imagen. `position:fixed` para que no participe en el
+       scroll ni cree barras horizontales. */
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: .5;
+      pointer-events: none;
+    }
+
+    body::before {
+      background: #0e4a5c;
+      top: -200px;
+      left: -160px;
+    }
+
+    body::after {
+      background: #1e1b4b;
+      bottom: -220px;
+      right: -160px;
+    }
+
+    .marco {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .volver {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 18px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-faint);
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    .volver:hover {
+      color: var(--ink-soft);
+    }
+
+    .tarjeta {
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 30px 24px;
+      backdrop-filter: blur(22px) saturate(150%);
+      -webkit-backdrop-filter: blur(22px) saturate(150%);
+      box-shadow: 0 30px 80px -30px rgba(2, 8, 20, .85), inset 0 1px 0 rgba(255, 255, 255, .06);
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .marca img {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+
+    .kicker {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .sub {
+      margin: 0 0 24px;
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .campo {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 48px;
+      /* 48px: objetivo táctil cómodo en móvil */
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, .03);
+      color: var(--ink);
+      font-family: var(--mono);
+      /* 16px EXACTOS en móvil: por debajo de eso iOS hace zoom automático al
+         enfocar el campo y descoloca la pantalla entera. */
+      font-size: 16px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    input::placeholder {
+      color: rgba(248, 250, 252, .28);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: rgba(6, 182, 212, .55);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, .14);
+    }
+
+    /* El navegador no debe pintar el campo de amarillo sobre fondo oscuro. */
+    input:-webkit-autofill,
+    input:-webkit-autofill:focus {
+      -webkit-text-fill-color: var(--ink);
+      -webkit-box-shadow: 0 0 0 1000px #16202f inset;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      min-height: 50px;
+      margin-top: 6px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #04202b;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 14px 44px rgba(6, 182, 212, .32);
+    }
+
+    button[type="submit"][disabled] {
+      opacity: .55;
+      cursor: progress;
+      box-shadow: none;
+    }
+
+    /* Zona de error: SIEMPRE en el DOM y reservando su hueco solo cuando hay
+       mensaje. Insertarla dinámicamente haría saltar el formulario hacia abajo
+       justo cuando el usuario está leyendo. */
+    .aviso {
+      display: none;
+      margin: 0 0 16px;
+      padding: 11px 13px;
+      border-radius: 11px;
+      border: 1px solid rgba(253, 164, 175, .28);
+      background: rgba(253, 164, 175, .08);
+      color: var(--error);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .aviso.visible {
+      display: block;
+    }
+
+    .pie {
+      margin: 22px 0 0;
+      text-align: center;
+      font-size: 10.5px;
+      letter-spacing: .06em;
+      color: var(--ink-faint);
+    }
+
+    .candado {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    @media (min-width: 480px) {
+      .tarjeta {
+        padding: 36px 32px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="marco">
+    <a class="volver" href="/">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:13px;height:13px;">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      Volver al sitio
+    </a>
+
+    <section class="tarjeta">
+      <div class="marca">
+        <img src="/assets/premium/LOGO.png" srcset="/assets/premium/LOGO.png 1x, /assets/premium/LOGO@2x.png 2x"
+          alt="Soluciones con IA" width="110" height="80" />
+      </div>
+
+      <span class="kicker">Portal Clientes</span>
+      <h1>Acceso privado</h1>
+      <p class="sub">Ingresa con el correo y la contraseña que te entregó tu ejecutivo.</p>
+
+      <!-- role="alert" + aria-live: un lector de pantalla anuncia el error sin
+           que el usuario tenga que ir a buscarlo. -->
+      <p class="aviso" id="aviso" role="alert" aria-live="assertive"></p>
+
+      <!-- novalidate: la validación nativa mostraría burbujas del navegador con
+           su propio estilo, ajenas al diseño. La comprobación se hace abajo. -->
+      <form id="formulario" novalidate>
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" autocomplete="username" inputmode="email" spellcheck="false"
+            autocapitalize="none" required placeholder="nombre@empresa.cl" />
+        </div>
+
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required
+            placeholder="••••••••••••" />
+        </div>
+
+        <button type="submit" id="enviar">Entrar</button>
+      </form>
+
+      <p class="pie">
+        <span class="candado">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:12px;height:12px;">
+            <rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+          ACCESO AUDITADO Y CIFRADO
+        </span>
+      </p>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var form = document.getElementById('formulario');
+      var aviso = document.getElementById('aviso');
+      var boton = document.getElementById('enviar');
+      var campoEmail = document.getElementById('email');
+      var campoPass = document.getElementById('password');
+
+      /**
+       * Mismo formato que exige el backend para un tenantId (kebab-case).
+       *
+       * 🔒 NO es cosmético: sin esta validación, `location.assign('/vip/' + t + '/')`
+       * con un valor como `//sitio-atacante.cl` produciría una URL
+       * PROTOCOLO-RELATIVA y el navegador saldría del dominio. Es la forma
+       * clásica de open redirect. Hoy el valor viene de nuestro propio backend,
+       * pero una redirección se construye asumiendo que el dato puede ser hostil.
+       */
+      var RE_TENANT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+      function mostrarError(texto) {
+        aviso.textContent = texto;
+        aviso.classList.add('visible');
+      }
+
+      function limpiarError() {
+        aviso.textContent = '';
+        aviso.classList.remove('visible');
+      }
+
+      function ocupado(si) {
+        boton.disabled = si;
+        boton.textContent = si ? 'Verificando…' : 'Entrar';
+      }
+
+      // Al corregir lo escrito, el error de antes deja de ser cierto.
+      campoEmail.addEventListener('input', limpiarError);
+      campoPass.addEventListener('input', limpiarError);
+
+      form.addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        if (boton.disabled) return;   // corta el doble envío por doble clic
+
+        var email = campoEmail.value.trim();
+        var password = campoPass.value;
+
+        if (!email || !password) {
+          mostrarError('Completa tu correo y tu contraseña.');
+          return;
+        }
+
+        limpiarError();
+        ocupado(true);
+
+        fetch('/api/auth/client-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          // La sesión llega como cookie HttpOnly: el navegador la guarda y la
+          // reenvía solo. Este script NUNCA la ve ni la almacena — no hay
+          // localStorage ni sessionStorage en toda la página, a propósito.
+          credentials: 'same-origin',
+          cache: 'no-store',
+          body: JSON.stringify({ email: email, password: password })
+        })
+          .then(function (respuesta) {
+            if (respuesta.status === 429) {
+              // Se distingue A PROPÓSITO del 401. Decirle «credenciales
+              // inválidas» a alguien que en realidad está limitado por
+              // intentos lo empuja a seguir probando y a agotar la ventana.
+              // El límite es observable de todos modos: no filtra nada.
+              ocupado(false);
+              mostrarError('Demasiados intentos. Espera unos minutos antes de volver a probar.');
+              return null;
+            }
+            if (!respuesta.ok) {
+              ocupado(false);
+              // Mensaje único para 400, 401 y 500: la pantalla no revela si el
+              // correo existe. El backend ya responde igual para todos.
+              mostrarError('Credenciales inválidas. Revisa tu correo y contraseña.');
+              campoPass.value = '';
+              campoPass.focus();
+              return null;
+            }
+            return respuesta.json();
+          })
+          .then(function (datos) {
+            if (!datos) return;
+
+            var destino = '/vip/forte-spa/';
+            if (datos.tenantId && RE_TENANT.test(datos.tenantId)) {
+              // Enrutado por inquilino: la misma pantalla sirve a cualquier
+              // cliente sin tocar este archivo. El literal de arriba queda solo
+              // como red de seguridad si la respuesta viniera sin tenantId.
+              destino = '/vip/' + datos.tenantId + '/';
+            }
+            // `replace` y no `assign`: al pulsar «atrás» desde el portal el
+            // usuario no debe volver a caer en el formulario de login.
+            window.location.replace(destino);
+          })
+          .catch(function () {
+            ocupado(false);
+            // Fallo de red o servidor caído: es un problema distinto de una
+            // credencial mala, y decirlo evita que el cliente crea que su
+            // contraseña dejó de funcionar.
+            mostrarError('No pudimos conectar con el servidor. Inténtalo de nuevo en unos segundos.');
+          });
+      });
+    })();
+  </script>
+</body>
+
+</html>
