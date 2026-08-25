@@ -202,6 +202,25 @@ server {
     # CSP— convertiría este arreglo de caché en una regresión de seguridad
     # sobre el documento HTML, que es justo donde más importa. Cualquier cambio
     # en el bloque del server debe replicarse aquí.
+    # ── Portal VIP de clientes (Fase 5 · 2026-08-25) ─────────────────────────
+    # 🔴 ESTA LÍNEA ARREGLA UNA VULNERABILIDAD REAL DE ESTE SCRIPT.
+    #
+    # La sección 4 hace \`cat > \${NGINX_SITE}\`: REESCRIBE el server block entero.
+    # Entre el 25-ago y este cambio, el portal del cliente se activaba con un
+    # \`include\` añadido A MANO al fichero, así que CUALQUIER ejecución de este
+    # script lo borraba y dejaba el portal sin servir — sin aviso, y sin que el
+    # despliegue fallara. Una publicación rutinaria de la landing tumbaba el
+    # acceso de un cliente que paga.
+    #
+    # Al vivir el include DENTRO de la plantilla, el vhost regenerado ya lo trae
+    # y el despliegue vuelve a ser idempotente.
+    #
+    # Si el snippet no existe, nginx aborta con "open() failed". Se usa la forma
+    # tolerante con comodín: un directorio vacío no rompe el arranque, que es lo
+    # que permite desplegar la landing en un servidor donde el portal aún no se
+    # ha aprovisionado.
+    include /etc/nginx/snippets/vip-portal*.conf;
+
     location / {
         add_header Cache-Control "no-cache, must-revalidate" always;
         add_header X-Content-Type-Options "nosniff" always;
