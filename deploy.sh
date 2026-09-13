@@ -241,10 +241,56 @@ if [ -e /etc/nginx/sites-enabled/default ]; then
   rm -f /etc/nginx/sites-enabled/default
 fi
 
+# ------------------------------------------------------------------------------
+# 4b. Snippet del Portal VIP (2026-09-13): versionado, renderizado y VERIFICADO
+# ------------------------------------------------------------------------------
+# Hasta hoy /etc/nginx/snippets/vip-portal.conf vivía solo en el VPS, editado a
+# mano. El 13-sep faltaba `location ^~ /api/vip/` y el portal del cliente
+# mostraba «No pudimos cargar tu estado de cuenta» (404 de nginx). Ahora la
+# fuente de verdad es nginx/vip-portal.conf.plantilla en este repo: se renderiza
+# sustituyendo los dos secretos de borde desde el .env del orquestador (nunca
+# se versionan) y se instala con 640 root:root. Las reglas son de PREFIJO
+# (/vip/, /api/vip/): cubren cualquier inquilino, presente o futuro, sin tocar
+# nginx por cliente.
+#
+# Y antes de recargar, verificar-portal.sh --pre comprueba que el snippet
+# expone lo que el portal necesita; si no, se ABORTA sin recargar y nginx sigue
+# con la versión anterior. Tras recargar, --post sondea las rutas en loopback.
+SNIPPET_DEST="/etc/nginx/snippets/vip-portal.conf"
+ORQ_ENV="/opt/zasa-orchestrator/.env"
+if [ -f "${REPO_DIR}/nginx/vip-portal.conf.plantilla" ]; then
+  if [ ! -f "${ORQ_ENV}" ]; then
+    echo "!! ${ORQ_ENV} no existe: no se puede renderizar el snippet del portal (se conserva el actual)" >&2
+  else
+    leer_env() { grep -E "^$1=" "${ORQ_ENV}" | head -1 | cut -d= -f2- | tr -d '"' | tr -d '\r\n'; }
+    TOK="$(leer_env API_SECRET_TOKEN)"; EDGE="$(leer_env EDGE_SECRET)"
+    if [ -z "${TOK}" ] || [ -z "${EDGE}" ]; then
+      echo "!! API_SECRET_TOKEN o EDGE_SECRET vacíos en ${ORQ_ENV}: no se renderiza el snippet (se conserva el actual)" >&2
+    else
+      mkdir -p /etc/nginx/snippets /root/backups-nginx
+      [ -f "${SNIPPET_DEST}" ] && cp -a "${SNIPPET_DEST}" "/root/backups-nginx/vip-portal.conf.$(date +%Y%m%d-%H%M%S)"
+      TMP_SNIP="$(mktemp /etc/nginx/snippets/.vip-portal.XXXXXX)"
+      # Sustitución literal (no regex) con awk: los secretos pueden llevar cualquier carácter.
+      awk -v tok="${TOK}" -v edge="${EDGE}" '{ gsub(/__API_SECRET_TOKEN__/, tok); gsub(/__EDGE_SECRET__/, edge); print }' \
+        "${REPO_DIR}/nginx/vip-portal.conf.plantilla" > "${TMP_SNIP}"
+      chown root:root "${TMP_SNIP}"; chmod 640 "${TMP_SNIP}"
+      mv -f "${TMP_SNIP}" "${SNIPPET_DEST}"
+      unset TOK EDGE
+      echo "==> Snippet del portal renderizado en ${SNIPPET_DEST} (640 root:root)"
+    fi
+  fi
+fi
+
+echo "==> Verificando el portal ANTES de recargar (linter de infraestructura)..."
+bash "${REPO_DIR}/nginx/verificar-portal.sh" --pre
+
 echo "==> Validando y recargando Nginx..."
 nginx -t
 systemctl enable nginx
 systemctl reload nginx
+sleep 2
+echo "==> Verificando el portal DESPUÉS de recargar (sondas en loopback)..."
+bash "${REPO_DIR}/nginx/verificar-portal.sh" --post
 
 # ------------------------------------------------------------------------------
 # 5. SSL con Certbot (Let's Encrypt)

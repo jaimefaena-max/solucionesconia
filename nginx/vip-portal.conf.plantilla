@@ -1,0 +1,149 @@
+# PLANTILLA versionada (Agencia_Solucionesconia/nginx/vip-portal.conf.plantilla).
+# deploy.sh la renderiza a /etc/nginx/snippets/vip-portal.conf sustituyendo
+# __API_SECRET_TOKEN__ y __EDGE_SECRET__ desde /opt/zasa-orchestrator/.env.
+# NO editar el snippet en el VPS a mano: el siguiente despliegue lo regenera.
+
+# ---------------------------------------------------------------------------
+# Portal VIP — proxy al orquestador (Fase 5, 2026-08-25)
+#
+# Se instala como /etc/nginx/snippets/vip-portal.conf y se activa con una línea
+# dentro del server block de solucionesconia.cl:
+#
+#   include /etc/nginx/snippets/vip-portal.conf;
+#
+# 🟢 YA NO ES «EL BLOQUE DE FORTE». Este fichero no menciona a ningún cliente:
+# cubre /vip/ entero. Dar de alta al cliente #4 NO toca nginx — basta su fila en
+# la tabla `clientes`. Ese era el objetivo de la fase.
+#
+# QUÉ DESAPARECIÓ Y POR QUÉ
+#   · `auth_basic` + htpasswd  → sustituidos en Fase 4 por sesión de aplicación.
+#   · `auth_request` + /_auth-verify → ya no hacen falta: el contenido lo sirve
+#     el propio backend, que autoriza y entrega en el mismo sitio. Mantener la
+#     sub-petición sería pedir permiso dos veces al mismo servidor.
+#   · `root /opt/agencia/portales` → no hay ficheros que servir.
+#
+# PROTOCOLO GOLDEN STANDARD — antes de aplicar:
+#   cp /etc/nginx/sites-available/solucionesconia.cl \
+#      /etc/nginx/sites-available/solucionesconia.cl.bak.$(date +%F-%H%M)
+#   nginx -t && systemctl reload nginx
+# ---------------------------------------------------------------------------
+
+# Resolución DIFERIDA del upstream. Con un hostname literal en proxy_pass, nginx
+# resuelve en tiempo de PARSEO: si el DNS está caído, `nginx -t` falla y el
+# servicio NO ARRANCA (así se perdieron 21 h el 28-jul-2026). Con variable, un
+# DNS caído degrada una petición en vez de impedir el arranque.
+resolver 127.0.0.53 valid=300s;
+resolver_timeout 5s;
+# 2026-09-11: apuntaba a zasa-orchestrator-58qq4.ondigitalocean.app (DO App
+# Platform, destruido en la consolidación del 07-sep). Se quedó fuera de esa
+# migración y /acceso devolvía 502 en client-login. Mismo upstream que vip/admin.
+set $orquestador 127.0.0.1:3001;
+
+# ── API de autenticación de cliente ─────────────────────────────────────────
+# La pantalla /acceso hace fetch a /api/auth/client-login desde ESTE dominio.
+# Sin este proxy, ese fetch cae en `location /` y devuelve 404.
+#
+# `^~` para que ningún location regex (estáticos, dotfiles) se lo quede antes.
+location ^~ /api/auth/ {
+    proxy_set_header Host              $host;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    # proxy_ssl_server_name: sin efecto, el upstream es HTTP en loopback (2026-09-11)
+    proxy_pass http://$orquestador$request_uri;
+
+    add_header Cache-Control "no-store" always;
+}
+
+# ── API del cliente autenticado (/api/vip/…) ────────────────────────────────
+# 2026-09-13: el portal (WidgetCobros, adjuntos de Novedades, intent de pago)
+# hace fetch same-origin a /api/vip/<tenant>/… desde ESTE dominio, y solo
+# /api/auth/ estaba proxied: el resto caía en `location /` (estático) y nginx
+# devolvía 404 → «No pudimos cargar tu estado de cuenta». Mismo transporte que
+# /api/auth/: la autorización la hace el guard de sesión del orquestador
+# (cookie __Host-sc.cli + inquilino), nginx solo transporta.
+location ^~ /api/vip/ {
+    proxy_set_header Host              $host;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_pass http://$orquestador$request_uri;
+
+    add_header Cache-Control "no-store" always;
+}
+
+# ── El portal, servido por el orquestador ───────────────────────────────────
+# nginx deja de decidir quién entra: solo transporta. La autorización ocurre en
+# el controlador, que valida cookie + inquilino ANTES de leer el expediente y
+# responde 302 al login si no hay sesión, o 403 si la sesión es de otro cliente.
+location ^~ /vip/ {
+    proxy_set_header Host              $host;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    # proxy_ssl_server_name: sin efecto, el upstream es HTTP en loopback (2026-09-11)
+    proxy_pass http://$orquestador$request_uri;
+
+    # ── Cabeceras: UNA sola fuente ──────────────────────────────────────────
+    # 🔴 EL BUG QUE ESTO ARREGLA (detectado al verificar, 2026-08-25).
+    # La primera versión no declaraba ningún add_header aquí, creyendo que así
+    # «pasarían tal cual» las del backend. Falso: nginx SUMA las heredadas del
+    # server a las que llegan del upstream, y la respuesta salía con
+    #
+    #     x-frame-options: DENY        (del orquestador)
+    #     x-frame-options: SAMEORIGIN  (heredada del server)
+    #
+    # Dos valores contradictorios para la misma cabecera. Varios navegadores
+    # tratan el duplicado como inválido y descartan LAS DOS, de modo que el
+    # portal quedaba sin protección anti-clickjacking justo donde más importa.
+    #
+    # Se arregla en dos movimientos:
+    #   1. `proxy_hide_header` retira las que envía el upstream…
+    #   2. …y se declaran aquí explícitamente. Declarar aunque sea una corta la
+    #      herencia del server (nginx reemplaza, no fusiona), así que hay que
+    #      poner el juego COMPLETO: omitir una sería perderla.
+    proxy_hide_header X-Frame-Options;
+    proxy_hide_header X-Content-Type-Options;
+    proxy_hide_header Referrer-Policy;
+    proxy_hide_header Cache-Control;
+    proxy_hide_header X-Robots-Tag;
+    # También la CSP genérica de @fastify/helmet. Dos cabeceras CSP no son un
+    # agujero —el navegador aplica AMBAS y gana la más restrictiva— pero
+    # obligan a razonar cada cambio futuro como una intersección de dos
+    # políticas, y ahí es donde se cuelan los errores. Una sola, la de aquí,
+    # que está escrita para esta página concreta.
+    proxy_hide_header Content-Security-Policy;
+
+    add_header Cache-Control             "no-store, must-revalidate"           always;
+    add_header X-Robots-Tag              "noindex, nofollow, noarchive"        always;
+    add_header X-Content-Type-Options    "nosniff"                             always;
+    add_header X-Frame-Options           "DENY"                                always;
+    add_header Referrer-Policy           "no-referrer"                         always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy   "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'" always;
+
+    # No hace falta `deny` para vault/ ni config/: esas rutas ya no existen como
+    # ficheros. El backend solo expone lo que su plantilla decide mostrar.
+}
+
+# ── Assets del portal (2026-09-11) ───────────────────────────────────────────
+# portal-vip.ejs carga CSS (ds-v2/*.css) y JS (portal-seguridad.js) desde
+# /clientes/assets/ en ruta ABSOLUTA. En este dominio ese prefijo no tenía
+# location y caía en `location /` (root estático): 404, portal sin estilos y
+# sin el script del canje. Solo lectura, sin sesión, mismo origen que /vip/.
+location ^~ /clientes/assets/ {
+    # Identidad de staff SOLO para estos ficheros públicos (CSS/JS del DS): el hook
+    # global no lee la cookie de cliente y sin identidad responde 401. Mismo patrón
+    # que admin.solucionesconia.cl. Al rotar API_SECRET_TOKEN o EDGE_SECRET, aquí también.
+    proxy_set_header      Authorization "Bearer __API_SECRET_TOKEN__";
+    proxy_set_header      X-Edge-Proof "__EDGE_SECRET__";
+    proxy_set_header Host              $host;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_pass http://$orquestador$request_uri;
+
+    # Los ficheros llevan ?v=<fecha> como cache-buster: caché moderada.
+    proxy_hide_header Cache-Control;
+    # SIN `always`: con él la cabecera pública iba también en los 401 y Cloudflare
+    # los cacheó 4 h (incidente 2026-09-11). Solo 2xx/3xx llevan caché.
+    add_header Cache-Control "public, max-age=3600";
+    add_header X-Content-Type-Options "nosniff" always;
+}
