@@ -20,7 +20,13 @@
 #   · no oculta (`proxy_hide_header`) ni declara (`add_header`) la CSP: la
 #     única fuente es src/core/http/csp.ts del orquestador, que llega por proxy;
 #   · los tres locations que proxyan al orquestador inyectan X-Edge-Proof
-#     (/api/vip/ es obligatorio: sin él, toda credencial de cabecera es 403).
+#     (/api/vip/ es obligatorio: sin él, toda credencial de cabecera es 403);
+#   · `location ^~ /api/` cierra por defecto (return 404): en este dominio solo
+#     /api/auth/ y /api/vip/ llegan al orquestador, nunca /api/admin/;
+#   · /vip/ oculta la HSTS del upstream: ninguna cabecera llega duplicada
+#     (--post lo comprueba sobre la respuesta real).
+#   · --post exige ANTES un server block 443 del dominio: sin él, las sondas
+#     caerían en el server 443 por defecto (incidente 2026-09-22).
 #
 # Origen: incidente 2026-09-13 «No pudimos cargar tu estado de cuenta» —
 # /api/vip/ no estaba proxied en solucionesconia.cl y nginx respondía 404.
@@ -75,6 +81,15 @@ checks_fichero() { # $1 fichero, $2 etiqueta
       fail "$loc NO inyecta X-Edge-Proof$( [[ "$loc" == "/api/vip/" ]] && printf ' (obligatorio: el orquestador responde 403 a toda credencial sin prueba de borde)')"
     fi
   done
+  # /api/ cerrado por defecto: en este dominio solo /api/auth/ y /api/vip/ llegan al orquestador.
+  if bloque_location "$f" '/api/' | grep -qE '^\s*return 404;'; then
+    ok "location ^~ /api/ cierra por defecto (return 404): /api/admin y el resto no se proxyan aquí"
+  else fail "falta location ^~ /api/ { return 404; }: /api/admin/* podría alcanzar el orquestador desde la landing"; fi
+  if bloque_location "$f" '/api/' | grep -qE '^\s*proxy_pass'; then fail "location ^~ /api/ hace proxy_pass: debe cerrar, no reenviar"; fi
+  # HSTS: una sola fuente en /vip/ (helmet también la emite; sin el hide llegaban dos).
+  if bloque_location "$f" '/vip/' | grep -qiE '^\s*proxy_hide_header\s+Strict-Transport-Security'; then
+    ok "/vip/ oculta la HSTS del upstream (una sola cabecera HSTS, la de nginx)"
+  else fail "/vip/ no oculta Strict-Transport-Security del upstream: saldrán dos cabeceras HSTS"; fi
 }
 
 case "$MODO" in
@@ -103,6 +118,34 @@ case "$MODO" in
     sonda() { curl -sk -o /dev/null -w '%{http_code}' --max-time 8 -H "Host: $DOMINIO" "$@"; }
     # Cabecera CSP (una línea por aparición, valor normalizado) de una URL.
     csp_de() { curl -sk -D - -o /dev/null --max-time 8 "$@" | tr -d '\r' | grep -iE '^content-security-policy:' | sed -E 's/^[^:]+:[[:space:]]*//'; }
+
+    # ── Guardia: ¿existe un server 443 para ESTE dominio? ───────────────────
+    # 🔴 Incidente 2026-09-22. deploy.sh reescribe el vhost solo con el :80 y
+    # Certbot reinstala el :443 después. Si estas sondas corren en medio (o
+    # Certbot falló), `Host: $DOMINIO` no casa con ningún server 443 y nginx
+    # sirve el PRIMERO que escucha en 443 (admin., con Basic Auth): / → 401,
+    # /api/admin proxied, CSP ajena. Los fallos parecían del snippet y eran de
+    # orden. Sin bloque 443 propio, el resto de sondas no mide nada útil: se
+    # falla aquí, nombrando la causa, y se sale.
+    if nginx -T 2>/dev/null | awk -v d="$DOMINIO" '
+        /^[[:space:]]*server[[:space:]]*\{/ { s=1; l=0; n=0 }
+        s && /^[[:space:]]*listen[^;]*443/ { l=1 }
+        s && /^[[:space:]]*server_name/ { for (i=2; i<=NF; i++) { gsub(/;/, "", $i); if ($i == d) n=1 } }
+        s && l && n { found=1 }
+        END { exit found ? 0 : 1 }'; then
+      ok "existe un server block 443 con server_name $DOMINIO (las sondas HTTPS llegan al vhost correcto)"
+    else
+      fail "NO hay server block 443 para $DOMINIO: las sondas caerían en el server 443 por defecto. Causa típica: Certbot (deploy.sh §5) no llegó a reinstalar el bloque SSL. Se omiten las demás sondas."
+      echo "✖ verificar-portal $MODO: $fallos fallo(s)"; exit 1
+    fi
+
+    # ── Cabeceras duplicadas: ninguna debe llegar dos veces ─────────────────
+    # nginx SUMA las suyas a las del upstream salvo que las oculte; una cabecera
+    # repetida (aunque sea idéntica) es una discrepancia que cada navegador
+    # resuelve a su manera. set-cookie es la única que puede repetirse por diseño.
+    dup="$(curl -sk -D - -o /dev/null --max-time 8 -H "Host: $DOMINIO" "https://127.0.0.1/vip/inquilino-cabeceras-$(date +%s)/" | tr -d '\r' | grep -E '^[A-Za-z-]+:' | cut -d: -f1 | tr 'A-Z' 'a-z' | grep -v '^set-cookie$' | sort | uniq -d | tr '\n' ' ')"
+    if [[ -z "$dup" ]]; then ok "/vip/ sin cabeceras duplicadas entre nginx y el orquestador"; else fail "/vip/ devuelve cabeceras DUPLICADAS: ${dup}(falta un proxy_hide_header en el snippet)"; fi
+
     for t in forte-spa inquilino-futuro-$(date +%s); do
       c=$(sonda "https://127.0.0.1/vip/$t/");                          [[ "$c" =~ ^(302|401|403)$ ]] && ok "/vip/$t/ → $c (orquestador; sin sesión)" || fail "/vip/$t/ → $c (esperado 302/401/403; 404 = nginx no proxya)"
       c=$(sonda "https://127.0.0.1/api/vip/$t/facturacion");           [[ "$c" == "401" ]] && ok "/api/vip/$t/facturacion → 401 (guard de sesión)" || fail "/api/vip/$t/facturacion → $c (esperado 401)"

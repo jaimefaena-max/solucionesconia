@@ -86,6 +86,20 @@ location ^~ /api/vip/ {
     add_header Cache-Control "no-store" always;
 }
 
+# ── Resto de /api/: cerrado por defecto ─────────────────────────────────────
+# 2026-09-22. En este dominio SOLO se proxyan /api/auth/ y /api/vip/ (los dos
+# locations de arriba ganan por prefijo más largo). Cualquier otra ruta bajo
+# /api/ —/api/admin/, /api/sales-agent/, /api/telemetry/…— NO debe llegar al
+# orquestador desde la landing: es superficie de staff y vive en admin. Hasta
+# hoy caía en `location /` (estáticos) y respondía 404 por accidente; ahora es
+# una decisión explícita, sin depender de que exista o no un fichero.
+# `add_header` propio para que el 404 no herede las cabeceras de la landing.
+location ^~ /api/ {
+    add_header Cache-Control "no-store" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    return 404;
+}
+
 # ── El portal, servido por el orquestador ───────────────────────────────────
 # nginx deja de decidir quién entra: solo transporta. La autorización ocurre en
 # el controlador, que valida cookie + inquilino ANTES de leer el expediente y
@@ -121,6 +135,11 @@ location ^~ /vip/ {
     proxy_hide_header Referrer-Policy;
     proxy_hide_header Cache-Control;
     proxy_hide_header X-Robots-Tag;
+    # 2026-09-22: el orquestador (helmet) también emite Strict-Transport-Security
+    # y este bloque la declara abajo con `always`: llegaban DOS cabeceras HSTS
+    # idénticas. Se oculta la del upstream; la de nginx es la única fuente (así
+    # sigue saliendo también en los 502/504 que genera el propio nginx).
+    proxy_hide_header Strict-Transport-Security;
 
     # ── Content-Security-Policy: la del orquestador, y SOLO la suya ─────────
     # 🔴 2026-09-22 (auditoría Zero Trust, hallazgo A1). Hasta hoy este bloque

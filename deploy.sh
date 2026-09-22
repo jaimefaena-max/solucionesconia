@@ -7,7 +7,9 @@
 #
 # El script es idempotente: puedes ejecutarlo las veces que quieras.
 # ==============================================================================
-set -euo pipefail
+# -E: el trap ERR de la sección 4 (rollback del vhost) se hereda en funciones y
+# subshells; sin él, un fallo dentro de una función abortaría SIN restaurar.
+set -Eeuo pipefail
 
 # ------------------------------------------------------------------------------
 # Variables — ajusta el correo antes de ejecutar si es necesario
@@ -120,6 +122,47 @@ find "${WEB_ROOT}" -type f -exec chmod 644 {} \;
 # ------------------------------------------------------------------------------
 # 4. Virtual Host de Nginx
 # ------------------------------------------------------------------------------
+# 🔴 INCIDENTE 2026-09-22 (solucionesconia.cl con 526 en Cloudflare). Este
+# bloque REESCRIBE el vhost solo con el server de :80; el de :443 lo vuelve a
+# instalar Certbot en la sección 5. Entre ambas, la 4b verificaba el portal con
+# sondas HTTPS en loopback: sin bloque 443 propio, las sondas caían en el primer
+# server 443 del host (admin., con Basic Auth) → 401, /api/admin proxied y CSP
+# ajena → `--post` fallaba → `set -e` abortaba ANTES de Certbot → el dominio
+# quedaba sin 443 (certificado ajeno para Cloudflare = 526) hasta intervención
+# manual. Tres correcciones, todas aquí:
+#   1. Backup del vhost ANTES de pisarlo (Protocolo Golden Standard) y trap ERR
+#      que lo RESTAURA y recarga si cualquier paso posterior falla: un deploy
+#      abortado ya no puede dejar el sitio peor que como lo encontró.
+#   2. No se recarga nginx hasta que Certbot haya reinstalado el 443: el nginx
+#      en ejecución sigue sirviendo la configuración anterior mientras tanto.
+#   3. `--post` corre DESPUÉS de Certbot (sección 5b), cuando el 443 existe.
+BACKUP_NGINX_DIR="/root/backups-nginx"
+mkdir -p "${BACKUP_NGINX_DIR}"
+VHOST_BACKUP=""
+if [ -f "${NGINX_SITE}" ]; then
+  VHOST_BACKUP="${BACKUP_NGINX_DIR}/${DOMAIN}.$(date +%Y%m%d-%H%M%S).pre-deploy"
+  cp -a "${NGINX_SITE}" "${VHOST_BACKUP}"
+  echo "==> Backup del vhost anterior en ${VHOST_BACKUP}"
+fi
+rollback_vhost() {
+  local rc=$?
+  trap - ERR
+  echo "!! Deploy abortado (rc=${rc}) después de reescribir el vhost." >&2
+  if [ -n "${VHOST_BACKUP}" ] && [ -f "${VHOST_BACKUP}" ]; then
+    cp -a "${VHOST_BACKUP}" "${NGINX_SITE}"
+    if nginx -t >/dev/null 2>&1; then
+      systemctl reload nginx
+      echo "!! Vhost anterior RESTAURADO desde ${VHOST_BACKUP} y nginx recargado: el sitio sigue como antes del deploy." >&2
+    else
+      echo "!! El vhost restaurado NO pasa nginx -t; nginx NO se ha recargado. Revisar a mano: ${NGINX_SITE}" >&2
+    fi
+  else
+    echo "!! No había vhost previo que restaurar (primer despliegue)." >&2
+  fi
+  exit "${rc}"
+}
+trap rollback_vhost ERR
+
 echo "==> Configurando virtual host de Nginx..."
 cat > "${NGINX_SITE}" <<NGINXCONF
 server {
@@ -192,7 +235,9 @@ server {
     # unas pocas pragma (Content-Type, Refresh, CSP...). La landing "creía" ser
     # no-cacheable y en realidad sí lo era. La única vía es esta cabecera.
     #
-    # `no-cache` (no `no-store`) es deliberado: permite conservar la copia y
+    # \`no-cache\` (no \`no-store\`) es deliberado: permite conservar la copia y
+    # (acentos graves ESCAPADOS: este heredoc no va entre comillas y bash
+    # ejecutaba \`no-cache\` como comando — "no-cache: command not found").
     # revalidarla con If-None-Match/If-Modified-Since, así que lo normal es un
     # 304 barato en lugar de reenviar el documento entero. Los estáticos con
     # hash siguen con su caché agresiva de 30 días (location de arriba).
@@ -255,7 +300,8 @@ fi
 #
 # Y antes de recargar, verificar-portal.sh --pre comprueba que el snippet
 # expone lo que el portal necesita; si no, se ABORTA sin recargar y nginx sigue
-# con la versión anterior. Tras recargar, --post sondea las rutas en loopback.
+# con la versión anterior. Las sondas --post van en la sección 5b, DESPUÉS de
+# que Certbot reinstale el bloque 443 (ver el incidente descrito en la 4).
 SNIPPET_DEST="/etc/nginx/snippets/vip-portal.conf"
 ORQ_ENV="/opt/zasa-orchestrator/.env"
 if [ -f "${REPO_DIR}/nginx/vip-portal.conf.plantilla" ]; then
@@ -284,13 +330,12 @@ fi
 echo "==> Verificando el portal ANTES de recargar (linter de infraestructura)..."
 bash "${REPO_DIR}/nginx/verificar-portal.sh" --pre
 
-echo "==> Validando y recargando Nginx..."
+# Solo validación: la recarga la hace Certbot (sección 5) con el 443 ya
+# reinstalado, y la sección 5b la repite de forma idempotente. Recargar aquí
+# publicaría un vhost sin 443 (es lo que dejó el sitio en 526 el 2026-09-22).
+echo "==> Validando la configuración de Nginx (sin recargar todavía)..."
 nginx -t
 systemctl enable nginx
-systemctl reload nginx
-sleep 2
-echo "==> Verificando el portal DESPUÉS de recargar (sondas en loopback)..."
-bash "${REPO_DIR}/nginx/verificar-portal.sh" --post
 
 # ------------------------------------------------------------------------------
 # 5. SSL con Certbot (Let's Encrypt)
@@ -298,6 +343,7 @@ bash "${REPO_DIR}/nginx/verificar-portal.sh" --post
 # --keep-until-expiring hace la operación idempotente: si el certificado ya
 # existe y es válido lo reutiliza, y re-instala el bloque SSL en el vhost
 # (necesario porque la sección 4 reescribe el archivo y borra el bloque 443).
+# Si Certbot falla, el trap ERR de la sección 4 restaura el vhost anterior.
 echo "==> Configurando SSL con Certbot..."
 issue_cert() {
   certbot --nginx "$@" \
@@ -312,6 +358,26 @@ if ! issue_cert -d "${DOMAIN}" -d "${WWW_DOMAIN}"; then
   echo "==> Reintentando solo con ${DOMAIN} para no dejar el sitio sin HTTPS..."
   issue_cert -d "${DOMAIN}"
 fi
+
+# ------------------------------------------------------------------------------
+# 5b. Recarga definitiva y sondas del portal (con el 443 ya instalado)
+# ------------------------------------------------------------------------------
+# Certbot ya recargó nginx al instalar el bloque SSL; esta recarga es
+# idempotente y deja constancia explícita. Las sondas --post exigen que exista
+# un server 443 para el dominio (si no, fallan nombrando la causa en vez de
+# caer en el server por defecto), y cualquier fallo aquí dispara el rollback
+# al vhost anterior: el sitio nunca se queda a medias.
+echo "==> Validando y recargando Nginx (vhost completo: 80 + 443)..."
+nginx -t
+systemctl reload nginx
+sleep 2
+echo "==> Verificando el portal DESPUÉS de recargar (sondas en loopback)..."
+bash "${REPO_DIR}/nginx/verificar-portal.sh" --post
+
+# A partir de aquí ya no se toca nginx: un fallo en el firewall o en la purga
+# de Cloudflare no debe revertir un vhost que acaba de verificarse en verde.
+trap - ERR
+echo "==> Vhost verificado; backup previo conservado en ${VHOST_BACKUP:-<ninguno>}"
 
 # ------------------------------------------------------------------------------
 # 6. Firewall (UFW): permitir SSH y Nginx, denegar el resto
