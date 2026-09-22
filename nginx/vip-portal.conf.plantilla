@@ -39,12 +39,26 @@ resolver_timeout 5s;
 # migración y /acceso devolvía 502 en client-login. Mismo upstream que vip/admin.
 set $orquestador 127.0.0.1:3001;
 
+# ── Prueba de borde (X-Edge-Proof) en TODO lo que va al orquestador ─────────
+# 2026-09-22 (auditoría Zero Trust, hallazgo A2/A3). El orquestador ata cada
+# credencial de cabecera (`Authorization`) a la cabecera `X-Edge-Proof` que
+# SOLO nginx conoce: es la prueba de que la petición pasó por el borde y no
+# llegó directa al :3001. Desde la Fase 2 esa prueba es FAIL-CLOSED también en
+# /api/vip/ (antes el hook global se saltaba ese prefijo). En `admin.` y `vip.`
+# la cabecera ya se inyectaba; en ESTE dominio solo la llevaba /clientes/assets/,
+# así que una sesión de cliente por Bearer a /api/vip/ habría recibido 403.
+#
+# Se inyecta en los tres locations que proxyan al orquestador. Donde el
+# backend no la comprueba (/api/auth/, /vip/) es inerte; donde sí, obligatoria.
+# Al rotar EDGE_SECRET, deploy.sh vuelve a renderizar: nada que editar aquí.
+
 # ── API de autenticación de cliente ─────────────────────────────────────────
 # La pantalla /acceso hace fetch a /api/auth/client-login desde ESTE dominio.
 # Sin este proxy, ese fetch cae en `location /` y devuelve 404.
 #
 # `^~` para que ningún location regex (estáticos, dotfiles) se lo quede antes.
 location ^~ /api/auth/ {
+    proxy_set_header X-Edge-Proof      "__EDGE_SECRET__";
     proxy_set_header Host              $host;
     proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto https;
@@ -60,8 +74,10 @@ location ^~ /api/auth/ {
 # /api/auth/ estaba proxied: el resto caía en `location /` (estático) y nginx
 # devolvía 404 → «No pudimos cargar tu estado de cuenta». Mismo transporte que
 # /api/auth/: la autorización la hace el guard de sesión del orquestador
-# (cookie __Host-sc.cli + inquilino), nginx solo transporta.
+# (cookie __Host-sc.cli + inquilino), nginx solo transporta… y acredita el
+# borde: sin X-Edge-Proof, toda credencial de cabecera a /api/vip/ es 403.
 location ^~ /api/vip/ {
+    proxy_set_header X-Edge-Proof      "__EDGE_SECRET__";
     proxy_set_header Host              $host;
     proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto https;
@@ -75,6 +91,7 @@ location ^~ /api/vip/ {
 # el controlador, que valida cookie + inquilino ANTES de leer el expediente y
 # responde 302 al login si no hay sesión, o 403 si la sesión es de otro cliente.
 location ^~ /vip/ {
+    proxy_set_header X-Edge-Proof      "__EDGE_SECRET__";
     proxy_set_header Host              $host;
     proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto https;
@@ -104,12 +121,28 @@ location ^~ /vip/ {
     proxy_hide_header Referrer-Policy;
     proxy_hide_header Cache-Control;
     proxy_hide_header X-Robots-Tag;
-    # También la CSP genérica de @fastify/helmet. Dos cabeceras CSP no son un
-    # agujero —el navegador aplica AMBAS y gana la más restrictiva— pero
-    # obligan a razonar cada cambio futuro como una intersección de dos
-    # políticas, y ahí es donde se cuelan los errores. Una sola, la de aquí,
-    # que está escrita para esta página concreta.
-    proxy_hide_header Content-Security-Policy;
+
+    # ── Content-Security-Policy: la del orquestador, y SOLO la suya ─────────
+    # 🔴 2026-09-22 (auditoría Zero Trust, hallazgo A1). Hasta hoy este bloque
+    # hacía `proxy_hide_header Content-Security-Policy` y declaraba una CSP
+    # propia con `script-src 'self' 'unsafe-inline'` y `style-src … 'unsafe-inline'`.
+    # Es decir: el orquestador emite una política estricta (src/core/http/csp.ts,
+    # fijada por tests/csp.test.ts, que prohíbe 'unsafe-inline' en los dos ejes)
+    # y el borde la TIRABA y la sustituía por una más laxa, justo en la página
+    # que sirve documentos tributarios. portal-vip.ejs no tiene ni un <script>
+    # ni un <style> inline desde el 2026-08-29: la concesión no protegía nada.
+    #
+    # Regla desde hoy: la CSP tiene UNA fuente de verdad, csp.ts. nginx ni la
+    # oculta ni la duplica (dos cabeceras CSP obligan a razonar cada cambio
+    # como intersección, que es donde se cuelan los errores). Si la política
+    # necesita cambiar, se cambia en csp.ts y llega aquí por el proxy.
+    # verificar-portal.sh lo vigila: en --plantilla/--pre, que este fichero no
+    # contenga 'unsafe-inline' ni oculte la CSP; en --post, que /vip/ responda
+    # con EXACTAMENTE la misma CSP que devuelve el orquestador en loopback.
+    #
+    # Efecto colateral documentado: el anti-embebido pasa a ser el de csp.ts
+    # (`frame-ancestors 'self'`) más el X-Frame-Options DENY de abajo. Si se
+    # quiere 'none', el sitio es csp.ts, no este fichero.
 
     add_header Cache-Control             "no-store, must-revalidate"           always;
     add_header X-Robots-Tag              "noindex, nofollow, noarchive"        always;
@@ -118,7 +151,6 @@ location ^~ /vip/ {
     add_header Referrer-Policy           "no-referrer"                         always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
-    add_header Content-Security-Policy   "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'" always;
 
     # No hace falta `deny` para vault/ ni config/: esas rutas ya no existen como
     # ficheros. El backend solo expone lo que su plantilla decide mostrar.
