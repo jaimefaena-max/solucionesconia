@@ -23,9 +23,12 @@
 #   · `root /opt/agencia/portales` → no hay ficheros que servir.
 #
 # PROTOCOLO GOLDEN STANDARD — antes de aplicar:
-#   cp /etc/nginx/sites-available/solucionesconia.cl \
-#      /etc/nginx/sites-available/solucionesconia.cl.bak.$(date +%F-%H%M)
+#   install -d -m 700 /root/backups-nginx
+#   cp -p /etc/nginx/sites-available/solucionesconia.cl \
+#      /root/backups-nginx/solucionesconia.cl.$(date +%F-%H%M)
 #   nginx -t && systemctl reload nginx
+# La copia va FUERA de /etc/nginx: junto al vhost ensucia sites-available, y en
+# sites-enabled nginx la cargaría. `-p` conserva el 600 de los vhosts con secretos.
 # ---------------------------------------------------------------------------
 
 # Resolución DIFERIDA del upstream. Con un hostname literal en proxy_pass, nginx
