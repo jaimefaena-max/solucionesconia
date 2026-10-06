@@ -201,3 +201,30 @@ location ^~ /clientes/assets/ {
     add_header Cache-Control "public, max-age=3600";
     add_header X-Content-Type-Options "nosniff" always;
 }
+
+# ── /acceso/: pantalla de login del Portal VIP con CSP ESTRICTA (2026-10-06) ──
+# Es la página que recibe la contraseña del cliente, y heredaba la CSP de la
+# landing: `script-src 'unsafe-inline'` + `https://unpkg.com` (un CDN público
+# donde cualquiera publica JS). Con eso, una inyección de HTML cualquiera podía
+# ejecutar script. Desde esta fecha el script y los estilos son ficheros
+# propios (acceso.js / acceso.css) y la política no admite nada en línea.
+# Único tercero: el beacon de Cloudflare Web Analytics, que Cloudflare inyecta
+# en el HTML de cara al navegador (curl no lo ve) y que solo sirve su propio JS.
+#
+# `^~` para que el location regex de estáticos (\.(css|js|…)$ del server block)
+# no se quede con acceso.js/acceso.css: así salen con estas mismas cabeceras y
+# sin la caché de 30 días, que dejaría un login roto tras un cambio.
+#
+# 🔴 `add_header` aquí ANULA todas las del server block (herencia de nginx):
+# por eso se repite el juego completo, no solo la CSP. Al tocar la CSP de la
+# landing en deploy.sh, revisar si esta también debe cambiar.
+location ^~ /acceso/ {
+    try_files $uri $uri/ =404;
+    add_header Content-Security-Policy   "default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'" always;
+    add_header X-Frame-Options           "DENY" always;
+    add_header X-Content-Type-Options    "nosniff" always;
+    add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
+    add_header Cache-Control             "no-cache, must-revalidate" always;
+}
