@@ -88,16 +88,17 @@
       .then(function (datos) {
         if (!datos) return;
 
-        var destino = '/vip/forte-spa/';
-        if (datos.tenantId && RE_TENANT.test(datos.tenantId)) {
-          // Enrutado por inquilino: la misma pantalla sirve a cualquier
-          // cliente sin tocar este archivo. El literal de arriba queda solo
-          // como red de seguridad si la respuesta viniera sin tenantId.
-          destino = '/vip/' + datos.tenantId + '/';
+        // Sin un tenantId válido no hay destino legítimo. Nada de portal por
+        // defecto: llevar a un cliente al portal de otro solo le da un 403
+        // tras un login correcto y esconde que el contrato del backend se rompió.
+        if (!datos.tenantId || !RE_TENANT.test(datos.tenantId)) {
+          ocupado(false);
+          mostrarError('No pudimos abrir tu portal. Inténtalo de nuevo en unos segundos.');
+          return;
         }
         // `replace` y no `assign`: al pulsar «atrás» desde el portal el
         // usuario no debe volver a caer en el formulario de login.
-        window.location.replace(destino);
+        window.location.replace('/vip/' + datos.tenantId + '/');
       })
       .catch(function () {
         ocupado(false);
