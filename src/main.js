@@ -113,9 +113,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Abrir: intercepta los CTA con data-open-scheduler (mailto queda de fallback).
+    // Los que llevan además data-open-sofia abren el chat de Sofía si el widget
+    // ya expone open(); si no cargó (bloqueador, red, versión sin open()), caen
+    // al modal de Cal.com como antes. Se comprueba en el clic, no al cargar:
+    // el script del widget es `defer` y puede llegar después.
     document.querySelectorAll("[data-open-scheduler]").forEach((el) => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
+        const sofia = window.SolucionesconiaVendedorIA;
+        if (el.hasAttribute("data-open-sofia") && sofia && typeof sofia.open === "function") {
+          sofia.open();
+          return;
+        }
         openModal(el);
       });
     });
