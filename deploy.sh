@@ -130,7 +130,7 @@ main() {
   plan="$(rsync -aicn --delete "${STAGE}/" "${WEB_ROOT}/")"
   borrados="$(printf '%s\n' "${plan}" | grep '^\*deleting' || true)"
   echo "==> Cambios previstos en ${WEB_ROOT}:"
-  printf '%s\n' "${plan}" | grep -E '^(<f|\*deleting|cd)' || echo "    (ninguno)"
+  printf '%s\n' "${plan}" | grep -E '^([<>]f|\*deleting|cd)' || echo "    (ninguno)"
 
   if [ "${SIMULAR}" -eq 1 ]; then
     echo "==> Simulación: no se ha tocado nada."; return 0
@@ -202,7 +202,7 @@ purgar_cloudflare() {
         */index.html) urls+=("https://${host}/${ruta%index.html}") ;;
       esac
     done
-  done < <(printf '%s\n' "$1" | sed -nE 's/^(<f[^ ]*|\*deleting) +//p' | grep -v '/$' || true)
+  done < <(printf '%s\n' "$1" | sed -nE 's/^([<>]f[^ ]*|\*deleting) +//p' | grep -v '/$' || true)
 
   if [ "${#urls[@]}" -eq 0 ]; then
     echo "==> Purga omitida: ningún fichero cambió."; return 0
