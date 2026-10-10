@@ -23,6 +23,8 @@ body {
 body {
   font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Inter variable con eje opsz: corte Display en titulares, Text en cuerpo. */
+  font-optical-sizing: auto;
   overflow-x: hidden;
 }
 
