@@ -69,42 +69,15 @@ section[id] {
   }
 }
 
-/* ── Estados :hover ─────────────────────────────────────────────────────────
-   El diseño original los declaraba con un atributo `style-hover`, que NO
-   existe en HTML: el navegador lo ignora y el hover se pierde. Aquí van como
-   CSS real para que funcionen y el marcado valide. */
-.sc-btn-primary {
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.sc-btn-primary:hover {
-  background: #22d3ee;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
-    0 18px 56px rgba(6, 182, 212, 0.5);
-}
-
-.sc-btn-ghost {
-  transition:
-    border-color 0.3s ease,
-    background-color 0.3s ease;
-}
-
-.sc-btn-ghost:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.07);
-}
-
-/* ── CTA del hero: hover, pulsación y foco ──────────────────────────────────
-   El reposo de estos botones va en style inline (respaldo anti-caché, ver
-   index.html), y un inline gana a cualquier regla de hoja: las dos reglas
-   :hover de arriba NUNCA se veían en el hero. De ahí el !important, solo en
-   las propiedades que el inline también declara.
+/* ── Botones .sc-btn-primary / .sc-btn-ghost: hover, pulsación y foco ───────
+   El diseño original declaraba el hover con un atributo `style-hover`, que no
+   existe en HTML. Y el reposo de cada botón va en style inline (respaldo
+   anti-caché, ver index.html): un inline gana a cualquier regla de hoja, así
+   que un :hover sin !important nunca se veía (hasta 2026-10-10 no funcionaba
+   en ningún botón). El !important va solo en lo que el inline también declara.
    Hover solo con puntero fino: en táctil se quedaba «pegado» tras el toque. */
-#inicio .sc-btn-primary,
-#inicio .sc-btn-ghost {
+.sc-btn-primary,
+.sc-btn-ghost {
   transition:
     transform 160ms ease-out,
     background-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
@@ -113,28 +86,28 @@ section[id] {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  #inicio .sc-btn-primary:hover {
+  .sc-btn-primary:hover {
     background: #22d3ee !important;
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.2) inset,
       0 18px 56px rgba(6, 182, 212, 0.5) !important;
   }
 
-  #inicio .sc-btn-ghost:hover {
+  .sc-btn-ghost:hover {
     border-color: rgba(255, 255, 255, 0.4) !important;
     background: rgba(255, 255, 255, 0.07) !important;
   }
 }
 
-#inicio .sc-btn-primary:active,
-#inicio .sc-btn-ghost:active {
+.sc-btn-primary:active,
+.sc-btn-ghost:active {
   transform: scale(0.97);
 }
 
 /* Foco de teclado: cian claro (12:1 sobre #0F172A) separado del botón para
    que se distinga también sobre el CTA primario, que ya es cian. */
-#inicio .sc-btn-primary:focus-visible,
-#inicio .sc-btn-ghost:focus-visible {
+.sc-btn-primary:focus-visible,
+.sc-btn-ghost:focus-visible {
   outline: 2px solid #67e8f9;
   outline-offset: 3px;
 }
@@ -258,8 +231,8 @@ section[id] {
     transform: none !important;
   }
 
-  #inicio .sc-btn-primary:active,
-  #inicio .sc-btn-ghost:active {
+  .sc-btn-primary:active,
+  .sc-btn-ghost:active {
     transform: none;
   }
 
