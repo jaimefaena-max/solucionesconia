@@ -97,6 +97,48 @@ section[id] {
   background: rgba(255, 255, 255, 0.07);
 }
 
+/* ── CTA del hero: hover, pulsación y foco ──────────────────────────────────
+   El reposo de estos botones va en style inline (respaldo anti-caché, ver
+   index.html), y un inline gana a cualquier regla de hoja: las dos reglas
+   :hover de arriba NUNCA se veían en el hero. De ahí el !important, solo en
+   las propiedades que el inline también declara.
+   Hover solo con puntero fino: en táctil se quedaba «pegado» tras el toque. */
+#inicio .sc-btn-primary,
+#inicio .sc-btn-ghost {
+  transition:
+    transform 160ms ease-out,
+    background-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #inicio .sc-btn-primary:hover {
+    background: #22d3ee !important;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+      0 18px 56px rgba(6, 182, 212, 0.5) !important;
+  }
+
+  #inicio .sc-btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+  }
+}
+
+#inicio .sc-btn-primary:active,
+#inicio .sc-btn-ghost:active {
+  transform: scale(0.97);
+}
+
+/* Foco de teclado: cian claro (12:1 sobre #0F172A) separado del botón para
+   que se distinga también sobre el CTA primario, que ya es cian. */
+#inicio .sc-btn-primary:focus-visible,
+#inicio .sc-btn-ghost:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 3px;
+}
+
 .sc-card {
   transition:
     border-color 0.3s ease,
@@ -214,6 +256,11 @@ section[id] {
 
   [data-parallax] {
     transform: none !important;
+  }
+
+  #inicio .sc-btn-primary:active,
+  #inicio .sc-btn-ghost:active {
+    transform: none;
   }
 
   .sc-modal__backdrop,
