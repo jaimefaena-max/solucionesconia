@@ -13,9 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sin animación: mostrar todo de inmediato.
     revealables.forEach((el) => el.classList.add("is-in"));
   } else if (revealables.length) {
-    // Escalona la entrada en grupos de 4 para que no aparezcan todos a la vez.
-    revealables.forEach((el, i) => {
-      el.style.transitionDelay = `${(i % 4) * 90}ms`;
+    // Escalona la entrada por orden visual DENTRO de cada sección. Con un
+    // índice global (i % 4), el 5.º elemento del hero —la micro-prueba bajo los
+    // CTA— recibía 0 ms y aparecía antes que los botones.
+    const indicePorSeccion = new Map();
+    revealables.forEach((el) => {
+      const seccion = el.closest("section") || el.parentElement;
+      const i = indicePorSeccion.get(seccion) || 0;
+      indicePorSeccion.set(seccion, i + 1);
+      el.style.transitionDelay = `${i * 90}ms`;
     });
 
     const observer = new IntersectionObserver(

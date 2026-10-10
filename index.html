@@ -135,6 +135,12 @@
        un <link> aparte. -->
   <!-- (styles.css consolidado en dist/style.css) -->
 
+  <!-- Sin JavaScript, [data-reveal] se quedaría en opacity:0 para siempre:
+       src/main.js es quien añade .is-in. La CSP admite style-src 'unsafe-inline'. -->
+  <noscript>
+    <style>[data-reveal]{opacity:1!important;transform:none!important}</style>
+  </noscript>
+
   <!-- Vendedor IA — Optimización de latencia (DNS + TLS) -->
   <link rel="preconnect" href="https://admin.solucionesconia.cl" />
 
@@ -290,7 +296,10 @@
               style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.6s ease-in-out infinite;"></span>
             Automatización con IA para Pymes
           </p>
-          <h1 data-reveal
+          <!-- Sin data-reveal a propósito: el h1 es el elemento LCP y Chrome no
+               lo cuenta mientras tenga opacity:0, así que se pinta desde el
+               primer frame, sin esperar a JS ni a la transición. -->
+          <h1
             style="margin:0 0 24px; font-size:clamp(44px,7.4vw,86px); line-height:1.02; letter-spacing:-.035em; font-weight:800; text-wrap:balance;">
             Tu negocio,<br /><span style="color:#67E8F9;">funcionando solo.</span>
           </h1>
