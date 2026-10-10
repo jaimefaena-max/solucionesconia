@@ -40,6 +40,7 @@ NO_PUBLICAR=(src/input.css .gitkeep)
 
 SIMULAR=0
 PERMITIR_BORRADO=0
+STAGE=""
 
 # Todo el cuerpo va dentro de main(): bash lee un script por trozos mientras lo
 # ejecuta, y el `git pull` de abajo puede reescribir este mismo fichero. Una
@@ -98,16 +99,16 @@ main() {
   # ----------------------------------------------------------------------------
   # Se inyecta el ID de LinkedIn y se fijan permisos AQUÍ, no en el web root:
   # así nginx nunca sirve un index.html con el placeholder sin sustituir.
-  local stage
-  stage="$(mktemp -d /tmp/solucionesconia-stage.XXXXXX)"
-  trap 'rm -rf "${stage}"' EXIT
+  # Global, no local: el trap EXIT se ejecuta cuando main() ya ha terminado.
+  STAGE="$(mktemp -d /tmp/solucionesconia-stage.XXXXXX)"
+  trap 'rm -rf "${STAGE:-}"' EXIT
 
   local excluir=()
   for x in "${NO_PUBLICAR[@]}"; do excluir+=(--exclude "${x}"); done
   for p in "${PUBLICAR[@]}"; do
     [ -e "${REPO_DIR}/${p}" ] || { echo "ERROR: falta ${p} en el clon." >&2; exit 1; }
   done
-  ( cd "${REPO_DIR}" && rsync -a --relative "${excluir[@]}" "${PUBLICAR[@]}" "${stage}/" )
+  ( cd "${REPO_DIR}" && rsync -a --relative "${excluir[@]}" "${PUBLICAR[@]}" "${STAGE}/" )
 
   # index.html lleva el placeholder $VITE_LINKEDIN_PARTNER_ID; el valor real
   # vive solo en ${REPO_DIR}/.env (no versionado). Sin él se aborta.
@@ -116,17 +117,17 @@ main() {
   # shellcheck disable=SC1091
   source "${REPO_DIR}/.env"
   set +a
-  sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:?VITE_LINKEDIN_PARTNER_ID no definido}/g" "${stage}/index.html"
+  sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:?VITE_LINKEDIN_PARTNER_ID no definido}/g" "${STAGE}/index.html"
 
-  chown -R root:root "${stage}"
-  find "${stage}" -type d -exec chmod 755 {} +
-  find "${stage}" -type f -exec chmod 644 {} +
+  chown -R root:root "${STAGE}"
+  find "${STAGE}" -type d -exec chmod 755 {} +
+  find "${STAGE}" -type f -exec chmod 644 {} +
 
   # ----------------------------------------------------------------------------
   # 4. Qué cambia: guarda contra borrados
   # ----------------------------------------------------------------------------
   local plan borrados
-  plan="$(rsync -aicn --delete "${stage}/" "${WEB_ROOT}/")"
+  plan="$(rsync -aicn --delete "${STAGE}/" "${WEB_ROOT}/")"
   borrados="$(printf '%s\n' "${plan}" | grep '^\*deleting' || true)"
   echo "==> Cambios previstos en ${WEB_ROOT}:"
   printf '%s\n' "${plan}" | grep -E '^(<f|\*deleting|cd)' || echo "    (ninguno)"
@@ -150,13 +151,13 @@ main() {
   # --delay-updates deja cada fichero nuevo en un temporal y los coloca todos
   # al final: la ventana con versiones mezcladas es mínima.
   local cambios
-  cambios="$(rsync -aic --delete --delay-updates "${stage}/" "${WEB_ROOT}/")"
+  cambios="$(rsync -aic --delete --delay-updates "${STAGE}/" "${WEB_ROOT}/")"
 
   # ----------------------------------------------------------------------------
   # 6. Verificación en loopback (el origen solo acepta tráfico de Cloudflare)
   # ----------------------------------------------------------------------------
   local esperado servido ruta codigo
-  esperado="$(sha256sum < "${stage}/index.html" | cut -c1-64)"
+  esperado="$(sha256sum < "${STAGE}/index.html" | cut -c1-64)"
   servido="$(curl -sk -H "Host: ${DOMAIN}" https://127.0.0.1/ | sha256sum | cut -c1-64)"
   if [ "${esperado}" != "${servido}" ]; then
     echo "ERROR: nginx no sirve el index.html recién publicado." >&2
