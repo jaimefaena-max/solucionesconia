@@ -121,7 +121,7 @@
        Ya NO se carga cdn.tailwindcss.com: el CSS se genera con
        `npm run build` a /dist/style.css. La config de marca vive en
        tailwind.config.js (antes en el difunto src/config.js). -->
-  <link rel="stylesheet" href="/dist/style.css" />
+  <link rel="stylesheet" href="/dist/style.css?v=$CSS_VERSION" />
 
   <!-- Iconos: SVG inline nativos (Lucide), sin dependencia de red. -->
 
@@ -507,7 +507,7 @@
     </div>
   </div>
 
-  <script src="/src/main.js"></script>
+  <script src="/src/main.js?v=$JS_VERSION"></script>
 
   <!-- ── Vendedor IA — Sofía (chat B2B, Zero Trust) ─────────────────────────
        ⚠️ ESTA ETIQUETA VA AL FINAL DEL <body>, COMO ÚLTIMO HIJO. No moverla al

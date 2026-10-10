@@ -119,6 +119,18 @@ main() {
   set +a
   sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:?VITE_LINKEDIN_PARTNER_ID no definido}/g" "${STAGE}/index.html"
 
+  # Cache busting: nginx sirve CSS y JS con max-age=2592000 (30 días) y la
+  # purga de Cloudflare no alcanza la caché del navegador. La versión es el
+  # hash del contenido, no el commit: solo cambia cuando cambia el fichero.
+  local v_css v_js
+  v_css="$(sha256sum < "${STAGE}/dist/style.css" | cut -c1-10)"
+  v_js="$(sha256sum < "${STAGE}/src/main.js" | cut -c1-10)"
+  sed -i -e "s/\$CSS_VERSION/${v_css}/g" -e "s/\$JS_VERSION/${v_js}/g" "${STAGE}/index.html"
+  if grep -qE '\$(CSS|JS)_VERSION' "${STAGE}/index.html"; then
+    echo "ERROR: index.html conserva un placeholder de versión sin sustituir." >&2; exit 1
+  fi
+  echo "==> Versiones de assets: style.css?v=${v_css} · main.js?v=${v_js}"
+
   chown -R root:root "${STAGE}"
   find "${STAGE}" -type d -exec chmod 755 {} +
   find "${STAGE}" -type f -exec chmod 644 {} +
