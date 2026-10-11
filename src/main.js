@@ -112,12 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
     };
 
-    // Abrir: intercepta los CTA con data-open-scheduler (mailto queda de fallback).
-    // Los que llevan además data-open-sofia abren el chat de Sofía si el widget
-    // ya expone open(); si no cargó (bloqueador, red, versión sin open()), caen
-    // al modal de Cal.com como antes. Se comprueba en el clic, no al cargar:
-    // el script del widget es `defer` y puede llegar después.
-    document.querySelectorAll("[data-open-scheduler]").forEach((el) => {
+    // Abrir: intercepta los CTA con data-open-scheduler o data-open-sofia (mailto
+    // queda de fallback sin JS). Los que llevan data-open-sofia abren el chat de
+    // Sofía si el widget ya expone open(); si no cargó (bloqueador, red, versión
+    // sin open()), caen al modal de Cal.com. Se comprueba en el clic, no al
+    // cargar: el script del widget es `defer` y puede llegar después.
+    document.querySelectorAll("[data-open-scheduler], [data-open-sofia]").forEach((el) => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
         const sofia = window.SolucionesconiaVendedorIA;
