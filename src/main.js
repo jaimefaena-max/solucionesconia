@@ -35,6 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("click", () => contar("cta_clic", el.dataset.cta));
   });
 
+  // Hitos del chat de Sofía: el widget los emite en window sin datos
+  // personales (admin_solucionesconia, SOL-19). Si el widget es anterior y no
+  // los emite, simplemente no llegan.
+  window.addEventListener("sofia:abierto", (ev) => {
+    const origen = ev.detail && ev.detail.origen === "cta" ? "cta" : "burbuja";
+    contar("chat_abierto", origen);
+  });
+  window.addEventListener("sofia:mensaje", () => contar("chat_mensaje", "widget"));
+  window.addEventListener("sofia:reserva", () => contar("reserva", "widget"));
+
   const prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
