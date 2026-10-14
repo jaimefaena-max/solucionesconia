@@ -1,7 +1,13 @@
 # PLANTILLA versionada (Agencia_Solucionesconia/nginx/vip-portal.conf.plantilla).
-# deploy.sh la renderiza a /etc/nginx/snippets/vip-portal.conf sustituyendo
-# __API_SECRET_TOKEN__ y __EDGE_SECRET__ desde /opt/zasa-orchestrator/.env.
-# NO editar el snippet en el VPS a mano: el siguiente despliegue lo regenera.
+# REFERENCIA, no se aplica sola: desde 594f6e2 (2026-10-10) deploy.sh ya no la
+# renderiza e instalar-plantillas.sh (zasa-orchestrator) no gestiona este snippet.
+# El vivo es /etc/nginx/snippets/vip-portal.conf (600 root), incluido por el
+# vhost de solucionesconia.cl con `include .../vip-portal*.conf;`. Solo lo
+# reescribe rotar-secretos-borde.sh (sed valor viejo → nuevo). Un cambio aquí
+# se lleva al vivo A MANO: respaldo + nginx -t + reload.
+# Los dos secretos de borde van SOLO en las proxy_set_header: no nombrar sus
+# marcadores en comentarios (un render los sustituiría también ahí; SOL-10).
+# Comprobado el 2026-10-14: config efectiva idéntica al vivo (65 líneas).
 
 # ---------------------------------------------------------------------------
 # Portal VIP — proxy al orquestador (Fase 5, 2026-08-25)
@@ -53,7 +59,7 @@ set $orquestador 127.0.0.1:3001;
 #
 # Se inyecta en los tres locations que proxyan al orquestador. Donde el
 # backend no la comprueba (/api/auth/, /vip/) es inerte; donde sí, obligatoria.
-# Al rotar EDGE_SECRET, deploy.sh vuelve a renderizar: nada que editar aquí.
+# Al rotar EDGE_SECRET, rotar-secretos-borde.sh lo cambia en el vivo: nada que editar aquí.
 
 # ── API de autenticación de cliente ─────────────────────────────────────────
 # La pantalla /acceso hace fetch a /api/auth/client-login desde ESTE dominio.
@@ -217,7 +223,7 @@ location ^~ /clientes/assets/ {
 #
 # 🔴 `add_header` aquí ANULA todas las del server block (herencia de nginx):
 # por eso se repite el juego completo, no solo la CSP. Al tocar la CSP de la
-# landing en deploy.sh, revisar si esta también debe cambiar.
+# landing (vhost de solucionesconia.cl, editado a mano), revisar si esta también debe cambiar.
 location ^~ /acceso/ {
     try_files $uri $uri/ =404;
     add_header Content-Security-Policy   "default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'" always;
