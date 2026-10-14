@@ -2,6 +2,36 @@
 // Portado a JS vanilla desde el componente del diseño (DCLogic): animaciones de
 // entrada por IntersectionObserver + parallax del hero. Sin dependencias.
 document.addEventListener("DOMContentLoaded", () => {
+  // ── Embudo anónimo (SOL-19) ───────────────────────────────────────────────
+  // Suma totales diarios en el orquestador: sin cookies, sin IP guardada, sin
+  // identificador de visitante. El servidor solo cuenta si el Origin es esta
+  // landing y el evento está en su lista cerrada; desde localhost responde 403
+  // y no cuenta nada. `credentials: "omit"` para no adjuntar cookies de
+  // admin.; text/plain para no disparar preflight CORS. Nunca rompe la página.
+  const EMBUDO_URL = "https://admin.solucionesconia.cl/api/sales-agent/evento";
+  const contar = (e, f) => {
+    try {
+      fetch(EMBUDO_URL, {
+        method: "POST",
+        mode: "no-cors",
+        credentials: "omit",
+        keepalive: true,
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ e, f }),
+      }).catch(() => {});
+    } catch (_) {
+      /* navegador sin fetch: el embudo no es crítico */
+    }
+  };
+
+  contar("visita", "pagina");
+
+  // Clic en un CTA marcado con data-cta (hero | cierre | tarjeta). Va aparte
+  // del modal de Cal.com: el clic cuenta aunque ese bloque no exista.
+  document.querySelectorAll("[data-cta]").forEach((el) => {
+    el.addEventListener("click", () => contar("cta_clic", el.dataset.cta));
+  });
+
   const prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
