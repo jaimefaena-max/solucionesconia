@@ -7,13 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // identificador de visitante. El servidor solo cuenta si el Origin es esta
   // landing y el evento está en su lista cerrada; desde localhost responde 403
   // y no cuenta nada. `credentials: "omit"` para no adjuntar cookies de
-  // admin.; text/plain para no disparar preflight CORS. Nunca rompe la página.
+  // admin.; text/plain para no disparar preflight CORS. `mode: "cors"` y no
+  // "no-cors": en no-cors Chrome aplica el Cross-Origin-Resource-Policy
+  // same-origin de helmet y deja un error de red en consola por cada evento
+  // (aunque el servidor cuente igual). Nunca rompe la página.
   const EMBUDO_URL = "https://admin.solucionesconia.cl/api/sales-agent/evento";
   const contar = (e, f) => {
     try {
       fetch(EMBUDO_URL, {
         method: "POST",
-        mode: "no-cors",
+        mode: "cors",
         credentials: "omit",
         keepalive: true,
         headers: { "Content-Type": "text/plain" },
