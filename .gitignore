@@ -45,3 +45,6 @@ build/
 
 # Archivos de contexto de sesión de Claude Code — no versionar
 *.claudecode_session*
+
+# Exportaciones de Google Stitch (descargas: referencia de diseño, no se versionan)
+stitch-export/

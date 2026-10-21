@@ -28,13 +28,12 @@ body {
   overflow-x: hidden;
 }
 
+/* Los enlaces heredan el color de su contexto: cada uno lo fija con su clase.
+   Un `a:hover` global (0,1,1) le ganaba a `.text-*` (0,1,0) y dejaba el texto
+   del CTA cian sobre fondo cian al pasar el ratón. */
 a {
-  color: #06b6d4;
+  color: inherit;
   text-decoration: none;
-}
-
-a:hover {
-  color: #67e8f9;
 }
 
 /* Ancla los saltos de sección debajo del header fijo */
@@ -57,24 +56,10 @@ section[id] {
   transform: none;
 }
 
-@keyframes pulseDot {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-}
-
 /* ── Botones .sc-btn-primary / .sc-btn-ghost: hover, pulsación y foco ───────
-   El diseño original declaraba el hover con un atributo `style-hover`, que no
-   existe en HTML. Y el reposo de cada botón va en style inline (respaldo
-   anti-caché, ver index.html): un inline gana a cualquier regla de hoja, así
-   que un :hover sin !important nunca se veía (hasta 2026-10-10 no funcionaba
-   en ningún botón). El !important va solo en lo que el inline también declara.
+   Desde el rediseño 2026-10-21 el reposo va en clases (ya no inline), así que
+   el hover no necesita !important: `.clase:hover` (0,2,0) ya le gana a la
+   utilidad de reposo (0,1,0).
    Hover solo con puntero fino: en táctil se quedaba «pegado» tras el toque. */
 .sc-btn-primary,
 .sc-btn-ghost {
@@ -87,15 +72,15 @@ section[id] {
 
 @media (hover: hover) and (pointer: fine) {
   .sc-btn-primary:hover {
-    background: #22d3ee !important;
+    background: #22d3ee;
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.2) inset,
-      0 18px 56px rgba(6, 182, 212, 0.5) !important;
+      0 18px 56px rgba(6, 182, 212, 0.5);
   }
 
   .sc-btn-ghost:hover {
-    border-color: rgba(255, 255, 255, 0.4) !important;
-    background: rgba(255, 255, 255, 0.07) !important;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.07);
   }
 }
 
@@ -112,22 +97,30 @@ section[id] {
   outline-offset: 3px;
 }
 
+/* Tarjetas: hover de borde, sombra y elevación. Solo con puntero fino, por la
+   misma razón que los botones. */
 .sc-card {
   transition:
     border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.sc-card:hover {
-  border-color: rgba(6, 182, 212, 0.3);
-  box-shadow:
-    0 24px 70px rgba(4, 12, 28, 0.6),
-    0 0 40px rgba(6, 182, 212, 0.12);
+@media (hover: hover) and (pointer: fine) {
+  .sc-card:hover {
+    border-color: rgba(6, 182, 212, 0.35);
+    box-shadow:
+      0 24px 70px rgba(4, 12, 28, 0.6),
+      0 0 40px rgba(6, 182, 212, 0.12);
+    transform: translateY(-3px);
+  }
 }
 
-/* Enlace de cada tarjeta de agente: abre el chat de Sofía (data-open-sofia). */
+/* Enlace de cada tarjeta de servicio: abre el chat de Sofía (data-open-sofia). */
 .sc-card-link {
-  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
   font-weight: 600;
   color: #67e8f9;
@@ -243,22 +236,6 @@ section[id] {
   display: block;
 }
 
-/* ── Hero: encuadre del Embajador según viewport ───────────────────────────
-   La imagen es un RETRATO vertical (848×1263). En móvil `cover` + `center 20%`
-   (inline en index.html) la encuadra bien: el rostro cae arriba y el alto del
-   viewport da espacio. En DESKTOP ese mismo `cover` la amplía demasiado (hero
-   ancho y bajo) y recorta la cabeza. Aquí la achicamos y la anclamos al margen
-   DERECHO —figura completa, como la imagen anterior—, dejando el lado izquierdo
-   en el fondo oscuro para que el texto respire. `!important` porque el reposo va
-   inline y un inline gana a la hoja (mismo patrón que los botones). */
-@media (min-width: 640px) {
-  #inicio [data-parallax] {
-    background-size: auto 100% !important;
-    background-position: right 30% !important;
-    background-repeat: no-repeat !important;
-  }
-}
-
 /* ── Accesibilidad: respetar la preferencia de movimiento reducido ───────── */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
@@ -272,7 +249,8 @@ section[id] {
   }
 
   .sc-btn-primary:active,
-  .sc-btn-ghost:active {
+  .sc-btn-ghost:active,
+  .sc-card:hover {
     transform: none;
   }
 

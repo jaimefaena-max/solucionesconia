@@ -91,11 +91,11 @@
     }
   </script>
 
-  <title>Soluciones con IA | Resultados Financieros y Ventas 24/7 para Pymes</title>
+  <title>Soluciones con IA | Automatización de procesos con IA para empresas en Chile</title>
   <meta name="description"
-    content="Agentes de IA que venden de noche, cobran a tiempo y automatizan tu back-office: más ventas y caja al día para Pymes y medianas empresas en Chile. Habla con Sofía." />
+    content="Consultoría e implementación de automatización con IA a la medida de medianas y grandes empresas en Chile. Auditoría presencial o virtual y un mes de ajuste: no pagas hasta que tu sistema funcione." />
   <meta name="keywords"
-    content="automatización IA Chile, asistentes virtuales para Pymes, inteligencia artificial para negocios, chatbots Chile, agencia de automatización B2B" />
+    content="automatización de procesos con IA, consultoría IA Chile, inteligencia artificial para empresas, agentes de IA, automatización empresarial B2B" />
   <meta name="author" content="Soluciones con IA" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.solucionesconia.cl/" />
@@ -103,37 +103,32 @@
   <!-- Open Graph / Redes Sociales -->
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CL" />
-  <meta property="og:title" content="Soluciones con IA | Resultados Financieros y Ventas 24/7 para Pymes" />
+  <meta property="og:title" content="Soluciones con IA | Automatización de procesos con IA para empresas en Chile" />
   <meta property="og:description"
-    content="Agentes de IA que venden de noche, cobran a tiempo y automatizan tu back-office: más ventas y caja al día para Pymes y medianas empresas en Chile. Habla con Sofía." />
+    content="Auditamos tu operación, diseñamos la automatización con IA a tu medida y la ajustamos contigo durante un mes. No pagas hasta que funcione." />
   <meta property="og:url" content="https://www.solucionesconia.cl/" />
   <meta property="og:site_name" content="Soluciones con IA" />
   <meta property="og:image" content="https://www.solucionesconia.cl/assets/og-image.jpg" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Soluciones con IA | Resultados Financieros y Ventas 24/7 para Pymes" />
+  <meta name="twitter:title" content="Soluciones con IA | Automatización de procesos con IA para empresas en Chile" />
   <meta name="twitter:description"
-    content="Agentes de IA que venden de noche, cobran a tiempo y automatizan tu back-office: más ventas y caja al día para Pymes y medianas empresas en Chile. Habla con Sofía." />
+    content="Auditamos tu operación, diseñamos la automatización con IA a tu medida y la ajustamos contigo durante un mes. No pagas hasta que funcione." />
 
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 
-  <!-- Tailwind CSS compilado localmente (build estricto con purga).
-       Ya NO se carga cdn.tailwindcss.com: el CSS se genera con
-       `npm run build` a /dist/style.css. La config de marca vive en
-       tailwind.config.js (antes en el difunto src/config.js). -->
+  <!-- Tailwind CSS compilado localmente (build estricto con purga): `npm run
+       build` genera /dist/style.css desde src/input.css. Los tokens del Design
+       System v2 viven en tailwind.config.js (ver DESIGN.md). Rediseño enterprise
+       2026-10-21: el marcado usa clases, ya no estilos inline. -->
   <link rel="stylesheet" href="/dist/style.css?v=$CSS_VERSION" />
 
-  <!-- Iconos: SVG inline nativos (Lucide), sin dependencia de red. -->
-
-  <!-- Tipografía -->
+  <!-- Tipografía: Inter variable (eje opsz) para todo el texto y JetBrains Mono
+       para etiquetas técnicas. Iconos: sprite SVG inline al inicio del <body>,
+       sin fuente de iconos ni dependencia de red. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap" rel="stylesheet" />
-
-  <!-- El CSS personalizado (antes en /src/styles.css) se trasladó a
-       src/input.css y se compila dentro de /dist/style.css; ya no hace falta
-       un <link> aparte. -->
-  <!-- (styles.css consolidado en dist/style.css) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
 
   <!-- Sin JavaScript, [data-reveal] se quedaría en opacity:0 para siempre:
        src/main.js es quien añade .is-in. La CSP admite style-src 'unsafe-inline'. -->
@@ -173,359 +168,597 @@
 
 </head>
 
-<body style="background:#0F172A; color:#F8FAFC;">
+<body class="bg-night font-sans text-ink antialiased selection:bg-accent selection:text-accent-ink">
 
-  <div style="min-height:100vh; position:relative;">
+  <!-- ── Sprite de iconos (trazos estilo Lucide) ─────────────────────────────
+       Cada icono se usa con <svg><use href="#i-…"/></svg> y hereda el color del
+       texto (currentColor). -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect x="13" y="13" width="8" height="8" rx="2"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
+    <symbol id="i-login" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5M15 12H3"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  </svg>
 
-    <!-- ── Header ────────────────────────────────────────────────────────────
-         PURGADO 2026-08-17: solo el logo corporativo. Sin CTA, sin avatar de IA
-         y sin anclajes del Vendedor IA — el launcher lo monta el SDK por su
-         cuenta, flotando abajo a la derecha.
+  <!-- ── Header ────────────────────────────────────────────────────────────
+       ⚠️ NO COLGAR AQUÍ NINGÚN NODO DEL WIDGET DE SOFÍA. `backdrop-filter`
+       convierte al header en containing block de sus descendientes
+       `position: fixed`: un nodo del widget aquí dentro se anclaría a la barra
+       en vez de flotar sobre el viewport (el fallo de agosto de 2026).
 
-         ⚠️ NO REINTRODUCIR AQUÍ NINGÚN NODO DEL WIDGET. Este header lleva
-         `backdrop-filter`, que lo convierte en CONTAINING BLOCK de sus
-         descendientes `position: fixed`: cualquier elemento del widget colgado
-         de aquí resolvería su `bottom/right` contra la caja del header —fija
-         arriba y de ~77px— y aparecería en la barra superior en vez de flotar
-         sobre el viewport. Es exactamente el fallo que se vio en agosto.
-
-         Limpieza 2026-08-20: se retiran `justify-between` y `gap:12px`, restos
-         de cuando el header tenía un segundo hijo (el CTA). Con un único hijo
-         no hacían nada; `justify-start` es además el valor por defecto de flex,
-         así que la maquetación no cambia ni siquiera si el CDN sirviera un CSS
-         antiguo sin esa clase. -->
-    <!-- 2026-08-25 · La barra deja de tener un solo elemento: entra el acceso de
-         clientes a la derecha, así que `justify-start` pasa a `justify-between`.
-         Se cambia en la clase Y en el inline por la misma razón documentada abajo
-         para el logo: `.justify-between` YA existe en dist/style.css, pero el
-         inline garantiza el reparto aunque un CSS viejo quedara en caché del CDN. -->
-    <header
-      class="w-full flex justify-between items-center px-4 sm:px-8 py-4"
-      style="position:fixed; top:0; left:0; right:0; z-index:50; backdrop-filter:blur(14px); background:rgba(15,23,42,.62); border-bottom:1px solid rgba(255,255,255,.06); justify-content:space-between;">
-      <!-- Logo corporativo, 44px (2026-08-20: sube desde 36px para darle más
-           presencia ahora que es el único elemento de la barra).
-
-           El tamaño se fija por clase (h-11) Y por style inline a propósito: el
-           inline es un fallback a prueba de caché. Tailwind purga, así que
-           `.h-11` no existe en dist/style.css hasta el siguiente build; si un
-           CSS viejo quedara servido por el CDN, el alto igual queda acotado por
-           el inline y el logo no se agranda sin control. Mantener AMBOS
-           sincronizados.
-
-           PNG CON ALFA (2026-08-20): sustituye a LOGO.jpeg, que era un mockup de
-           1899x1229 (403 KB) con la marca renderizada sobre una pared oscura. Ese
-           fondo opaco se leía como una tarjeta pegada sobre el header translúcido
-           y obligaba a disimularlo con `border-radius`, ya retirado: con canal
-           alfa no hay caja que redondear.
-
-           `width`/`height` llevan el tamaño INTRÍNSECO (110x80), no el de
-           pantalla. Es lo que el navegador usa para reservar el hueco antes de
-           descargar la imagen (aspect-ratio 1.375) y evitar el salto de layout;
-           el tamaño real lo imponen la clase y el inline. Al recortarse los
-           márgenes muertos del mockup el ratio pasó de 1.545 a 1.375, así que
-           estos dos números deben cambiar si el asset se regenera.
-
-           `srcset` sirve el @2x en pantallas de alta densidad; el `src` queda
-           como respaldo para navegadores que lo ignoren. -->
-      <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex items-center" style="flex:0 0 auto;">
+       «Portal Clientes» va como ghost: el CTA primario de la página es agendar
+       la auditoría y no debe competir con nada. Su valor es la prueba social
+       («tienen clientes con sistemas de verdad»). /acceso lleva su propio
+       noindex. -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-white/[.06] bg-night/[.62] backdrop-blur-[14px]">
+    <div class="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-5 lg:px-8">
+      <!-- width/height = tamaño INTRÍNSECO del PNG (110x80): reservan el hueco
+           antes de descargar la imagen y evitan el salto de layout. -->
+      <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex shrink-0 items-center gap-3">
         <img src="/assets/premium/LOGO.png"
           srcset="/assets/premium/LOGO.png 1x, /assets/premium/LOGO@2x.png 2x"
-          alt="Soluciones con IA" width="110" height="80" class="h-11 w-auto"
-          style="height:44px; width:auto; display:block;" />
+          alt="Soluciones con IA" width="110" height="80" class="block h-11 w-auto" />
+        <span class="hidden items-center rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[.12em] text-accent-light sm:inline-flex">Enterprise · Chile</span>
       </a>
 
-      <!-- ── Acceso de clientes (Fase 1 · 2026-08-25) ──────────────────────────
-           POR QUÉ ES GHOST Y NO PRIMARY. El CTA primario de la página es «Agenda
-           tu diagnóstico»: es el objetivo de conversión y no debe competir con
-           nada. Un botón cyan en la barra le robaría la mirada al visitante que
-           todavía no es cliente, que es la inmensa mayoría del tráfico. El ghost
-           queda visible para quien lo busca —arriba a la derecha, donde el ojo lo
-           espera— sin disputar la jerarquía.
+      <nav aria-label="Principal" class="hidden items-center gap-7 text-sm font-medium text-ink/65 lg:flex">
+        <a href="#como-trabajamos" class="transition-colors hover:text-ink">Cómo trabajamos</a>
+        <a href="#servicios" class="transition-colors hover:text-ink">Servicios</a>
+        <a href="#antes-y-despues" class="transition-colors hover:text-ink">Antes y después</a>
+        <a href="#portal" class="transition-colors hover:text-ink">Portal Clientes</a>
+      </nav>
 
-           SU VALOR REAL NO ES EL TRÁFICO, ES LA PRUEBA SOCIAL. Con la cartera
-           actual el volumen de accesos es irrelevante en analítica; lo que este
-           botón compra es que un prospecto lea «tienen clientes de verdad, con
-           sistemas de verdad» en el primer vistazo.
-
-           TAMAÑOS CON clamp() Y NO CON CLASES RESPONSIVAS. Tailwind purga: una
-           clase nueva como `sm:px-5` NO existiría en dist/style.css hasta el
-           siguiente build, y el deploy sube el CSS ya compilado. Con clamp() el
-           botón es responsivo sin depender de ningún rebuild ni de la caché del
-           CDN — misma filosofía de respaldo inline que el logo.
-
-           🔗 DESTINO (Fase 3 · 2026-08-25): apunta a /acceso, la pantalla de
-           login unificada. Antes iba directo a /vip/forte-spa/, lo que tenía dos
-           defectos: llevaba a TODO visitante al portal de UN cliente concreto, y
-           disparaba el cuadro nativo de Basic Auth del navegador — justo lo
-           contrario de la impresión premium que este botón busca crear.
-
-           Se RETIRA `rel="nofollow"`: tenía sentido cuando el destino era un 401,
-           donde el crawler gastaba presupuesto en una puerta cerrada. /acceso
-           responde 200 y es una página legítima del sitio; el `noindex` que lleva
-           en su propia cabecera basta para mantenerla fuera de resultados. -->
-      <a href="/acceso" class="sc-btn-ghost"
-        aria-label="Portal Clientes — acceso al área privada"
-        style="display:inline-flex; align-items:center; gap:8px; flex:0 0 auto; min-height:40px; padding:0 clamp(14px,3vw,20px); border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.03); color:#F8FAFC; font-size:clamp(13px,2.4vw,14px); font-weight:600; letter-spacing:-.01em; white-space:nowrap; backdrop-filter:blur(8px); text-decoration:none;">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"
-          style="width:15px; height:15px; flex:0 0 auto;">
-          <rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8" />
-          <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-        </svg>
-        Portal Clientes
-      </a>
-    </header>
-
-    <!-- ── Hero ─────────────────────────────────────────────────────────── -->
-    <section id="inicio"
-      style="position:relative; min-height:100vh; min-height:100svh; display:flex; align-items:center; overflow:hidden; padding:clamp(96px,14vh,140px) clamp(20px,5vw,72px) clamp(56px,9vh,96px);">
-      <div data-parallax="0.18"
-        style="position:absolute; inset:-8% 0 -8% 0; background-image:url('/assets/premium/embajador-ia.webp'); background-size:cover; background-position:center 20%; will-change:transform;">
+      <div class="flex items-center gap-2.5">
+        <a href="/acceso" aria-label="Portal Clientes — acceso al área privada"
+          class="sc-btn-ghost inline-flex min-h-[40px] items-center gap-2 whitespace-nowrap rounded-full border border-white/[.18] bg-white/[.03] px-4 text-[13px] font-semibold tracking-[-.01em] text-ink backdrop-blur-md sm:px-5 sm:text-sm">
+          <svg class="h-[15px] w-[15px] shrink-0" aria-hidden="true"><use href="#i-lock" /></svg>
+          Portal Clientes
+        </a>
+        <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20agendar%20una%20auditor%C3%ADa" data-open-scheduler data-open-sofia
+          class="sc-btn-primary hidden min-h-[40px] items-center gap-2 whitespace-nowrap rounded-full bg-accent px-5 text-sm font-bold tracking-[-.01em] text-accent-ink shadow-cta md:inline-flex">
+          <span class="h-2 w-2 rounded-full bg-accent-ink animate-pulse-glow" aria-hidden="true"></span>
+          Agendar auditoría
+        </a>
       </div>
-      <div
-        style="position:absolute; inset:0; background:linear-gradient(100deg, rgba(15,23,42,.96) 0%, rgba(15,23,42,.9) 34%, rgba(15,23,42,.55) 62%, rgba(30,58,138,.42) 100%);">
-      </div>
-      <div
-        style="position:absolute; inset:0; opacity:.5; background-image:radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size:3px 3px; mix-blend-mode:overlay; pointer-events:none;">
-      </div>
+    </div>
+  </header>
 
-      <div style="position:relative; width:100%; max-width:1280px; margin:0 auto;">
-        <div style="max-width:760px;">
-          <p data-reveal
-            style="display:inline-flex; align-items:center; gap:10px; margin:0 0 clamp(16px,3vh,24px); padding:8px 16px; border-radius:999px; border:1px solid rgba(6,182,212,.32); background:rgba(6,182,212,.08); color:rgba(248,250,252,.72); font-size:13px; font-weight:500; letter-spacing:.1em; text-transform:uppercase;">
-            <span
-              style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.6s ease-in-out infinite;"></span>
-            Automatización con IA para Pymes
-          </p>
-          <!-- Sin data-reveal a propósito: el h1 es el elemento LCP y Chrome no
-               lo cuenta mientras tenga opacity:0, así que se pinta desde el
-               primer frame, sin esperar a JS ni a la transición. -->
-          <h1
-            style="margin:0 0 clamp(16px,3vh,24px); font-size:clamp(44px,7.4vw,86px); line-height:1.02; letter-spacing:-.035em; font-weight:700; text-wrap:balance;">
-            Tu negocio,<br /><span style="color:#67E8F9;">funcionando solo.</span>
-          </h1>
-          <p data-reveal
-            style="margin:0 0 clamp(24px,4.5vh,40px); max-width:520px; font-size:clamp(17px,2vw,21px); line-height:1.55; font-weight:400; color:rgba(248,250,252,.76); text-wrap:pretty;">
-            Recupera tu tiempo. Nosotros automatizamos ventas, atención y gestión con agentes de IA que trabajan por ti,
-            24/7.
-          </p>
-          <div data-reveal style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:clamp(16px,3vh,24px);">
-            <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20mi%20diagn%C3%B3stico%20gratuito" data-open-scheduler data-open-sofia data-cta="hero" class="sc-btn-primary"
-              style="display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:0 32px; border-radius:999px; background:#06B6D4; color:#04202B; font-size:16px; font-weight:700; letter-spacing:-.01em; box-shadow:0 0 0 1px rgba(255,255,255,.14) inset, 0 14px 44px rgba(6,182,212,.36);">Habla
-              con Sofía ahora</a>
-            <a href="#agentes" class="sc-btn-ghost"
-              style="display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:0 30px; border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.03); color:#F8FAFC; font-size:16px; font-weight:600; backdrop-filter:blur(8px);">Ver
-              cómo funciona</a>
-          </div>
-          <p data-reveal style="margin:0; font-size:14px; font-weight:500; color:rgba(248,250,252,.5);">Sin permanencia ·
-            Implementación en semanas, no meses</p>
-        </div>
-      </div>
-    </section>
+  <main>
 
-    <!-- ── Agentes ──────────────────────────────────────────────────────── -->
-    <section id="agentes"
-      style="position:relative; padding:clamp(88px,12vw,148px) clamp(20px,5vw,72px); background:linear-gradient(180deg, #0F172A 0%, #101B36 100%);">
-      <div style="max-width:1280px; margin:0 auto;">
-        <div style="max-width:660px; margin-bottom:clamp(48px,6vw,76px);">
-          <h2 data-reveal
-            style="margin:0 0 18px; font-size:clamp(32px,4.6vw,54px); line-height:1.08; letter-spacing:-.03em; font-weight:700; text-wrap:balance;">
-            Todo lo que tu Pyme necesita para crecer con IA</h2>
-          <p data-reveal
-            style="margin:0; font-size:clamp(16px,1.8vw,19px); line-height:1.55; color:rgba(248,250,252,.66);">Del
-            diagnóstico a la operación diaria: estrategia, agentes, automatización y web, con un solo equipo.</p>
-        </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap:clamp(18px,2.2vw,26px);">
+    <!-- ── Hero ───────────────────────────────────────────────────────────── -->
+    <section id="inicio" class="relative flex min-h-[100svh] items-center overflow-hidden pb-16 pt-[100px] sm:pt-28 lg:pb-24 lg:pt-32">
+      <div aria-hidden="true" class="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[980px] -translate-x-1/2 rounded-full bg-gradient-to-b from-accent/20 via-accent/10 to-transparent blur-[120px]"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -right-48 top-1/3 h-[420px] w-[420px] rounded-full bg-accent/15 blur-[100px]"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -left-36 bottom-10 h-[360px] w-[360px] rounded-full bg-brand/30 blur-[90px]"></div>
 
-          <article data-reveal class="sc-card"
-            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
-            <div
-              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
-              <div style="width:16px; height:16px; border:1.6px solid #67E8F9; border-radius:50%;"></div>
-            </div>
-            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Diagnóstico Estratégico de IA y Procesos</h3>
-            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Revisamos cómo vendes,
-              atiendes y cobras, y te decimos qué automatizar primero y cuánto tiempo y dinero te devuelve.</p>
-            <div
-              style="margin-top:auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
-              <span
-                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
-              <span><strong style="font-size:15px; color:#F8FAFC;">Gratis</strong> · sin permanencia</span>
-            </div>
-            <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20mi%20diagn%C3%B3stico%20gratuito" data-open-sofia data-cta="tarjeta"
-              class="sc-card-link">Pídele tu diagnóstico a Sofía →</a>
-          </article>
+      <div class="relative z-10 mx-auto w-full max-w-7xl px-5 lg:px-8">
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
 
-          <article data-reveal class="sc-card"
-            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
-            <div
-              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
-              <div style="width:16px; height:16px; border:1.6px solid #67E8F9; border-radius:4px;"></div>
-            </div>
-            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Agentes de Ventas y Cobranza 24/7 (Sofía)</h3>
-            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Responden, cualifican y
-              agendan cada consulta aunque llegue a las 2&nbsp;AM, y recuerdan los pagos antes de que venzan.</p>
-            <div
-              style="margin-top:auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
-              <span
-                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
-              <span><strong style="font-size:15px; color:#F8FAFC;">24/7</strong> · 365 días, sin turnos</span>
-            </div>
-            <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20un%20agente%20de%20ventas%20IA" data-open-sofia data-cta="tarjeta"
-              class="sc-card-link">Pruébala: escríbele a Sofía →</a>
-          </article>
+          <div class="flex flex-col items-start gap-5 sm:gap-6 lg:col-span-7">
+            <p data-reveal class="inline-flex items-center gap-3 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 backdrop-blur-md">
+              <span class="relative flex h-2.5 w-2.5" aria-hidden="true">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-light opacity-75"></span>
+                <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_10px_rgba(6,182,212,.9)]"></span>
+              </span>
+              <span class="text-[11px] font-semibold uppercase tracking-[.1em] text-accent-light sm:text-[13px] sm:tracking-[.12em]">Consultoría e implementación de IA a medida · Chile</span>
+            </p>
 
-          <article data-reveal class="sc-card"
-            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
-            <div
-              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
-              <div style="width:16px; height:16px; border:1.6px solid #67E8F9; border-radius:2px 12px 2px 12px;"></div>
-            </div>
-            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Automatización Avanzada de Procesos y Back&#8209;office</h3>
-            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Reportes, recordatorios
-              e integraciones entre tus sistemas funcionando solos: nadie vuelve a copiar datos a mano.</p>
-            <div
-              style="margin-top:auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
-              <span
-                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
-              <span><strong style="font-size:15px; color:#F8FAFC;">0</strong> tareas repetitivas a mano</span>
-            </div>
-            <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20automatizar%20procesos" data-open-sofia data-cta="tarjeta"
-              class="sc-card-link">Pregúntale a Sofía qué automatizar →</a>
-          </article>
+            <!-- Sin data-reveal a propósito: el h1 es el elemento LCP y Chrome no
+                 lo cuenta mientras tenga opacity:0. -->
+            <h1 class="text-balance text-[34px] font-bold leading-[1.1] tracking-[-.035em] text-ink sm:text-[56px] sm:leading-[1.08] lg:text-[64px] xl:text-[72px]">
+              Automatización de procesos con IA diseñada
+              <span class="bg-gradient-to-r from-accent-light to-accent-faint bg-clip-text text-transparent">a la medida de tu empresa</span>
+            </h1>
 
-          <article data-reveal class="sc-card"
-            style="position:relative; display:flex; flex-direction:column; gap:16px; padding:clamp(26px,3vw,36px); border-radius:22px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(160deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.025) 100%); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(4,12,28,.5), 0 0 0 1px rgba(6,182,212,.05);">
-            <div
-              style="width:46px; height:46px; display:flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(6,182,212,.35); background:rgba(6,182,212,.08);">
-              <div style="width:13px; height:13px; border:1.6px solid #67E8F9; border-radius:3px; transform:rotate(45deg);"></div>
-            </div>
-            <h3 style="margin:0; font-size:22px; font-weight:700; letter-spacing:-.02em;">Desarrollo Web Profesional y Experiencias 3D</h3>
-            <p style="margin:0; font-size:16px; line-height:1.55; color:rgba(248,250,252,.66);">Webs rápidas que
-              convierten visitas en clientes, con experiencias 3D que muestran tu producto como ninguna foto puede.</p>
-            <div
-              style="margin-top:auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:#A5F3FC; font-variant-numeric:tabular-nums;">
-              <span
-                style="width:6px; height:6px; border-radius:50%; background:#06B6D4; animation:pulseDot 2.4s ease-in-out infinite;"></span>
-              <span>Lista en <strong style="font-size:15px; color:#F8FAFC;">semanas</strong>, no meses</span>
-            </div>
-            <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20una%20web%20profesional" data-open-sofia data-cta="tarjeta"
-              class="sc-card-link">Cuéntale tu proyecto a Sofía →</a>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Antes / Después ──────────────────────────────────────────────── -->
-    <section id="comparativa"
-      style="position:relative; padding:clamp(88px,12vw,148px) clamp(20px,5vw,72px); background:#101B36; overflow:hidden;">
-      <div
-        style="position:absolute; top:-20%; right:-10%; width:60vw; height:60vw; border-radius:50%; background:radial-gradient(circle, rgba(30,58,138,.5) 0%, transparent 66%); pointer-events:none;">
-      </div>
-      <div style="position:relative; max-width:1160px; margin:0 auto;">
-        <h2 data-reveal
-          style="margin:0 0 clamp(44px,6vw,72px); font-size:clamp(32px,4.6vw,54px); line-height:1.08; letter-spacing:-.03em; font-weight:700; max-width:600px; text-wrap:balance;">
-          Tu negocio, antes y después</h2>
-        <div
-          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:clamp(18px,2.4vw,30px); align-items:start;">
-
-          <div data-reveal
-            style="padding:clamp(26px,3vw,40px); border-radius:22px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.02);">
-            <p
-              style="margin:0 0 26px; font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(248,250,252,.38);">
-              Sin IA</p>
-            <div style="display:flex; flex-direction:column; gap:20px;">
-              <div style="display:flex; gap:14px; align-items:flex-start;">
-                <span style="flex:none; margin-top:9px; width:14px; height:1.5px; background:rgba(248,250,252,.28);"></span>
-                <p style="margin:0; font-size:17px; line-height:1.5; color:rgba(248,250,252,.5);">Respondes mensajes a
-                  medianoche</p>
-              </div>
-              <div style="display:flex; gap:14px; align-items:flex-start;">
-                <span style="flex:none; margin-top:9px; width:14px; height:1.5px; background:rgba(248,250,252,.28);"></span>
-                <p style="margin:0; font-size:17px; line-height:1.5; color:rgba(248,250,252,.5);">Se pierden clientes que
-                  nadie atendió</p>
-              </div>
-              <div style="display:flex; gap:14px; align-items:flex-start;">
-                <span style="flex:none; margin-top:9px; width:14px; height:1.5px; background:rgba(248,250,252,.28);"></span>
-                <p style="margin:0; font-size:17px; line-height:1.5; color:rgba(248,250,252,.5);">El día se va en tareas
-                  repetitivas</p>
+            <div data-reveal class="w-full rounded-2xl border border-accent/40 bg-gradient-to-r from-accent/15 via-night-high/70 to-accent/10 p-4 shadow-[0_10px_30px_rgba(6,182,212,.15)] backdrop-blur-xl lg:p-5">
+              <div class="flex items-start gap-3.5">
+                <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-accent/20 text-accent-light">
+                  <svg class="h-[22px] w-[22px]" aria-hidden="true"><use href="#i-shield" /></svg>
+                </span>
+                <div>
+                  <span class="inline-block rounded bg-accent/15 px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-light">Garantía de riesgo cero</span>
+                  <p class="mt-2 text-base font-bold leading-snug text-ink sm:text-lg lg:text-xl">No pagas nada hasta que tu sistema lleve un mes funcionando a tu medida.</p>
+                  <!-- En móvil se oculta: el titular de la garantía basta y el CTA
+                       tiene que verse sin hacer scroll. -->
+                  <p class="mt-1.5 hidden text-sm leading-relaxed text-ink/80 sm:block lg:text-[15px]">Diseñamos, implementamos e integramos la automatización en tus procesos críticos y la ajustamos contigo durante un mes. Asumimos el riesgo para que compruebes el impacto real antes de pagar.</p>
+                </div>
               </div>
             </div>
+
+            <!-- data-reveal en el envoltorio y no en el <a>: en el propio botón,
+                 la transición de la cascada retrasaba el hover y la pulsación. -->
+            <div data-reveal class="flex w-full flex-wrap items-center gap-3.5 sm:w-auto">
+              <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20agendar%20una%20auditor%C3%ADa" data-open-scheduler data-open-sofia data-cta="hero"
+                class="sc-btn-primary inline-flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-base font-bold tracking-[-.01em] text-accent-ink shadow-cta sm:w-auto">
+                <svg class="h-5 w-5" aria-hidden="true"><use href="#i-calendar" /></svg>
+                Agendar auditoría
+              </a>
+              <a href="#como-trabajamos"
+                class="sc-btn-ghost inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full border border-white/[.18] bg-white/[.03] px-7 text-base font-semibold text-ink backdrop-blur-md sm:w-auto">
+                Cómo trabajamos
+              </a>
+            </div>
+
+            <ul data-reveal class="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[13px] text-ink/65">
+              <li class="flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-check" /></svg>
+                <span class="font-medium text-ink">Sin costo inicial</span>
+              </li>
+              <li class="flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-clock" /></svg>
+                1 mes de ajuste en tu operación
+              </li>
+              <li class="flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-users" /></svg>
+                Auditoría presencial o virtual
+              </li>
+            </ul>
           </div>
 
-          <div data-reveal
-            style="padding:clamp(26px,3vw,40px); border-radius:22px; border:1px solid rgba(6,182,212,.26); background:linear-gradient(160deg, rgba(6,182,212,.1) 0%, rgba(255,255,255,.03) 100%); backdrop-filter:blur(18px); box-shadow:0 24px 70px rgba(4,12,28,.5), 0 0 50px rgba(6,182,212,.1);">
-            <p
-              style="margin:0 0 26px; font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#67E8F9;">
-              Con IA</p>
-            <div style="display:flex; flex-direction:column; gap:20px;">
-              <div style="display:flex; gap:14px; align-items:flex-start;">
-                <span
-                  style="flex:none; margin-top:9px; width:14px; height:1.5px; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,.8);"></span>
-                <p style="margin:0; font-size:17px; line-height:1.5; font-weight:500; color:#F8FAFC;">Tus agentes
-                  responden solos, al instante</p>
-              </div>
-              <div style="display:flex; gap:14px; align-items:flex-start;">
-                <span
-                  style="flex:none; margin-top:9px; width:14px; height:1.5px; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,.8);"></span>
-                <p style="margin:0; font-size:17px; line-height:1.5; font-weight:500; color:#F8FAFC;">Ningún cliente
-                  queda sin respuesta</p>
-              </div>
-              <div style="display:flex; gap:14px; align-items:flex-start;">
-                <span
-                  style="flex:none; margin-top:9px; width:14px; height:1.5px; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,.8);"></span>
-                <p style="margin:0; font-size:17px; line-height:1.5; font-weight:500; color:#F8FAFC;">Tú decides; el
-                  sistema ejecuta</p>
+          <!-- Retrato del Embajador en tarjeta glass. El PNG es un retrato vertical
+               (848×1263): `object-[center_15%]` deja el rostro dentro del
+               encuadre 4:5. -->
+          <div data-reveal class="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
+            <div class="relative rounded-3xl border border-white/[.08] bg-gradient-to-b from-white/10 to-white/[.02] p-3 shadow-[0_24px_70px_rgba(4,12,28,.7)] backdrop-blur-2xl">
+              <div class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-night-deep">
+                <img src="/assets/premium/embajador-ia.webp" alt="Embajador de Soluciones con IA"
+                  width="848" height="1263" fetchpriority="high" decoding="async"
+                  class="h-full w-full object-cover object-[center_15%]" />
+                <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-night via-transparent to-transparent opacity-90"></div>
+
+                <div class="absolute inset-x-4 top-4 flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-night-high/85 p-3 backdrop-blur-xl">
+                  <div class="flex items-center gap-2.5">
+                    <span class="relative flex h-2.5 w-2.5" aria-hidden="true">
+                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-light opacity-75"></span>
+                      <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent"></span>
+                    </span>
+                    <div class="flex flex-col">
+                      <span class="text-[13px] font-bold leading-tight text-ink">Sofía · Agente de IA</span>
+                      <span class="font-mono text-[11px] text-accent-light">Atiende y agenda 24/7</span>
+                    </div>
+                  </div>
+                  <span class="rounded border border-accent/20 bg-accent/10 px-2 py-1 font-mono text-[11px] text-accent-light">CHILE</span>
+                </div>
+
+                <div class="absolute inset-x-4 bottom-4 rounded-xl border border-white/[.08] bg-night-deep/85 p-4 backdrop-blur-xl">
+                  <div class="flex items-center justify-between gap-3 sm:mb-2">
+                    <div>
+                      <p class="font-bold text-ink">Auditoría presencial o virtual</p>
+                      <p class="font-mono text-[12px] text-ink/65">Entendemos tu proceso antes de proponer</p>
+                    </div>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-accent/20 bg-accent/10 text-accent-light">
+                      <svg class="h-[18px] w-[18px]" aria-hidden="true"><use href="#i-check" /></svg>
+                    </span>
+                  </div>
+                  <div class="hidden grid-cols-3 gap-2 border-t border-white/[.06] pt-2 font-mono text-[11px] sm:grid">
+                    <div><span class="block text-ink/50">Paso 1</span><span class="font-bold text-accent-light">Auditoría</span></div>
+                    <div><span class="block text-ink/50">Paso 2</span><span class="font-bold text-ink">A medida</span></div>
+                    <div><span class="block text-ink/50">Paso 3</span><span class="font-bold text-accent-faint">1 mes de ajuste</span></div>
+                  </div>
+                </div>
               </div>
             </div>
+            <div aria-hidden="true" class="pointer-events-none absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-accent/20 blur-2xl"></div>
           </div>
 
         </div>
-        <p data-reveal
-          style="margin:clamp(44px,6vw,68px) 0 0; max-width:720px; font-size:clamp(20px,2.6vw,28px); line-height:1.35; letter-spacing:-.02em; font-weight:600; color:rgba(248,250,252,.86); text-wrap:pretty;">
-          La diferencia no es trabajar más. Es dejar de cargar con todo.</p>
       </div>
     </section>
 
-    <!-- ── CTA final ────────────────────────────────────────────────────── -->
-    <section id="diagnostico"
-      style="position:relative; padding:clamp(96px,13vw,168px) clamp(20px,5vw,72px); background:#0F172A; overflow:hidden; text-align:center;">
-      <div
-        style="position:absolute; bottom:-42%; left:50%; transform:translateX(-50%); width:min(1100px,120vw); height:min(1100px,120vw); border-radius:50%; background:radial-gradient(circle, rgba(6,182,212,.24) 0%, rgba(30,58,138,.14) 42%, transparent 68%); pointer-events:none;">
-      </div>
-      <div style="position:relative; max-width:780px; margin:0 auto; display:flex; flex-direction:column; align-items:center;">
-        <h2 data-reveal
-          style="margin:0 0 22px; font-size:clamp(34px,5.4vw,64px); line-height:1.05; letter-spacing:-.035em; font-weight:800; text-wrap:balance;">
-          Menos carga para ti. Más negocio funcionando.</h2>
-        <p data-reveal
-          style="margin:0 0 40px; max-width:560px; font-size:clamp(17px,2vw,20px); line-height:1.55; color:rgba(248,250,252,.7); text-wrap:pretty;">
-          Agenda un diagnóstico gratuito y te mostramos exactamente qué se puede automatizar en tu Pyme.</p>
-        <!-- data-reveal en un envoltorio y no en el <a>: en el propio botón, su
-             transition y el transitionDelay de la cascada pisaban los del
-             .sc-btn-primary y retrasaban el hover y la pulsación 180 ms. -->
-        <div data-reveal>
-          <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20mi%20diagn%C3%B3stico%20gratuito" data-open-scheduler data-open-sofia data-cta="cierre" class="sc-btn-primary"
-            style="display:inline-flex; align-items:center; justify-content:center; min-height:64px; padding:0 44px; border-radius:999px; background:#06B6D4; color:#04202B; font-size:18px; font-weight:700; letter-spacing:-.01em; box-shadow:0 0 0 1px rgba(255,255,255,.16) inset, 0 18px 60px rgba(6,182,212,.42);">Diagnóstico
-            inmediato con IA</a>
+    <!-- ── Cómo trabajamos (modelo de riesgo cero, 4 pasos) ───────────────── -->
+    <section id="como-trabajamos" class="relative bg-gradient-to-b from-night-deep via-night to-night py-24 lg:py-28">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <div class="mb-14 max-w-3xl lg:mb-16">
+          <p data-reveal class="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3 py-1 font-mono text-[12px] font-semibold uppercase tracking-[.12em] text-accent-light">Metodología</p>
+          <h2 data-reveal class="mb-4 text-balance text-[32px] font-bold leading-[1.1] tracking-[-.03em] text-ink sm:text-[42px] lg:text-[52px]">¿Cómo trabajamos? Un modelo de riesgo cero</h2>
+          <p data-reveal class="text-pretty text-lg leading-relaxed text-ink/65 lg:text-xl">Sin anticipos ni promesas vacías: compartimos contigo el riesgo de adoptar la tecnología, y solo cobramos cuando ves el resultado en tu operación.</p>
         </div>
-        <p data-reveal style="margin:24px 0 0; font-size:14px; font-weight:500; color:rgba(248,250,252,.48);">
-          Te responde al instante, 24/7. Cero compromiso.</p>
+
+        <ol class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          <li data-reveal class="sc-card relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[.12] bg-night-card/80 p-7 backdrop-blur-xl">
+            <div>
+              <div class="mb-6 flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-6 w-6" aria-hidden="true"><use href="#i-search" /></svg>
+                </span>
+                <span class="rounded bg-accent/10 px-2.5 py-1 font-mono text-xs font-bold text-accent-light">PASO 01</span>
+              </div>
+              <h3 class="mb-3 text-[19px] font-bold leading-snug text-ink">Auditoría inicial, presencial o virtual</h3>
+              <p class="text-sm leading-relaxed text-ink/65">Nos reunimos con tu equipo y levantamos en detalle tus procesos clave, los cuellos de botella y cómo conversan hoy tus sistemas: ERP, CRM, planillas y correo.</p>
+            </div>
+            <p class="mt-6 flex items-center gap-2 border-t border-white/[.06] pt-4 font-mono text-[11px] text-ink/45">
+              <svg class="h-[15px] w-[15px] text-accent" aria-hidden="true"><use href="#i-calendar" /></svg>
+              En tus oficinas o por videollamada
+            </p>
+          </li>
+
+          <li data-reveal class="sc-card relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[.12] bg-night-card/80 p-7 backdrop-blur-xl">
+            <div>
+              <div class="mb-6 flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-6 w-6" aria-hidden="true"><use href="#i-sliders" /></svg>
+                </span>
+                <span class="rounded bg-accent/10 px-2.5 py-1 font-mono text-xs font-bold text-accent-light">PASO 02</span>
+              </div>
+              <h3 class="mb-3 text-[19px] font-bold leading-snug text-ink">Solución a medida</h3>
+              <p class="text-sm leading-relaxed text-ink/65">Diseñamos la automatización para tu proceso real, no una plantilla, respetando tus reglas de negocio y la forma en que trabaja tu equipo.</p>
+            </div>
+            <p class="mt-6 flex items-center gap-2 border-t border-white/[.06] pt-4 font-mono text-[11px] text-ink/45">
+              <svg class="h-[15px] w-[15px] text-accent" aria-hidden="true"><use href="#i-file" /></svg>
+              Plan claro de qué se automatiza
+            </p>
+          </li>
+
+          <li data-reveal class="sc-card relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[.12] bg-night-card/80 p-7 backdrop-blur-xl">
+            <div>
+              <div class="mb-6 flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-6 w-6" aria-hidden="true"><use href="#i-rocket" /></svg>
+                </span>
+                <span class="rounded bg-accent/20 px-2.5 py-1 font-mono text-xs font-bold text-accent-light">PASO 03</span>
+              </div>
+              <h3 class="mb-3 text-[19px] font-bold leading-snug text-ink">Implementación y ajuste durante 1 mes</h3>
+              <p class="text-sm leading-relaxed text-ink/65">La ponemos a operar en tu día a día y la afinamos contigo durante 30 días, resolviendo cada excepción junto a tu equipo, sin costo.</p>
+            </div>
+            <p class="mt-6 flex items-center gap-2 border-t border-white/[.06] pt-4 font-mono text-[11px] text-accent-light">
+              <svg class="h-[15px] w-[15px]" aria-hidden="true"><use href="#i-check" /></svg>
+              Operación real, acompañada
+            </p>
+          </li>
+
+          <li data-reveal class="sc-card relative flex flex-col justify-between overflow-hidden rounded-2xl border border-accent/40 bg-gradient-to-b from-accent/10 via-night-card to-night-card p-7 shadow-[0_10px_35px_rgba(6,182,212,.12)] backdrop-blur-xl">
+            <div>
+              <div class="mb-6 flex items-center justify-between">
+                <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-accent-ink shadow-glow">
+                  <svg class="h-6 w-6" aria-hidden="true"><use href="#i-card" /></svg>
+                </span>
+                <span class="rounded bg-accent px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-wider text-accent-ink">PASO 04</span>
+              </div>
+              <h3 class="mb-3 text-[19px] font-bold leading-snug text-ink">Recién ahí empieza el pago</h3>
+              <p class="text-sm leading-relaxed text-ink/80">Si después de un mes funcionando en tu operación el sistema cumple lo acordado, comienza la facturación. Antes de eso, cero.</p>
+            </div>
+            <p class="mt-6 flex items-center gap-2 border-t border-accent/20 pt-4 font-mono text-[11px] font-semibold text-accent-light">
+              <svg class="h-[15px] w-[15px]" aria-hidden="true"><use href="#i-shield" /></svg>
+              Riesgo cero para tu empresa
+            </p>
+          </li>
+        </ol>
       </div>
     </section>
 
-    <!-- ── Footer ───────────────────────────────────────────────────────── -->
-    <footer
-      style="padding:32px clamp(20px,5vw,72px); border-top:1px solid rgba(255,255,255,.06); display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; font-size:13px; color:rgba(248,250,252,.42);">
-      <span>Soluciones con IA · Automatización para Pymes en Chile</span>
-      <span>solucionesconia.cl</span>
-    </footer>
+    <!-- ── Servicios (4 frentes, rejilla 2×2) ─────────────────────────────── -->
+    <section id="servicios" class="relative bg-gradient-to-b from-night to-night-raise py-24 lg:py-28">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <div class="mb-14 max-w-3xl lg:mb-16">
+          <p data-reveal class="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3 py-1 font-mono text-[12px] font-semibold uppercase tracking-[.12em] text-accent-light">Servicios</p>
+          <h2 data-reveal class="mb-4 text-balance text-[32px] font-bold leading-[1.1] tracking-[-.03em] text-ink sm:text-[42px] lg:text-[52px]">Cuatro frentes de transformación para tu empresa</h2>
+          <p data-reveal class="text-pretty text-lg leading-relaxed text-ink/65 lg:text-xl">Ingeniería y acompañamiento estratégico para organizaciones que necesitan solidez técnica y resultados medibles.</p>
+        </div>
 
-  </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-7">
+
+          <article data-reveal class="sc-card flex flex-col justify-between rounded-[22px] border border-white/[.08] bg-gradient-to-br from-white/[.07] to-white/[.025] p-8 shadow-card backdrop-blur-xl lg:p-10">
+            <div>
+              <div class="mb-8 flex items-center justify-between">
+                <span class="flex h-14 w-14 items-center justify-center rounded-[13px] border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-7 w-7" aria-hidden="true"><use href="#i-chart" /></svg>
+                </span>
+                <span class="font-mono text-xs uppercase tracking-widest text-ink/40">Servicio 01</span>
+              </div>
+              <h3 class="mb-3 text-[22px] font-bold leading-[1.35] tracking-[-.02em] text-ink">Auditoría de procesos e IA</h3>
+              <p class="mb-8 leading-relaxed text-ink/65">Diagnóstico de tus flujos operacionales, factibilidad técnica y priorización de los casos de uso con mayor impacto, antes de invertir un peso en desarrollo.</p>
+              <ul class="mb-8 flex flex-wrap gap-2 font-mono text-[12px] text-ink/80">
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">En terreno o remota</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Priorización por impacto</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Informe ejecutivo</li>
+              </ul>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t border-white/[.06] pt-6">
+              <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20una%20auditor%C3%ADa%20de%20procesos" data-open-sofia data-cta="tarjeta" class="sc-card-link">
+                Solicitar auditoría <svg class="h-[18px] w-[18px]" aria-hidden="true"><use href="#i-arrow" /></svg>
+              </a>
+              <span class="font-mono text-[11px] text-ink/40">Informe para gerencia</span>
+            </div>
+          </article>
+
+          <article data-reveal class="sc-card flex flex-col justify-between rounded-[22px] border border-white/[.08] bg-gradient-to-br from-white/[.07] to-white/[.025] p-8 shadow-card backdrop-blur-xl lg:p-10">
+            <div>
+              <div class="mb-8 flex items-center justify-between">
+                <span class="flex h-14 w-14 items-center justify-center rounded-[13px] border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-7 w-7" aria-hidden="true"><use href="#i-bot" /></svg>
+                </span>
+                <span class="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-widest text-accent-light">
+                  <span class="h-2 w-2 animate-pulse rounded-full bg-accent" aria-hidden="true"></span>
+                  Activo 24/7
+                </span>
+              </div>
+              <h3 class="mb-3 text-[22px] font-bold leading-[1.35] tracking-[-.02em] text-ink">Agentes de IA 24/7</h3>
+              <p class="mb-8 leading-relaxed text-ink/65">Agentes entrenados con la voz, las políticas y el catálogo de tu empresa: atienden, califican y agendan por WhatsApp, web y correo, conectados a tu CRM.</p>
+              <ul class="mb-8 flex flex-wrap gap-2 font-mono text-[12px] text-ink/80">
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Tono de tu marca</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">WhatsApp · Web · Correo</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Integración con tu CRM</li>
+              </ul>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t border-white/[.06] pt-6">
+              <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20un%20agente%20de%20IA" data-open-sofia data-cta="tarjeta" class="sc-card-link">
+                Pruébalo: habla con Sofía <svg class="h-[18px] w-[18px]" aria-hidden="true"><use href="#i-arrow" /></svg>
+              </a>
+              <span class="font-mono text-[11px] text-accent-light">Demo en vivo</span>
+            </div>
+          </article>
+
+          <article data-reveal class="sc-card flex flex-col justify-between rounded-[22px] border border-white/[.08] bg-gradient-to-br from-white/[.07] to-white/[.025] p-8 shadow-card backdrop-blur-xl lg:p-10">
+            <div>
+              <div class="mb-8 flex items-center justify-between">
+                <span class="flex h-14 w-14 items-center justify-center rounded-[13px] border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-7 w-7" aria-hidden="true"><use href="#i-flow" /></svg>
+                </span>
+                <span class="font-mono text-xs uppercase tracking-widest text-ink/40">Servicio 03</span>
+              </div>
+              <h3 class="mb-3 text-[22px] font-bold leading-[1.35] tracking-[-.02em] text-ink">Automatización de procesos internos e integraciones</h3>
+              <p class="mb-8 leading-relaxed text-ink/65">Conectamos los sistemas que ya usas —ERP, CRM, planillas y correo— y automatizamos conciliaciones, reportes y documentos para eliminar la digitación manual.</p>
+              <ul class="mb-8 flex flex-wrap gap-2 font-mono text-[12px] text-ink/80">
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">ERP y CRM</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Reportes y conciliaciones</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Flujos documentales</li>
+              </ul>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t border-white/[.06] pt-6">
+              <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20automatizar%20procesos" data-open-sofia data-cta="tarjeta" class="sc-card-link">
+                Evaluar mi caso <svg class="h-[18px] w-[18px]" aria-hidden="true"><use href="#i-arrow" /></svg>
+              </a>
+              <span class="font-mono text-[11px] text-ink/40">Sobre tus sistemas actuales</span>
+            </div>
+          </article>
+
+          <article data-reveal class="sc-card flex flex-col justify-between rounded-[22px] border border-white/[.08] bg-gradient-to-br from-white/[.07] to-white/[.025] p-8 shadow-card backdrop-blur-xl lg:p-10">
+            <div>
+              <div class="mb-8 flex items-center justify-between">
+                <span class="flex h-14 w-14 items-center justify-center rounded-[13px] border border-accent/25 bg-accent/10 text-accent-light">
+                  <svg class="h-7 w-7" aria-hidden="true"><use href="#i-monitor" /></svg>
+                </span>
+                <span class="font-mono text-xs uppercase tracking-widest text-ink/40">Servicio 04</span>
+              </div>
+              <h3 class="mb-3 text-[22px] font-bold leading-[1.35] tracking-[-.02em] text-ink">Plataformas digitales a medida</h3>
+              <p class="mb-8 leading-relaxed text-ink/65">Portales, dashboards y sitios web rápidos, con IA integrada y pensados para los procesos críticos de tu negocio.</p>
+              <ul class="mb-8 flex flex-wrap gap-2 font-mono text-[12px] text-ink/80">
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Dashboards operacionales</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Portales para clientes</li>
+                <li class="rounded-full border border-white/[.06] bg-white/[.04] px-3 py-1">Webs de alto rendimiento</li>
+              </ul>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t border-white/[.06] pt-6">
+              <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20una%20plataforma%20a%20medida" data-open-sofia data-cta="tarjeta" class="sc-card-link">
+                Consultar proyecto <svg class="h-[18px] w-[18px]" aria-hidden="true"><use href="#i-arrow" /></svg>
+              </a>
+              <span class="font-mono text-[11px] text-ink/40">Diseño y desarrollo propio</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Antes y después ────────────────────────────────────────────────── -->
+    <section id="antes-y-despues" class="relative overflow-hidden bg-night-deep py-24 lg:py-28">
+      <div class="relative z-10 mx-auto max-w-6xl px-5 lg:px-8">
+        <div class="mx-auto mb-14 max-w-2xl text-center lg:mb-16">
+          <p data-reveal class="mb-3 font-mono text-[12px] font-semibold uppercase tracking-[.14em] text-accent-light">Antes y después</p>
+          <h2 data-reveal class="text-balance text-[32px] font-bold leading-[1.1] tracking-[-.03em] text-ink sm:text-[42px] lg:text-[52px]">El costo de operar como antes</h2>
+        </div>
+
+        <div data-reveal class="grid grid-cols-1 overflow-hidden rounded-3xl border border-white/[.08] bg-night-card shadow-2xl lg:grid-cols-2">
+          <div class="flex flex-col justify-between border-b border-white/[.06] bg-night-deep/90 p-8 lg:border-b-0 lg:border-r lg:p-12">
+            <div>
+              <div class="mb-6 flex items-center gap-3">
+                <span class="h-3 w-3 rounded-full border border-danger bg-danger/40" aria-hidden="true"></span>
+                <h3 class="text-lg font-bold uppercase tracking-wider text-ink/65">Operación convencional</h3>
+              </div>
+              <p class="mb-8 text-ink/50">Fricción constante, información en silos y tareas repetitivas que frenan el crecimiento.</p>
+              <ul class="space-y-6">
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true"><use href="#i-x" /></svg>
+                  <div>
+                    <span class="block font-medium text-ink/65">Información dispersa</span>
+                    <span class="text-sm text-ink/45">Datos repartidos entre correos, planillas y sistemas que no conversan entre sí.</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true"><use href="#i-x" /></svg>
+                  <div>
+                    <span class="block font-medium text-ink/65">Tareas manuales repetitivas</span>
+                    <span class="text-sm text-ink/45">Equipos calificados digitando y conciliando a mano, con riesgo de error en cada paso.</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true"><use href="#i-x" /></svg>
+                  <div>
+                    <span class="block font-medium text-ink/65">Cuellos de botella</span>
+                    <span class="text-sm text-ink/45">Clientes y proveedores esperando respuestas, cotizaciones o aprobaciones.</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true"><use href="#i-x" /></svg>
+                  <div>
+                    <span class="block font-medium text-ink/65">Reportes tardíos</span>
+                    <span class="text-sm text-ink/45">La información llega cuando ya no sirve para corregir el rumbo.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <p class="mt-10 border-t border-white/[.06] pt-6 font-mono text-xs font-medium text-danger">Operación reactiva, costos ocultos y equipos saturados</p>
+          </div>
+
+          <div class="relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-brand-dark/40 via-night-raise to-night-high/60 p-8 lg:p-12">
+            <div aria-hidden="true" class="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-accent/25 blur-3xl"></div>
+            <div class="relative z-10">
+              <div class="mb-6 flex items-center gap-3">
+                <span class="h-3 w-3 animate-pulse rounded-full bg-accent shadow-[0_0_12px_rgba(6,182,212,.9)]" aria-hidden="true"></span>
+                <h3 class="text-lg font-bold uppercase tracking-wider text-ink">Con Soluciones con IA</h3>
+              </div>
+              <p class="mb-8 text-ink/80">Procesos conectados de punta a punta, visibles y bajo control.</p>
+              <ul class="space-y-6">
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="#i-check" /></svg>
+                  <div>
+                    <span class="block font-semibold text-ink">Flujos conectados de punta a punta</span>
+                    <span class="text-sm text-ink/75">Canales de atención, CRM y ERP sincronizados sin intervención manual.</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="#i-check" /></svg>
+                  <div>
+                    <span class="block font-semibold text-ink">Trazabilidad de cada paso</span>
+                    <span class="text-sm text-ink/75">Cada interacción y cada proceso queda registrado y es fácil de revisar.</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="#i-check" /></svg>
+                  <div>
+                    <span class="block font-semibold text-ink">Respuesta inmediata, todos los días</span>
+                    <span class="text-sm text-ink/75">Tus clientes reciben atención y agendamiento a cualquier hora.</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-4">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true"><use href="#i-check" /></svg>
+                  <div>
+                    <span class="block font-semibold text-ink">Tu equipo, enfocado en lo importante</span>
+                    <span class="text-sm text-ink/75">Las personas deciden; el sistema ejecuta lo repetitivo.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="relative z-10 mt-10 flex items-center justify-between border-t border-accent/20 pt-6">
+              <p class="font-mono text-xs font-semibold text-accent-light">Operación ordenada, medible y bajo tu control</p>
+              <svg class="h-5 w-5 text-accent" aria-hidden="true"><use href="#i-shield" /></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Portal Clientes ────────────────────────────────────────────────── -->
+    <section id="portal" class="relative bg-night py-20">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8">
+        <div data-reveal class="relative overflow-hidden rounded-3xl border border-white/[.18] bg-gradient-to-r from-night-high/90 via-night-card to-night-card p-8 shadow-2xl lg:p-12">
+          <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+            <div class="space-y-4 lg:col-span-8">
+              <p class="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 font-mono text-xs uppercase text-accent-light">
+                <svg class="h-[15px] w-[15px]" aria-hidden="true"><use href="#i-lock" /></svg>
+                Portal Clientes
+              </p>
+              <h2 class="text-balance text-2xl font-bold text-ink lg:text-3xl">Todo tu proyecto, en un solo lugar</h2>
+              <p class="max-w-2xl leading-relaxed text-ink/65">Cada cliente tiene su portal privado: el avance de su proyecto, sus documentos, las novedades y la facturación, siempre a mano y con acceso seguro.</p>
+              <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-xs text-ink/75">
+                <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-chart" /></svg>Avance del proyecto</li>
+                <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-file" /></svg>Documentos</li>
+                <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-card" /></svg>Facturación</li>
+              </ul>
+            </div>
+            <div class="flex flex-col items-start justify-center lg:col-span-4 lg:items-end">
+              <a href="/acceso"
+                class="sc-btn-ghost group inline-flex min-h-[56px] items-center justify-center gap-3 rounded-full border border-white/[.18] bg-white/[.03] px-8 font-bold text-ink shadow-xl backdrop-blur-md">
+                Ingresar al Portal Clientes
+                <svg class="h-5 w-5 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true"><use href="#i-login" /></svg>
+              </a>
+              <span class="mt-3 font-mono text-[11px] text-ink/40">Acceso exclusivo para clientes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA final ──────────────────────────────────────────────────────── -->
+    <section id="contacto" class="relative overflow-hidden bg-gradient-to-b from-night via-night-deep to-night py-28 text-center">
+      <div aria-hidden="true" class="pointer-events-none absolute left-1/2 top-1/2 h-[450px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/15 blur-[140px]"></div>
+      <div class="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-5 lg:px-8">
+        <p data-reveal class="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-4 py-1.5 font-mono text-[12px] font-semibold uppercase tracking-[.14em] text-accent-light">Garantía de riesgo cero</p>
+        <h2 data-reveal class="mb-6 max-w-3xl text-balance text-[34px] font-extrabold leading-[1.1] tracking-[-.035em] text-ink lg:text-[60px]">Comprueba el valor en tu operación antes de pagar</h2>
+        <p data-reveal class="mb-10 max-w-2xl text-pretty text-lg leading-relaxed text-ink/75 lg:text-xl">Agenda una auditoría presencial o virtual con nuestro equipo. Diseñamos la solución, la implementamos y solo facturamos tras un mes funcionando a tu medida.</p>
+        <div data-reveal class="mb-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
+          <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20agendar%20una%20auditor%C3%ADa" data-open-scheduler data-open-sofia data-cta="cierre"
+            class="sc-btn-primary inline-flex min-h-[64px] w-full items-center justify-center gap-3 rounded-full bg-accent px-9 text-[17px] font-bold tracking-[-.01em] text-accent-ink shadow-cta-lg sm:w-auto">
+            <svg class="h-[22px] w-[22px]" aria-hidden="true"><use href="#i-calendar" /></svg>
+            Agendar auditoría
+          </a>
+          <a href="mailto:contacto@solucionesconia.cl"
+            class="sc-btn-ghost inline-flex min-h-[64px] w-full items-center justify-center gap-2 rounded-full border border-white/[.18] bg-white/[.04] px-8 text-[17px] font-semibold text-ink sm:w-auto">
+            <svg class="h-[22px] w-[22px] text-accent" aria-hidden="true"><use href="#i-mail" /></svg>
+            Escríbenos
+          </a>
+        </div>
+        <p data-reveal class="flex items-center justify-center gap-2 font-mono text-xs text-ink/45">
+          <span class="h-2 w-2 rounded-full bg-accent" aria-hidden="true"></span>
+          Para gerencias generales, de operaciones y de TI en Chile
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer class="border-t border-white/[.08] bg-night-deep py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="mb-14 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+        <div class="space-y-4 lg:col-span-2">
+          <img src="/assets/premium/LOGO.png"
+            srcset="/assets/premium/LOGO.png 1x, /assets/premium/LOGO@2x.png 2x"
+            alt="Soluciones con IA" width="110" height="80" loading="lazy" class="block h-11 w-auto" />
+          <p class="max-w-sm text-ink/65">Consultoría e implementación de automatización con IA para medianas y grandes empresas en Chile, con un modelo de riesgo cero.</p>
+        </div>
+        <div>
+          <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-ink">Servicios</h3>
+          <ul class="space-y-2.5 text-sm text-ink/65">
+            <li><a href="#servicios" class="transition-colors hover:text-accent-light">Auditoría de procesos e IA</a></li>
+            <li><a href="#servicios" class="transition-colors hover:text-accent-light">Agentes de IA 24/7</a></li>
+            <li><a href="#servicios" class="transition-colors hover:text-accent-light">Automatización e integraciones</a></li>
+            <li><a href="#servicios" class="transition-colors hover:text-accent-light">Plataformas digitales a medida</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-ink">Empresa</h3>
+          <ul class="space-y-2.5 text-sm text-ink/65">
+            <li><a href="#como-trabajamos" class="transition-colors hover:text-accent-light">Cómo trabajamos</a></li>
+            <li><a href="#antes-y-despues" class="transition-colors hover:text-accent-light">Antes y después</a></li>
+            <li><a href="/acceso" class="transition-colors hover:text-accent-light">Portal Clientes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-ink">Contacto</h3>
+          <ul class="space-y-2.5 text-sm text-ink/65">
+            <li class="flex items-start gap-1.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="#i-pin" /></svg>Santiago, Chile</li>
+            <li class="flex items-start gap-1.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="#i-mail" /></svg><a href="mailto:contacto@solucionesconia.cl" class="transition-colors hover:text-accent-light">contacto@solucionesconia.cl</a></li>
+            <li class="flex items-start gap-1.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true"><use href="#i-users" /></svg>Auditoría presencial o virtual</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-white/[.06] pt-6">
+        <p class="text-center font-mono text-xs text-ink/40 sm:text-left">© 2026 Soluciones con IA SpA (solucionesconia.cl). Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
   <!-- ── Modal de agendamiento Cal.com (oculto por defecto; iframe lazy-load) ── -->
   <div id="scheduler-modal" class="sc-modal" hidden aria-hidden="true">
     <div class="sc-modal__backdrop" data-close-scheduler></div>
-    <div class="sc-modal__panel" role="dialog" aria-modal="true" aria-label="Agenda tu diagnóstico gratuito">
+    <div class="sc-modal__panel" role="dialog" aria-modal="true" aria-label="Agenda tu auditoría">
       <button type="button" class="sc-modal__close" data-close-scheduler aria-label="Cerrar">&times;</button>
       <!-- El <iframe> se inyecta aquí en la primera apertura (ver src/main.js). -->
       <div class="sc-modal__frame" id="scheduler-frame"></div>
@@ -545,8 +778,7 @@
        ningún ancestro. Pero el script anidado dentro de un contenedor sigue
        siendo un error: deja el arranque a merced del orden de render de esa
        sección, y es la clase de fallo que en agosto de 2026 dejó nodos del
-       widget colgando del <header> y obligó a mantener una autolimpieza
-       defensiva en el <head> (retirada al confirmarse innecesaria).
+       widget colgando del <header>.
 
        Sin `crossorigin`: el bundle no envía Access-Control-Allow-Origin, y con
        crossorigin="anonymous" el navegador bloqueaba su ejecución (CORS). Un
