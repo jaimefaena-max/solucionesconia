@@ -243,6 +243,22 @@ section[id] {
   display: block;
 }
 
+/* ── Hero: encuadre del Embajador según viewport ───────────────────────────
+   La imagen es un RETRATO vertical (848×1263). En móvil `cover` + `center 20%`
+   (inline en index.html) la encuadra bien: el rostro cae arriba y el alto del
+   viewport da espacio. En DESKTOP ese mismo `cover` la amplía demasiado (hero
+   ancho y bajo) y recorta la cabeza. Aquí la achicamos y la anclamos al margen
+   DERECHO —figura completa, como la imagen anterior—, dejando el lado izquierdo
+   en el fondo oscuro para que el texto respire. `!important` porque el reposo va
+   inline y un inline gana a la hoja (mismo patrón que los botones). */
+@media (min-width: 640px) {
+  #inicio [data-parallax] {
+    background-size: auto 100% !important;
+    background-position: right 30% !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
 /* ── Accesibilidad: respetar la preferencia de movimiento reducido ───────── */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
