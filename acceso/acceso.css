@@ -162,6 +162,75 @@ input {
   transition: border-color .2s ease, box-shadow .2s ease;
 }
 
+/* Contraseña con ojo: el botón va dentro del campo, a la derecha, con área
+   táctil de 44 px; el input reserva ese hueco para que el texto no lo pise. */
+.campo-clave {
+  position: relative;
+}
+
+.campo-clave input {
+  padding-right: 52px;
+}
+
+/* Edge/IE traen su propio ojo: se oculta para no duplicarlo. */
+.campo-clave input::-ms-reveal,
+.campo-clave input::-ms-clear {
+  display: none;
+}
+
+.ver-clave {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease;
+}
+
+.ver-clave:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, .05);
+}
+
+.ver-clave:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  color: var(--ink);
+}
+
+.ver-clave svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Oculta → ojo abierto («mostrar»); visible → ojo tachado («ocultar»). */
+.ver-clave .ojo-cerrado,
+.ver-clave[aria-pressed="true"] .ojo-abierto {
+  display: none;
+}
+
+.ver-clave[aria-pressed="true"] .ojo-cerrado {
+  display: block;
+}
+
+.ver-clave[aria-pressed="true"] {
+  color: var(--accent);
+}
+
 input::placeholder {
   color: rgba(248, 250, 252, .28);
 }

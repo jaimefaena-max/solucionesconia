@@ -8,6 +8,24 @@
   var boton = document.getElementById('enviar');
   var campoEmail = document.getElementById('email');
   var campoPass = document.getElementById('password');
+  var verClave = document.getElementById('ver-clave');
+
+  /** Ojo: alterna la contraseña entre oculta y visible, sin perder el foco ni el cursor. */
+  function mostrarClave(visible) {
+    if (!verClave) return;
+    campoPass.type = visible ? 'text' : 'password';
+    verClave.setAttribute('aria-pressed', visible ? 'true' : 'false');
+    var texto = visible ? 'Ocultar contraseña' : 'Mostrar contraseña';
+    verClave.setAttribute('aria-label', texto);
+    verClave.setAttribute('title', texto);
+  }
+  if (verClave) {
+    // mousedown sin foco: el teclado del móvil no se cierra al tocar el ojo.
+    verClave.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    verClave.addEventListener('click', function () {
+      mostrarClave(campoPass.type === 'password');
+    });
+  }
 
   /**
    * Mismo formato que exige el backend para un tenantId (kebab-case).
@@ -42,6 +60,9 @@
   form.addEventListener('submit', function (evento) {
     evento.preventDefault();
     if (boton.disabled) return;   // corta el doble envío por doble clic
+    // Al enviar se vuelve a ocultar: el gestor de contraseñas del navegador
+    // reconoce el campo y la clave no queda a la vista mientras se entra.
+    mostrarClave(false);
 
     var email = campoEmail.value.trim();
     var password = campoPass.value;
