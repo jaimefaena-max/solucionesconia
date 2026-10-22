@@ -1,17 +1,25 @@
-/* acceso.css — estilos de la pantalla de acceso del Portal VIP. Extraído del <style> en línea
-   de acceso/index.html (2026-10-06) para que /acceso funcione con una CSP sin 'unsafe-inline'. */
+/* acceso.css — pantalla de acceso del Portal Clientes. Hoja externa (no <style>
+   ni atributos style) para que /acceso funcione con una CSP sin 'unsafe-inline'.
+
+   Rediseño 2026-10-21: misma línea que la home enterprise (DESIGN.md). Inter
+   para títulos, textos y campos; JetBrains Mono solo en etiquetas técnicas.
+   Fondo con los resplandores de la home y una retícula sutil; tarjeta de
+   cristal con borde degradado. */
 :root {
   --bg: #0f172a;
-  /* Cyan del Design System v2 — el mismo del CTA primario de la home. */
   --accent: #06b6d4;
   --accent-2: #22d3ee;
-  --glass: rgba(255, 255, 255, .045);
-  --stroke: rgba(255, 255, 255, .10);
+  --accent-light: #67e8f9;
+  --accent-ink: #04202b;
+  --brand: #1e3a8a;
+  --card: rgba(15, 23, 42, 0.72);
+  --stroke: rgba(255, 255, 255, 0.10);
   --ink: #f8fafc;
-  --ink-soft: rgba(248, 250, 252, .62);
-  --ink-faint: rgba(248, 250, 252, .40);
+  --ink-soft: rgba(248, 250, 252, 0.70);
+  --ink-faint: rgba(248, 250, 252, 0.45);
   --error: #fda4af;
-  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "Inter", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 /* MOBILE FIRST: todo lo de abajo es la base de móvil; las únicas media
@@ -24,142 +32,205 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
+  padding: 32px 18px;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--mono);
+  font-family: var(--sans);
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
 }
 
-/* Aurora de fondo: es lo que da el acabado premium del portal VIP sin
-   cargar una sola imagen. `position:fixed` para que no participe en el
-   scroll ni cree barras horizontales. */
-body::before,
+/* Resplandores de la home: cian arriba, azul institucional abajo a la
+   izquierda y un eco cian a la derecha. `position:fixed` para que no
+   participen en el scroll ni creen barras horizontales. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 50% -8%, rgba(6, 182, 212, 0.24), transparent 70%),
+    radial-gradient(45% 45% at 0% 100%, rgba(30, 58, 138, 0.50), transparent 70%),
+    radial-gradient(35% 35% at 100% 65%, rgba(6, 182, 212, 0.10), transparent 70%);
+}
+
+/* Retícula fina, desvanecida hacia los bordes: da profundidad sin ruido. */
 body::after {
   content: "";
   position: fixed;
+  inset: 0;
   z-index: 0;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: .5;
   pointer-events: none;
-}
-
-body::before {
-  background: #0e4a5c;
-  top: -200px;
-  left: -160px;
-}
-
-body::after {
-  background: #1e1b4b;
-  bottom: -220px;
-  right: -160px;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
 }
 
 .marco {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 460px;
+  animation: entrada 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .volver {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin-bottom: 18px;
-  font-size: 12px;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink-faint);
   text-decoration: none;
-  transition: color .2s ease;
+  transition: color 0.2s ease;
 }
 
 .volver:hover {
-  color: var(--ink-soft);
+  color: var(--ink);
 }
 
+.volver:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+/* Tarjeta de cristal con borde degradado: el fondo translúcido va en el
+   padding-box y el degradado en el border-box, así el borde de 1px brilla en
+   cian arriba a la izquierda y se apaga hacia el centro. */
 .tarjeta {
-  background: var(--glass);
-  border: 1px solid var(--stroke);
-  border-radius: 20px;
-  padding: 30px 24px;
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  box-shadow: 0 30px 80px -30px rgba(2, 8, 20, .85), inset 0 1px 0 rgba(255, 255, 255, .06);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  padding: 34px 24px 28px;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(145deg, rgba(103, 232, 249, 0.55), rgba(255, 255, 255, 0.07) 38%, rgba(255, 255, 255, 0.05) 62%, rgba(6, 182, 212, 0.35)) border-box;
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow:
+    0 40px 100px -30px rgba(2, 8, 20, 0.9),
+    0 0 60px rgba(6, 182, 212, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Línea de luz en el canto superior. */
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(103, 232, 249, 0.9), transparent);
 }
 
 .marca {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
 }
 
 .marca img {
-  height: 34px;
+  height: 46px;
   width: auto;
   display: block;
 }
 
+/* Kicker en píldora con punto, como los badges de la home. */
 .kicker {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .22em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(6, 182, 212, 0.30);
+  background: rgba(6, 182, 212, 0.10);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 8px;
+  color: var(--accent-light);
+}
+
+.kicker::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.9);
 }
 
 h1 {
-  margin: 0 0 6px;
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -.02em;
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
 }
 
 .sub {
-  margin: 0 0 24px;
-  font-size: 12.5px;
-  line-height: 1.55;
+  margin: 0 0 28px;
+  font-size: 15.5px;
+  line-height: 1.6;
   color: var(--ink-soft);
 }
 
 .campo {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 label {
   display: block;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: .14em;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  margin-bottom: 7px;
+  margin-bottom: 9px;
 }
 
 input {
   width: 100%;
   box-sizing: border-box;
-  min-height: 48px;
-  /* 48px: objetivo táctil cómodo en móvil */
-  padding: 0 14px;
-  border-radius: 12px;
+  min-height: 54px;
+  /* 54px: objetivo táctil cómodo en móvil */
+  padding: 0 16px;
+  border-radius: 14px;
   border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, .03);
+  background: rgba(255, 255, 255, 0.035);
   color: var(--ink);
-  font-family: var(--mono);
-  /* 16px EXACTOS en móvil: por debajo de eso iOS hace zoom automático al
+  font-family: var(--sans);
+  /* 16px como MÍNIMO en móvil: por debajo de eso iOS hace zoom automático al
      enfocar el campo y descoloca la pantalla entera. */
   font-size: 16px;
-  transition: border-color .2s ease, box-shadow .2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input:hover {
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 /* Contraseña con ojo: el botón va dentro del campo, a la derecha, con área
@@ -169,7 +240,7 @@ input {
 }
 
 .campo-clave input {
-  padding-right: 52px;
+  padding-right: 56px;
 }
 
 /* Edge/IE traen su propio ojo: se oculta para no duplicarlo. */
@@ -181,7 +252,7 @@ input {
 .ver-clave {
   position: absolute;
   top: 50%;
-  right: 4px;
+  right: 5px;
   transform: translateY(-50%);
   width: 44px;
   height: 44px;
@@ -193,12 +264,12 @@ input {
   background: transparent;
   color: var(--ink-faint);
   cursor: pointer;
-  transition: color .2s ease, background .2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .ver-clave:hover {
   color: var(--ink);
-  background: rgba(255, 255, 255, .05);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .ver-clave:focus-visible {
@@ -228,17 +299,18 @@ input {
 }
 
 .ver-clave[aria-pressed="true"] {
-  color: var(--accent);
+  color: var(--accent-light);
 }
 
 input::placeholder {
-  color: rgba(248, 250, 252, .28);
+  color: rgba(248, 250, 252, 0.28);
 }
 
 input:focus {
   outline: none;
-  border-color: rgba(6, 182, 212, .55);
-  box-shadow: 0 0 0 3px rgba(6, 182, 212, .14);
+  border-color: rgba(6, 182, 212, 0.65);
+  background: rgba(6, 182, 212, 0.05);
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.14);
 }
 
 /* El navegador no debe pintar el campo de amarillo sobre fondo oscuro. */
@@ -250,22 +322,44 @@ input:-webkit-autofill:focus {
 
 button[type="submit"] {
   width: 100%;
-  min-height: 50px;
-  margin-top: 6px;
+  min-height: 56px;
+  margin-top: 8px;
   border: 0;
   border-radius: 999px;
   background: var(--accent);
-  color: #04202b;
-  font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: -.01em;
+  color: var(--accent-ink);
+  font-family: var(--sans);
+  font-size: 16.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 14px 44px rgba(6, 182, 212, .32);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16), 0 16px 48px rgba(6, 182, 212, 0.38);
+  transition:
+    transform 160ms ease-out,
+    background-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Hover solo con puntero fino: en táctil se quedaba «pegado» tras el toque. */
+@media (hover: hover) and (pointer: fine) {
+  button[type="submit"]:not([disabled]):hover {
+    background: var(--accent-2);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), 0 20px 60px rgba(6, 182, 212, 0.50);
+    transform: translateY(-1px);
+  }
+}
+
+button[type="submit"]:not([disabled]):active {
+  transform: scale(0.98);
+}
+
+button[type="submit"]:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 3px;
 }
 
 button[type="submit"][disabled] {
-  opacity: .55;
+  opacity: 0.55;
   cursor: progress;
   box-shadow: none;
 }
@@ -275,13 +369,13 @@ button[type="submit"][disabled] {
    justo cuando el usuario está leyendo. */
 .aviso {
   display: none;
-  margin: 0 0 16px;
-  padding: 11px 13px;
-  border-radius: 11px;
-  border: 1px solid rgba(253, 164, 175, .28);
-  background: rgba(253, 164, 175, .08);
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(253, 164, 175, 0.30);
+  background: rgba(253, 164, 175, 0.08);
   color: var(--error);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -290,27 +384,40 @@ button[type="submit"][disabled] {
 }
 
 .pie {
-  margin: 22px 0 0;
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
   text-align: center;
-  font-size: 10.5px;
-  letter-spacing: .06em;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--ink-faint);
 }
 
 .candado {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   justify-content: center;
+}
+
+.candado svg {
+  color: var(--accent);
 }
 
 @media (min-width: 480px) {
   .tarjeta {
-    padding: 36px 32px;
+    padding: 44px 40px 34px;
   }
 
   h1 {
-    font-size: 23px;
+    font-size: 34px;
+  }
+
+  .sub {
+    font-size: 16px;
   }
 }
 

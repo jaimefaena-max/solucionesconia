@@ -12,28 +12,25 @@
   <meta name="description" content="Acceso al portal privado de clientes de Soluciones con IA." />
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 
-  <!-- Design System v2: la MISMA hoja compilada que usa la landing. De aquí
-       salen `sc-btn-primary` y su hover, el reset y el fondo #0f172a. Enlazarla
-       —en vez de copiar estilos— es lo que garantiza que el botón de esta
-       pantalla envejezca igual que los de la home. -->
+  <!-- Design System v2: la MISMA hoja compilada que usa la landing (reset y
+       fondo #0f172a). El diseño propio de esta pantalla va en acceso.css. -->
   <link rel="stylesheet" href="/dist/style.css" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Inter (cuerpo, igual que la landing) + JetBrains Mono, que es la voz del
-       portal VIP. La mezcla es deliberada: esta página es el PUENTE entre la
-       web comercial y el expediente privado, y debe reconocerse en las dos. -->
+  <!-- Igual que la home: Inter (eje opsz) para títulos, textos y campos, y
+       JetBrains Mono solo para etiquetas técnicas. -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@500;600&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="./acceso.css?v=20261021ojo" />
+  <link rel="stylesheet" href="./acceso.css?v=20261021lujo" />
 </head>
 
 <body>
   <main class="marco">
     <a class="volver" href="/">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="13" height="13">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="15" height="15">
         <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" />
       </svg>
@@ -82,11 +79,11 @@
 
       <p class="pie">
         <span class="candado">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="12" height="12">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="14" height="14">
             <rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8" />
             <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
           </svg>
-          ACCESO AUDITADO Y CIFRADO
+          Conexión cifrada
         </span>
       </p>
     </section>
