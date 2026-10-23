@@ -430,3 +430,204 @@ button[type="submit"][disabled] {
     animation: none !important;
   }
 }
+
+/* ── Escritorio (2026-10-23) ─────────────────────────────────────────────────
+   En PC la tarjeta de 460 px quedaba sola en el centro. Desde 1024 px la
+   pantalla se divide: a la izquierda el panel «aliado» (logo junto a la marca y
+   por qué confiar), a la derecha el formulario de siempre.
+   🔴 Todo vive dentro de min-width: 1024px; por debajo la pantalla es la del
+   celular, que no se toca. La única regla fuera oculta el panel nuevo. */
+.aliado {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  body {
+    padding: 48px;
+  }
+
+  .marco {
+    max-width: 1180px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 460px;
+    grid-template-rows: auto auto;
+    column-gap: 56px;
+    align-items: center;
+  }
+
+  .aliado {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .volver {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    align-self: end;
+  }
+
+  .tarjeta {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* El logo ya está en el panel, junto al nombre: la tarjeta queda limpia. */
+  .tarjeta .marca {
+    display: none;
+  }
+
+  .aliado__marca {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+
+  .aliado__marca img {
+    height: 76px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 10px 30px rgba(6, 182, 212, 0.30));
+  }
+
+  .aliado__nombre {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 18px;
+    border-left: 1px solid rgba(103, 232, 249, 0.25);
+  }
+
+  .aliado__nombre strong {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .aliado__nombre span {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+  }
+
+  .aliado__kicker {
+    margin-bottom: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+  }
+
+  .aliado__titulo {
+    margin: 0 0 20px;
+    font-size: clamp(36px, 3.6vw, 52px);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+
+  /* Segunda línea con el degradado cian del titular de la home. */
+  .aliado__titulo span {
+    background: linear-gradient(90deg, #67e8f9, #22d3ee 55%, #a5f3fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .aliado__texto {
+    max-width: 34em;
+    margin: 0 0 32px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .aliado__pilares {
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .aliado__pilares li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .aliado__pilares strong {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .aliado__icono {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    border: 1px solid rgba(6, 182, 212, 0.30);
+    background: rgba(6, 182, 212, 0.10);
+    color: var(--accent-light);
+    box-shadow: 0 0 24px rgba(6, 182, 212, 0.12);
+  }
+
+  .aliado__icono svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .aliado__lema {
+    margin: 0;
+    padding-left: 16px;
+    border-left: 2px solid var(--accent-2);
+    font-size: 18px;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--ink);
+  }
+}
+
+@media (min-width: 1280px) {
+  .marco {
+    column-gap: 96px;
+  }
+}
+
+/* Portátiles de poca altura (1280×720): todo cabe sin scroll. */
+@media (min-width: 1024px) and (max-height: 780px) {
+  body {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .aliado__marca {
+    margin-bottom: 28px;
+  }
+
+  .aliado__texto,
+  .aliado__pilares {
+    margin-bottom: 24px;
+  }
+}
