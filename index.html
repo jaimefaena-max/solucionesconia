@@ -141,11 +141,11 @@
   <link rel="stylesheet" href="/dist/style.css?v=$CSS_VERSION" />
 
   <!-- Tipografía: Inter variable (eje opsz) para todo el texto y JetBrains Mono
-       para etiquetas técnicas. Iconos: sprite SVG inline al inicio del <body>,
-       sin fuente de iconos ni dependencia de red. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+       para etiquetas técnicas, AUTO-ALOJADAS (assets/fonts/, @font-face en
+       src/input.css): sin CSS bloqueante de Google Fonts. Se precarga solo Inter
+       (texto en la primera pantalla). Iconos: sprite SVG inline al inicio del
+       <body>, sin fuente de iconos ni dependencia de red. -->
+  <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
 
   <!-- Sin JavaScript, [data-reveal] se quedaría en opacity:0 para siempre:
        src/main.js es quien añade .is-in. La CSP admite style-src 'unsafe-inline'. -->

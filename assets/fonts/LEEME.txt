@@ -1,0 +1,4 @@
+Fuentes auto-alojadas (subconjunto latin, woff2 variable), obtenidas de Google Fonts:
+  - inter-latin.woff2           Inter (ejes opsz y wght 400-800)   SIL Open Font License 1.1
+  - jetbrains-mono-latin.woff2  JetBrains Mono (wght 500-600)      SIL Open Font License 1.1
+Se declaran con @font-face en src/input.css. /acceso sigue con Google Fonts.
