@@ -225,11 +225,14 @@ purgar_cloudflare() {
     lote=("${urls[@]:i:30}")
     cuerpo="$(printf '"%s",' "${lote[@]}")"
     cuerpo="{\"files\":[${cuerpo%,}]}"
-    http="$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+    # El token va por stdin (`-K -` lee la configuración de curl del here-string),
+    # no en argv: un `-H "Authorization: Bearer …"` sería visible para cualquier
+    # usuario en `ps` / /proc/<pid>/cmdline mientras dura la llamada.
+    http="$(curl -s -o /dev/null -w '%{http_code}' -X POST -K - \
       "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-      -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
       -H "Content-Type: application/json" \
-      --data "${cuerpo}")" || http="000"
+      --data "${cuerpo}" \
+      <<<"header = \"Authorization: Bearer ${CLOUDFLARE_API_TOKEN}\"")" || http="000"
     [ "${http}" = "200" ] || fallos=$((fallos + 1))
   done
   if [ "${fallos}" -eq 0 ]; then
