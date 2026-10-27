@@ -125,11 +125,16 @@ main() {
   # index.html lleva el placeholder $VITE_LINKEDIN_PARTNER_ID; el valor real
   # vive solo en ${REPO_DIR}/.env (no versionado). Sin él se aborta.
   [ -f "${REPO_DIR}/.env" ] || { echo "ERROR: falta ${REPO_DIR}/.env (VITE_LINKEDIN_PARTNER_ID)." >&2; exit 1; }
-  set -a
-  # shellcheck disable=SC1091
-  source "${REPO_DIR}/.env"
-  set +a
-  sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID:?VITE_LINKEDIN_PARTNER_ID no definido}/g" "${STAGE}/index.html"
+  # El .env NO se hace `source`: este script corre como root y un .env con
+  # `$(…)` o backticks se ejecutaría con sus privilegios. Se leen solo las tres
+  # claves esperadas, como texto, y se validan por formato antes de usarlas.
+  VITE_LINKEDIN_PARTNER_ID="$(leer_env VITE_LINKEDIN_PARTNER_ID)"
+  CLOUDFLARE_ZONE_ID="$(leer_env CLOUDFLARE_ZONE_ID)"
+  CLOUDFLARE_API_TOKEN="$(leer_env CLOUDFLARE_API_TOKEN)"
+  [[ "${VITE_LINKEDIN_PARTNER_ID}" =~ ^[0-9]+$ ]]     || { echo "ERROR: VITE_LINKEDIN_PARTNER_ID ausente o no numérico en ${REPO_DIR}/.env." >&2; exit 1; }
+  [[ -z "${CLOUDFLARE_ZONE_ID}" || "${CLOUDFLARE_ZONE_ID}" =~ ^[0-9A-Fa-f]+$ ]]     || { echo "ERROR: CLOUDFLARE_ZONE_ID con formato inválido (se espera hexadecimal)." >&2; exit 1; }
+  [[ -z "${CLOUDFLARE_API_TOKEN}" || "${CLOUDFLARE_API_TOKEN}" =~ ^[A-Za-z0-9_-]+$ ]]     || { echo "ERROR: CLOUDFLARE_API_TOKEN con formato inválido (se espera [A-Za-z0-9_-])." >&2; exit 1; }
+  sed -i "s/\$VITE_LINKEDIN_PARTNER_ID/${VITE_LINKEDIN_PARTNER_ID}/g" "${STAGE}/index.html"
 
   # Cache busting: nginx sirve CSS y JS con max-age=2592000 (30 días) y la
   # purga de Cloudflare no alcanza la caché del navegador. La versión es el
@@ -216,6 +221,18 @@ main() {
   echo "=============================================================="
   echo "  ✅ Publicado ${head:0:7} en https://${DOMAIN}"
   echo "=============================================================="
+}
+
+# Lee UNA clave de ${REPO_DIR}/.env como texto (última aparición, sin comillas
+# envolventes ni CR). Nunca evalúa el fichero ni imprime nada por stderr.
+leer_env() {
+  local linea
+  linea="$(grep -E "^[[:space:]]*(export[[:space:]]+)?$1=" "${REPO_DIR}/.env" | tail -n1)" || true
+  linea="${linea#*=}"
+  linea="${linea%$'\r'}"
+  linea="${linea#\"}"; linea="${linea%\"}"
+  linea="${linea#\'}"; linea="${linea%\'}"
+  printf '%s' "${linea}"
 }
 
 # Devuelve el web root al estado del respaldo hecho justo antes de publicar.
