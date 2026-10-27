@@ -101,10 +101,11 @@ main() {
   # ----------------------------------------------------------------------------
   # 2. Compilar el CSS de Tailwind (dist/ no está en git)
   # ----------------------------------------------------------------------------
-  # `npm ci` respeta package-lock.json → build reproducible. Si falla, set -e
+  # `npm ci` respeta package-lock.json → build reproducible; `--ignore-scripts`
+  # evita que un postinstall de cualquier dependencia corra como root. Si falla, set -e
   # aborta antes de tocar el web root.
   echo "==> Compilando CSS (Tailwind)..."
-  ( cd "${REPO_DIR}" && npm ci --no-audit --no-fund && npm run build )
+  ( cd "${REPO_DIR}" && npm ci --ignore-scripts --no-audit --no-fund && npm run build )
 
   # ----------------------------------------------------------------------------
   # 3. Montar la versión publicable en un directorio de staging
