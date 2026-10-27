@@ -38,7 +38,7 @@ BACKUP_DIR="${BACKUP_DIR:-/root/backups-solucionesconia/$(date +%Y%m%d-%H%M%S)}"
 # Lista BLANCA de lo que se publica (antes era lista negra, y acababan en el web
 # root docs/, nginx/ y diseño_premium.md, servidos con 200). Si index.html
 # empieza a enlazar otra carpeta, añadirla aquí.
-PUBLICAR=(index.html acceso assets dist src)
+PUBLICAR=(index.html robots.txt sitemap.xml acceso assets dist src)
 NO_PUBLICAR=(src/input.css .gitkeep)
 
 SIMULAR=0
@@ -210,6 +210,12 @@ main() {
   EN_VENTANA=0
   trap - ERR INT TERM
   echo "==> Loopback OK: index.html servido = publicado; /, /acceso/, CSS y JS en 200"
+  # robots.txt y sitemap.xml: solo aviso. Si el vhost no los sirve, el sitio
+  # funciona igual y no justifica revertir una publicación buena.
+  for ruta in /robots.txt /sitemap.xml; do
+    codigo="$(curl -sk --max-time 10 -o /dev/null -w '%{http_code}' -H "Host: ${DOMAIN}" "https://127.0.0.1${ruta}")" || codigo="000"
+    [ "${codigo}" = "200" ] || echo "!! ${ruta} → ${codigo} en loopback: revisar el vhost (no se revierte)." >&2
+  done
 
   # ----------------------------------------------------------------------------
   # 7. Purga de Cloudflare SOLO de los ficheros cambiados
