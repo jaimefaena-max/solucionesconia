@@ -181,13 +181,15 @@ main() {
   # ----------------------------------------------------------------------------
   local esperado servido ruta codigo
   esperado="$(sha256sum < "${STAGE}/index.html" | cut -c1-64)"
-  servido="$(curl -sk -H "Host: ${DOMAIN}" https://127.0.0.1/ | sha256sum | cut -c1-64)"
+  # --max-time: un nginx colgado no puede dejar el script esperando con el web
+  # root recién publicado; un curl fallido cuenta como "no sirve lo publicado".
+  servido="$(curl -sk --max-time 10 -H "Host: ${DOMAIN}" https://127.0.0.1/ | sha256sum | cut -c1-64)" || servido="curl-fallido"
   if [ "${esperado}" != "${servido}" ]; then
     echo "ERROR: nginx no sirve el index.html recién publicado." >&2
     revertir; exit 1
   fi
   for ruta in / /acceso/ /dist/style.css /src/main.js; do
-    codigo="$(curl -sk -o /dev/null -w '%{http_code}' -H "Host: ${DOMAIN}" "https://127.0.0.1${ruta}")"
+    codigo="$(curl -sk --max-time 10 -o /dev/null -w '%{http_code}' -H "Host: ${DOMAIN}" "https://127.0.0.1${ruta}")" || codigo="000"
     [ "${codigo}" = "200" ] || { echo "ERROR: ${ruta} → ${codigo} en loopback." >&2; revertir; exit 1; }
   done
   # Publicación verificada: se cierra la ventana (la purga de Cloudflare ya no
@@ -296,7 +298,7 @@ purgar_cloudflare() {
     # El token va por stdin (`-K -` lee la configuración de curl del here-string),
     # no en argv: un `-H "Authorization: Bearer …"` sería visible para cualquier
     # usuario en `ps` / /proc/<pid>/cmdline mientras dura la llamada.
-    http="$(curl -s -o /dev/null -w '%{http_code}' -X POST -K - \
+    http="$(curl -s --max-time 20 -o /dev/null -w '%{http_code}' -X POST -K - \
       "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
       -H "Content-Type: application/json" \
       --data "${cuerpo}" \
