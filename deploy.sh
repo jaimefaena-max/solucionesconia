@@ -32,6 +32,7 @@ WWW_DOMAIN="www.solucionesconia.cl"
 WEB_ROOT="${WEB_ROOT:-/var/www/${DOMAIN}}"
 RAMA="main"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCK_FILE="${LOCK_FILE:-/var/lock/solucionesconia-deploy.lock}"
 BACKUP_DIR="${BACKUP_DIR:-/root/backups-solucionesconia/$(date +%Y%m%d-%H%M%S)}"
 
 # Lista BLANCA de lo que se publica (antes era lista negra, y acababan en el web
@@ -60,9 +61,15 @@ main() {
   done
 
   [ "$(id -u)" -eq 0 ] || { echo "ERROR: ejecutar como root." >&2; exit 1; }
-  for cmd in git rsync npm curl sha256sum; do
+  for cmd in git rsync npm curl sha256sum flock; do
     command -v "${cmd}" >/dev/null 2>&1 || { echo "ERROR: falta ${cmd}; este script no instala paquetes." >&2; exit 1; }
   done
+
+  # Un solo deploy a la vez (también la simulación: ambos corren `npm ci` y el
+  # build en el mismo clon). El descriptor 9 queda abierto hasta que el proceso
+  # termina, y con él el lock; no se libera a mano.
+  exec 9>"${LOCK_FILE}"
+  flock -n 9 || { echo "ERROR: ya hay otro deploy en curso (lock ${LOCK_FILE})." >&2; exit 1; }
 
   echo "==> Publicando ${DOMAIN} desde ${REPO_DIR}"
 
