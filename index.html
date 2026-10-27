@@ -81,15 +81,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        for (let registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
-  </script>
+  <!-- (El segundo script de desregistro de SW, duplicado del bloque endurecido
+       del inicio del <head>, se retiró: aquel ya desregistra todos los SW.) -->
 
   <title>Soluciones con IA | Automatización de procesos con IA para empresas en Chile</title>
   <meta name="description"
@@ -99,6 +92,28 @@
   <meta name="author" content="Soluciones con IA" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.solucionesconia.cl/" />
+
+  <!-- Datos estructurados (schema.org). Solo nombre comercial: sin razón
+       social, RUT ni domicilio. Un bloque application/ld+json no se ejecuta,
+       así que la CSP de script-src no lo afecta. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Soluciones con IA",
+    "url": "https://www.solucionesconia.cl/",
+    "logo": "https://www.solucionesconia.cl/assets/premium/LOGO.png",
+    "image": "https://www.solucionesconia.cl/assets/og-image.jpg",
+    "description": "Consultoría e implementación de automatización con IA a la medida de medianas y grandes empresas en Chile. Auditoría presencial o virtual y un mes de ajuste.",
+    "areaServed": { "@type": "Country", "name": "Chile" },
+    "knowsLanguage": "es-CL",
+    "serviceType": [
+      "Automatización de procesos con inteligencia artificial",
+      "Consultoría de inteligencia artificial para empresas",
+      "Agentes de IA"
+    ]
+  }
+  </script>
 
   <!-- Open Graph / Redes Sociales -->
   <meta property="og:type" content="website" />
