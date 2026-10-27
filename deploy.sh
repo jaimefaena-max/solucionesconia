@@ -27,10 +27,12 @@ set -Eeuo pipefail
 
 DOMAIN="solucionesconia.cl"
 WWW_DOMAIN="www.solucionesconia.cl"
-WEB_ROOT="/var/www/${DOMAIN}"
+# WEB_ROOT y BACKUP_DIR admiten sobreescritura por entorno solo para poder
+# probar revertir() contra directorios temporales; en el VPS no se definen.
+WEB_ROOT="${WEB_ROOT:-/var/www/${DOMAIN}}"
 RAMA="main"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKUP_DIR="/root/backups-solucionesconia/$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="${BACKUP_DIR:-/root/backups-solucionesconia/$(date +%Y%m%d-%H%M%S)}"
 
 # Lista BLANCA de lo que se publica (antes era lista negra, y acababan en el web
 # root docs/, nginx/ y diseño_premium.md, servidos con 200). Si index.html
@@ -41,6 +43,9 @@ NO_PUBLICAR=(src/input.css .gitkeep)
 SIMULAR=0
 PERMITIR_BORRADO=0
 STAGE=""
+# 1 mientras el web root está a medio publicar (desde el respaldo hasta que la
+# verificación en loopback pasa): solo en esa ventana un fallo dispara revertir().
+EN_VENTANA=0
 
 # Todo el cuerpo va dentro de main(): bash lee un script por trozos mientras lo
 # ejecuta, y el `git pull` de abajo puede reescribir este mismo fichero. Una
@@ -160,6 +165,12 @@ main() {
   tar -C "$(dirname "${WEB_ROOT}")" -czf "${BACKUP_DIR}/webroot.tgz" "$(basename "${WEB_ROOT}")"
   echo "==> Respaldo del web root en ${BACKUP_DIR}/webroot.tgz"
 
+  # Desde aquí el web root puede quedar a medias: cualquier fallo (explícito o
+  # por set -e, vía el trap ERR) lo devuelve al respaldo con revertir().
+  EN_VENTANA=1
+  trap 'al_fallar' ERR
+  trap 'al_interrumpir' INT TERM
+
   # --delay-updates deja cada fichero nuevo en un temporal y los coloca todos
   # al final: la ventana con versiones mezcladas es mínima.
   local cambios
@@ -173,13 +184,16 @@ main() {
   servido="$(curl -sk -H "Host: ${DOMAIN}" https://127.0.0.1/ | sha256sum | cut -c1-64)"
   if [ "${esperado}" != "${servido}" ]; then
     echo "ERROR: nginx no sirve el index.html recién publicado." >&2
-    echo "       Rollback: rm -rf ${WEB_ROOT} && tar -C $(dirname "${WEB_ROOT}") -xzf ${BACKUP_DIR}/webroot.tgz" >&2
-    exit 1
+    revertir; exit 1
   fi
   for ruta in / /acceso/ /dist/style.css /src/main.js; do
     codigo="$(curl -sk -o /dev/null -w '%{http_code}' -H "Host: ${DOMAIN}" "https://127.0.0.1${ruta}")"
-    [ "${codigo}" = "200" ] || { echo "ERROR: ${ruta} → ${codigo} en loopback. Rollback: ver arriba (${BACKUP_DIR})." >&2; exit 1; }
+    [ "${codigo}" = "200" ] || { echo "ERROR: ${ruta} → ${codigo} en loopback." >&2; revertir; exit 1; }
   done
+  # Publicación verificada: se cierra la ventana (la purga de Cloudflare ya no
+  # debe revertir nada) y se desarman los traps.
+  EN_VENTANA=0
+  trap - ERR INT TERM
   echo "==> Loopback OK: index.html servido = publicado; /, /acceso/, CSS y JS en 200"
 
   # ----------------------------------------------------------------------------
@@ -193,6 +207,60 @@ main() {
   echo "=============================================================="
   echo "  ✅ Publicado ${head:0:7} en https://${DOMAIN}"
   echo "=============================================================="
+}
+
+# Devuelve el web root al estado del respaldo hecho justo antes de publicar.
+# Antes el rollback era solo un texto impreso, y su receta (`rm -rf` + `tar`)
+# dejaba el sitio VACÍO si el tar fallaba. Ahora el tar se extrae primero a un
+# temporal y el web root solo se toca (rsync --delete) si el respaldo es legible
+# y contiene el directorio esperado; el web root nunca se borra de entrada.
+revertir() {
+  # EN_VENTANA=0 neutraliza los traps (al_fallar/al_interrumpir ya no actúan);
+  # no se hace `trap -` aquí porque revertir() también corre dentro de un trap.
+  EN_VENTANA=0
+  local nombre tmp rc=0
+  nombre="$(basename "${WEB_ROOT}")"
+  echo "!! REVIRTIENDO ${WEB_ROOT} desde ${BACKUP_DIR}/webroot.tgz" >&2
+  if [ ! -s "${BACKUP_DIR}/webroot.tgz" ]; then
+    echo "!! No hay respaldo legible en ${BACKUP_DIR}; el web root NO se ha tocado." >&2
+    return 1
+  fi
+  tmp="$(mktemp -d /tmp/solucionesconia-revert.XXXXXX)" || return 1
+  if tar -xzf "${BACKUP_DIR}/webroot.tgz" -C "${tmp}" && [ -d "${tmp}/${nombre}" ]; then
+    rsync -a --delete "${tmp}/${nombre}/" "${WEB_ROOT}/" || rc=1
+  else
+    echo "!! El respaldo no se pudo extraer; el web root NO se ha tocado." >&2
+    rc=1
+  fi
+  rm -rf "${tmp}"
+  if [ "${rc}" -eq 0 ]; then
+    echo "!! Web root restaurado desde el respaldo. Revisar qué falló antes de reintentar." >&2
+  else
+    echo "!! FALLÓ la reversión; restaurar a mano: ${BACKUP_DIR}/webroot.tgz" >&2
+  fi
+  return "${rc}"
+}
+
+# Trap ERR: solo actúa dentro de la ventana de publicación y solo en el shell
+# principal. Con `set -E` las subshells de `$(…)` heredan el trap; sin la guarda
+# de BASHPID, un fallo dentro de `$(rsync …)` revertiría dos veces (una en la
+# subshell, cuyo cambio de EN_VENTANA se pierde, y otra en el padre).
+al_fallar() {
+  RC_FALLO=$?
+  [ "${BASHPID}" = "$$" ] || return "${RC_FALLO}"
+  if [ "${EN_VENTANA}" -eq 1 ]; then
+    echo "ERROR: fallo durante la publicación (código ${RC_FALLO})." >&2
+    revertir || true
+  fi
+  return "${RC_FALLO}"
+}
+
+al_interrumpir() {
+  if [ "${BASHPID}" = "$$" ] && [ "${EN_VENTANA}" -eq 1 ]; then
+    echo "ERROR: interrumpido durante la publicación." >&2
+    revertir || true
+  fi
+  exit 130
 }
 
 purgar_cloudflare() {
@@ -242,5 +310,9 @@ purgar_cloudflare() {
   fi
 }
 
-main "$@"
-exit
+# Con `source deploy.sh` (pruebas) solo se definen las funciones; ejecutado
+# directamente, publica y sale sin leer nada más del fichero.
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  main "$@"
+  exit
+fi
