@@ -218,10 +218,29 @@ main() {
   # admin. y vip. Credenciales solo desde .env (nunca en código ni en argv).
   purgar_cloudflare "${cambios}"
 
+  podar_respaldos
+
   echo ""
   echo "=============================================================="
   echo "  ✅ Publicado ${head:0:7} en https://${DOMAIN}"
   echo "=============================================================="
+}
+
+# Conserva los RETENER_RESPALDOS respaldos más recientes (cada uno es un tar del
+# web root completo y se acumulaban sin límite). Solo toca carpetas con nombre
+# exacto AAAAMMDD-HHMMSS dentro del directorio padre de BACKUP_DIR, y solo se
+# llama tras una publicación verificada, nunca ante un fallo.
+RETENER_RESPALDOS=10
+podar_respaldos() {
+  local base viejo
+  base="$(dirname "${BACKUP_DIR}")"
+  [ -d "${base}" ] || return 0
+  while IFS= read -r viejo; do
+    [ -n "${viejo}" ] || continue
+    rm -rf -- "${base:?}/${viejo}"
+    echo "==> Respaldo antiguo eliminado: ${base}/${viejo}"
+  done < <(find "${base}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' \
+             | grep -E '^[0-9]{8}-[0-9]{6}$' | sort -r | tail -n "+$((RETENER_RESPALDOS + 1))")
 }
 
 # Lee UNA clave de ${REPO_DIR}/.env como texto (última aparición, sin comillas
