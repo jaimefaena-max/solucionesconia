@@ -223,15 +223,16 @@
        la auditoría y no debe competir con nada. Su valor es la prueba social
        («tienen clientes con sistemas de verdad»). /acceso lleva su propio
        noindex. -->
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-white/[.06] bg-night/[.62] backdrop-blur-[14px]">
-    <div class="mx-auto flex h-[4.75rem] max-w-7xl items-center justify-between gap-4 px-5 lg:px-8 min-[1100px]:max-w-none min-[1100px]:px-[clamp(1.2rem,2.2vw,3.2rem)]">
-      <!-- width/height = tamaño INTRÍNSECO del PNG (110x80): reservan el hueco
-           antes de descargar la imagen y evitan el salto de layout. -->
-      <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="flex shrink-0 items-center gap-3">
-        <img src="/assets/premium/LOGO.png"
-          srcset="/assets/premium/LOGO.png 1x, /assets/premium/LOGO@2x.png 2x"
-          alt="Soluciones con IA" width="110" height="80" class="block h-11 w-auto" />
-        <span class="hidden items-center rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-[.12em] text-accent-light sm:inline-flex">Enterprise · Chile</span>
+  <header class="sc-header fixed inset-x-0 top-0 z-50 border-b border-white/[.06] bg-night/[.62] backdrop-blur-[14px]">
+    <div class="sc-header__barra mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 lg:px-8 min-[1100px]:max-w-none min-[1100px]:px-[clamp(1.2rem,2.2vw,3.2rem)]">
+      <!-- Marca: el ícono solo (sin el texto que traía el logo debajo), grande, y el nombre al lado.
+           logo-icono-*.webp se recortó de LOGO.jpeg con canal alfa (ver commit). width/height =
+           tamaño intrínseco del de 96 px: reservan el hueco y evitan el salto de layout. -->
+      <a href="#inicio" aria-label="Soluciones con IA - Inicio" class="sc-marca group flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3.5">
+        <img src="/assets/premium/logo-icono-96.webp"
+          srcset="/assets/premium/logo-icono-96.webp 1x, /assets/premium/logo-icono-192.webp 2x"
+          alt="" width="94" height="96" class="sc-marca__icono block w-auto" />
+        <span class="sc-marca__nombre whitespace-nowrap font-extrabold leading-none tracking-[-.035em] text-ink">Soluciones con <span class="sc-marca__ia">IA</span></span>
       </a>
 
       <nav aria-label="Principal" class="hidden items-center gap-7 text-sm font-medium text-ink/65 lg:flex">
@@ -333,10 +334,10 @@
                encuadre 4:5. -->
           <div data-reveal class="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
             <div class="relative rounded-3xl border border-white/[.08] bg-gradient-to-b from-white/10 to-white/[.02] p-3 shadow-[0_24px_70px_rgba(4,12,28,.7)] backdrop-blur-2xl">
-              <div class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-night-deep min-[1100px]:aspect-auto min-[1100px]:h-[min(56svh,56rem)]">
+              <div class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-night-deep min-[1100px]:aspect-auto min-[1100px]:h-[min(64svh,calc(100svh-21rem))]">
                 <img src="/assets/premium/embajador-ia.webp" alt="Embajador de Soluciones con IA"
                   width="848" height="1263" fetchpriority="high" decoding="async"
-                  class="h-full w-full object-cover object-[center_15%]" />
+                  class="h-full w-full object-cover object-top" />
                 <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-night via-transparent to-transparent opacity-90"></div>
 
                 <div class="absolute inset-x-4 bottom-4 rounded-xl border border-white/[.08] bg-night-deep/85 p-4 backdrop-blur-xl">

@@ -290,3 +290,72 @@ section[id] {
     animation: none !important;
   }
 }
+
+/* ── Marca del encabezado ────────────────────────────────────────────────────
+   Ícono grande con un halo cian suave y el nombre al lado. «IA» lleva un brillo
+   lento que recorre el texto (se apaga con «reducir movimiento»).
+   Al bajar, la barra se compacta (main.js pone .is-compacto) y al volver arriba
+   recupera el tamaño grande. */
+.sc-header {
+  transition: background-color 0.35s ease;
+}
+
+.sc-header.is-compacto {
+  background-color: rgba(15, 23, 42, 0.86);
+}
+
+.sc-header__barra {
+  height: 4.75rem;
+  transition: height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.sc-marca__icono {
+  height: 2.875rem;
+  filter: drop-shadow(0 0 0.9rem rgba(6, 182, 212, 0.32));
+  transition: height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1), filter 0.35s ease;
+}
+
+.sc-marca__nombre {
+  font-size: 1.0625rem;
+  text-shadow: 0 0 1.5rem rgba(6, 182, 212, 0.18);
+  transition: font-size 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (min-width: 400px) {
+  .sc-marca__nombre { font-size: 1.1875rem; }
+}
+
+@media (min-width: 640px) {
+  .sc-header__barra { height: 6rem; }
+  .sc-marca__icono { height: 4.5rem; }
+  .sc-marca__nombre { font-size: 1.875rem; }
+  .sc-header.is-compacto .sc-header__barra { height: 4.75rem; }
+  .sc-header.is-compacto .sc-marca__icono { height: 3.25rem; }
+  .sc-header.is-compacto .sc-marca__nombre { font-size: 1.5rem; }
+}
+
+.sc-marca__ia {
+  background: linear-gradient(100deg, #06b6d4 0%, #22d3ee 30%, #a5f3fc 50%, #22d3ee 70%, #06b6d4 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sc-brillo-ia 7s ease-in-out infinite;
+}
+
+@keyframes sc-brillo-ia {
+  0%, 100% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sc-marca:hover .sc-marca__icono {
+    transform: scale(1.05) rotate(-3deg);
+    filter: drop-shadow(0 0 1.4rem rgba(6, 182, 212, 0.55));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-marca__ia { animation: none; background-position: 50% 0; }
+  .sc-marca__icono, .sc-marca__nombre, .sc-header__barra { transition: none; }
+}

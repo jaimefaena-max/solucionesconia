@@ -104,6 +104,21 @@ document.addEventListener("DOMContentLoaded", () => {
     onScroll();
   }
 
+  // ── Encabezado que se compacta al bajar ─────────────────────────────────────
+  // Arriba, la marca grande; apenas se baja, la barra se achica para dejar más
+  // contenido a la vista. Con IntersectionObserver sobre un testigo de 1 px en la
+  // parte superior: sin cálculos en cada evento de scroll.
+  const header = document.querySelector(".sc-header");
+  if (header && "IntersectionObserver" in window) {
+    const testigo = document.createElement("div");
+    testigo.setAttribute("aria-hidden", "true");
+    testigo.style.cssText = "position:absolute;top:0;left:0;width:1px;height:24px;pointer-events:none";
+    document.body.prepend(testigo);
+    new IntersectionObserver(([e]) => {
+      header.classList.toggle("is-compacto", !e.isIntersecting);
+    }).observe(testigo);
+  }
+
   // ── Modal de agendamiento (Cal.com) ────────────────────────────────────────
   const modal = document.getElementById("scheduler-modal");
   const frameHost = document.getElementById("scheduler-frame");
