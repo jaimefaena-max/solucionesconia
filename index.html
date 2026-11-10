@@ -332,11 +332,9 @@
           <!-- Retrato del Embajador en tarjeta glass. El PNG es un retrato vertical
                (848×1263): `object-[center_15%]` deja el rostro dentro del
                encuadre 4:5. -->
-          <div data-reveal class="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none min-[1100px]:flex min-[1100px]:justify-end">
-            <div class="relative rounded-3xl border border-white/[.08] bg-gradient-to-b from-white/10 to-white/[.02] p-3 shadow-[0_24px_70px_rgba(4,12,28,.7)] backdrop-blur-2xl min-[1100px]:w-fit">
-              <!-- Proporción de retrato (3:4): la persona se ve completa, del pelo a la taza. En escritorio el
-                   cuadro toma el alto disponible de la pantalla y el ancho sale de la proporción. -->
-              <div class="relative aspect-[3/4] overflow-hidden rounded-2xl bg-night-deep min-[1100px]:h-[min(calc(100svh-20rem),56rem)] min-[1100px]:w-auto">
+          <div data-reveal class="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
+            <div class="relative rounded-3xl border border-white/[.08] bg-gradient-to-b from-white/10 to-white/[.02] p-3 shadow-[0_24px_70px_rgba(4,12,28,.7)] backdrop-blur-2xl">
+              <div class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-night-deep min-[1100px]:aspect-auto min-[1100px]:h-[min(64svh,calc(100svh-21rem))]">
                 <img src="/assets/premium/embajador-ia.webp" alt="Embajador de Soluciones con IA"
                   width="848" height="1263" fetchpriority="high" decoding="async"
                   class="h-full w-full object-cover object-top" />
@@ -353,7 +351,7 @@
                       <svg class="h-[1.125rem] w-[1.125rem]" aria-hidden="true"><use href="#i-check" /></svg>
                     </span>
                   </div>
-                  <div class="hidden grid-cols-3 gap-2 border-t border-white/[.06] pt-2 font-mono text-[0.6875rem] sm:grid min-[1100px]:hidden min-[1600px]:grid">
+                  <div class="hidden grid-cols-3 gap-2 border-t border-white/[.06] pt-2 font-mono text-[0.6875rem] sm:grid">
                     <div><span class="block text-ink/50">Paso 1</span><span class="font-bold text-accent-light">Auditoría</span></div>
                     <div><span class="block text-ink/50">Paso 2</span><span class="font-bold text-ink">A medida</span></div>
                     <div><span class="block text-ink/50">Paso 3</span><span class="font-bold text-accent-faint">1 mes de ajuste</span></div>
