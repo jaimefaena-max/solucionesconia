@@ -268,7 +268,7 @@
       <div class="relative z-10 mx-auto w-full max-w-7xl px-5 lg:px-8 min-[1100px]:max-w-none min-[1100px]:px-[clamp(1.2rem,2.2vw,3.2rem)]">
         <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
 
-          <div class="flex flex-col items-start gap-5 sm:gap-6 lg:col-span-7">
+          <div class="sc-hero-col flex flex-col items-start gap-5 sm:gap-6 lg:col-span-7">
             <p data-reveal class="inline-flex items-center gap-3 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 backdrop-blur-md">
               <span class="relative flex h-2.5 w-2.5" aria-hidden="true">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-light opacity-75"></span>
@@ -284,36 +284,36 @@
               <span class="bg-gradient-to-r from-accent-light to-accent-faint bg-clip-text text-transparent">a la medida de tu empresa</span>
             </h1>
 
-            <div data-reveal class="w-full rounded-2xl border border-accent/40 bg-gradient-to-r from-accent/15 via-night-high/70 to-accent/10 p-4 shadow-[0_10px_30px_rgba(6,182,212,.15)] backdrop-blur-xl lg:p-5">
-              <div class="flex items-start gap-3.5">
-                <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-accent/20 text-accent-light">
+            <div data-reveal class="sc-garantia w-full rounded-2xl border border-accent/40 bg-gradient-to-r from-accent/15 via-night-high/70 to-accent/10 p-4 shadow-[0_10px_30px_rgba(6,182,212,.15)] backdrop-blur-xl lg:p-5">
+              <div class="sc-garantia__fila flex items-start gap-3.5">
+                <span class="sc-garantia__icono mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-accent/20 text-accent-light">
                   <svg class="h-[1.375rem] w-[1.375rem]" aria-hidden="true"><use href="#i-shield" /></svg>
                 </span>
                 <div>
-                  <span class="inline-block rounded bg-accent/15 px-2 py-0.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider text-accent-light">Garantía de riesgo cero</span>
-                  <p class="mt-2 text-base font-bold leading-snug text-ink sm:text-lg lg:text-xl">No pagas nada hasta que tu sistema lleve un mes funcionando a tu medida.</p>
+                  <span class="sc-garantia__sello inline-block rounded bg-accent/15 px-2 py-0.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider text-accent-light">Garantía de riesgo cero</span>
+                  <p class="sc-garantia__titulo mt-2 text-base font-bold leading-snug text-ink sm:text-lg lg:text-xl">No pagas nada hasta que tu sistema lleve un mes funcionando a tu medida.</p>
                   <!-- En móvil se oculta: el titular de la garantía basta y el CTA
                        tiene que verse sin hacer scroll. -->
-                  <p class="mt-1.5 hidden text-sm leading-relaxed text-ink/80 sm:block lg:text-[0.9375rem]">Diseñamos, implementamos e integramos la automatización en tus procesos críticos y la ajustamos contigo durante un mes. Asumimos el riesgo para que compruebes el impacto real antes de pagar.</p>
+                  <p class="sc-garantia__texto mt-1.5 hidden text-sm leading-relaxed text-ink/80 sm:block lg:text-[0.9375rem]">Diseñamos, implementamos e integramos la automatización en tus procesos críticos y la ajustamos contigo durante un mes. Asumimos el riesgo para que compruebes el impacto real antes de pagar.</p>
                 </div>
               </div>
             </div>
 
             <!-- data-reveal en el envoltorio y no en el <a>: en el propio botón,
                  la transición de la cascada retrasaba el hover y la pulsación. -->
-            <div data-reveal class="flex w-full flex-wrap items-center gap-3.5 sm:w-auto">
+            <div data-reveal class="sc-hero-ctas flex w-full flex-wrap items-center gap-3.5 sm:w-auto">
               <a href="mailto:contacto@solucionesconia.cl?subject=Quiero%20agendar%20una%20auditor%C3%ADa" data-open-scheduler data-open-sofia data-cta="hero"
-                class="sc-btn-primary inline-flex min-h-[3.5rem] w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-base font-bold tracking-[-.01em] text-accent-ink shadow-cta sm:w-auto">
+                class="sc-hero-cta sc-btn-primary inline-flex min-h-[3.5rem] w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-base font-bold tracking-[-.01em] text-accent-ink shadow-cta sm:w-auto">
                 <svg class="h-5 w-5" aria-hidden="true"><use href="#i-calendar" /></svg>
                 Agendar auditoría
               </a>
               <a href="#como-trabajamos"
-                class="sc-btn-ghost inline-flex min-h-[3.5rem] w-full items-center justify-center gap-2 rounded-full border border-white/[.18] bg-white/[.03] px-7 text-base font-semibold text-ink backdrop-blur-md sm:w-auto">
+                class="sc-hero-cta sc-btn-ghost inline-flex min-h-[3.5rem] w-full items-center justify-center gap-2 rounded-full border border-white/[.18] bg-white/[.03] px-7 text-base font-semibold text-ink backdrop-blur-md sm:w-auto">
                 Cómo trabajamos
               </a>
             </div>
 
-            <ul data-reveal class="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.8125rem] text-ink/65">
+            <ul data-reveal class="sc-hero-confianza flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.8125rem] text-ink/65">
               <li class="flex items-center gap-1.5">
                 <svg class="h-4 w-4 text-accent" aria-hidden="true"><use href="#i-check" /></svg>
                 <span class="font-medium text-ink">Sin costo inicial</span>

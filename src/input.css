@@ -387,3 +387,40 @@ section[id] {
 .sc-panel-foto span {
   text-shadow: 0 1px 2px rgba(4, 12, 28, 0.9), 0 0 12px rgba(4, 12, 28, 0.7);
 }
+
+/* ── Portada: bloque izquierdo (garantía, botones y fila final) ─────────────────
+   Crece con el ALTO de la pantalla para terminar a la altura de la tarjeta de la foto,
+   cuyo alto también depende del alto de la pantalla. Dos niveles (desde 960 y 1150 px de alto). #inicio para ganarle
+   a las utilidades responsivas de Tailwind, que se emiten al final de la hoja. */
+@media (min-width: 1280px) and (min-height: 960px) {
+  #inicio .sc-hero-col { gap: 2rem; }
+  #inicio .sc-garantia { padding: 1.75rem; border-radius: 1.5rem; }
+  #inicio .sc-garantia__fila { gap: 1.25rem; }
+  #inicio .sc-garantia__icono { width: 3.5rem; height: 3.5rem; border-radius: 1rem; }
+  #inicio .sc-garantia__icono svg { width: 1.75rem; height: 1.75rem; }
+  #inicio .sc-garantia__sello { padding: 0.25rem 0.625rem; font-size: 0.8125rem; }
+  #inicio .sc-garantia__titulo { margin-top: 0.75rem; font-size: 1.625rem; line-height: 1.28; letter-spacing: -0.015em; text-wrap: balance; }
+  #inicio .sc-garantia__texto { margin-top: 0.625rem; font-size: 1.125rem; }
+  #inicio .sc-hero-ctas { gap: 1rem; }
+  #inicio .sc-hero-cta { min-height: 4.25rem; padding-left: 2.25rem; padding-right: 2.25rem; font-size: 1.1875rem; gap: 0.75rem; }
+  #inicio .sc-hero-cta svg { width: 1.5rem; height: 1.5rem; }
+  #inicio .sc-hero-confianza { column-gap: 2.25rem; font-size: 1rem; }
+  #inicio .sc-hero-confianza li { gap: 0.625rem; }
+  #inicio .sc-hero-confianza svg { width: 1.25rem; height: 1.25rem; }
+}
+
+@media (min-width: 1800px) and (min-height: 1150px) {
+  #inicio .sc-hero-col { gap: 2.75rem; }
+  #inicio .sc-garantia { padding: 2.5rem; }
+  #inicio .sc-garantia__fila { gap: 1.5rem; }
+  #inicio .sc-garantia__icono { width: 4rem; height: 4rem; }
+  #inicio .sc-garantia__icono svg { width: 2rem; height: 2rem; }
+  #inicio .sc-garantia__sello { font-size: 0.875rem; }
+  #inicio .sc-garantia__titulo { font-size: 2rem; }
+  #inicio .sc-garantia__texto { font-size: 1.3125rem; }
+  #inicio .sc-hero-ctas { gap: 1.25rem; }
+  #inicio .sc-hero-cta { min-height: 5rem; padding-left: 2.75rem; padding-right: 2.75rem; font-size: 1.375rem; }
+  #inicio .sc-hero-cta svg { width: 1.75rem; height: 1.75rem; }
+  #inicio .sc-hero-confianza { column-gap: 3rem; font-size: 1.1875rem; }
+  #inicio .sc-hero-confianza svg { width: 1.5rem; height: 1.5rem; }
+}
