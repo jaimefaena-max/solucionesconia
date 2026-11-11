@@ -424,3 +424,27 @@ section[id] {
   #inicio .sc-hero-confianza { column-gap: 3rem; font-size: 1.1875rem; }
   #inicio .sc-hero-confianza svg { width: 1.5rem; height: 1.5rem; }
 }
+
+/* ── Toda la página en la escala de la portada ─────────────────────────────────
+   La portada crece con el alto de la pantalla (ver .sc-hero-col). Las secciones de abajo
+   y el pie usan el mismo factor con `zoom`, para que la página tenga un solo tamaño de
+   letra y de componentes hasta el final: ×1,2 desde 1280×960 y ×1,4 desde 1800×1150.
+   El margen lateral se divide por el factor para que el texto siga alineado con la portada. */
+:root { --sc-escala: 1; }
+
+@media (min-width: 1280px) and (min-height: 960px) {
+  :root { --sc-escala: 1.2; }
+}
+
+@media (min-width: 1800px) and (min-height: 1150px) {
+  :root { --sc-escala: 1.4; }
+}
+
+.sc-escala { zoom: var(--sc-escala); }
+
+@media (min-width: 1100px) {
+  .sc-escala > .mx-auto {
+    padding-left: calc(clamp(1.2rem, 2.2vw, 3.2rem) / var(--sc-escala)) !important;
+    padding-right: calc(clamp(1.2rem, 2.2vw, 3.2rem) / var(--sc-escala)) !important;
+  }
+}
