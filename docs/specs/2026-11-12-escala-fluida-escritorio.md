@@ -5,7 +5,7 @@ repo: Workspace_Agencia/Agencia_Solucionesconia (GitHub: solucionesconia)
 tamano: normal
 estado: implementado
 version: 3 (tras la prueba real de Jaime: pantallas bajas)
-sha: <se rellena al implementar>
+sha: b7d970e
 linear: <por crear en P-SOL-3>
 ---
 
