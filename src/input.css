@@ -355,25 +355,44 @@ section[id] {
   }
 }
 
-/* Marca +40 % en escritorio (pedido de Jaime 2026-11-10): ícono 4,5 → 6,3 rem y nombre
-   1,875 → 2,625 rem; la barra crece lo justo para contenerla. Entre 1024 y 1279 px, con el
-   menú visible y poco ancho, crece un 10 % para no chocar con el menú. */
+/* Cabecera y portada fluidas en escritorio (docs/specs/2026-11-12-escala-fluida-escritorio.md).
+   Crecen con ancho Y alto en la proporción de la referencia 2560×1300: cada tamaño toma el menor
+   de `medida/2560 vw` y `medida/1300 vh`, entre un mínimo legible y el máximo de siempre (que a
+   2560 px, raíz 20 px, da la referencia). Antes saltaban a su tamaño mayor en 1280 px, justo el
+   ancho de los notebooks más comunes (1920×1080 al 150 %), y el CTA quedaba bajo el borde. */
 @media (min-width: 1024px) {
-  .sc-header__barra { height: 6.75rem; }
-  .sc-marca__icono { height: 5rem; }
-  .sc-marca__nombre { font-size: 2rem; }
+  :root { --sc-barra: clamp(4.75rem, min(5.9vw, 11.5vh), 7.5rem); }
+  .sc-header__barra { height: var(--sc-barra); }
+  .sc-marca__icono { height: clamp(3.25rem, min(4.9vw, 9.7vh), 6.3rem); }
+  .sc-marca__nombre { font-size: clamp(1.5rem, min(2.05vw, 4.05vh), 2.625rem); }
+  /* La cabecera es fixed: el contenido de la portada empieza bajo la barra + 2 rem. */
+  #inicio { padding-top: calc(var(--sc-barra) + 2rem); }
+  #inicio .sc-hero-titulo { font-size: clamp(2.75rem, min(3.5vw, 6.9vh), 4.5rem); }
 }
 
-@media (min-width: 1280px) {
-  .sc-header__barra { height: 7.5rem; }
-  .sc-marca__icono { height: 6.3rem; }
-  .sc-marca__nombre { font-size: 2.625rem; }
-}
+/* Menú: solo se ve desde 1024 px (`hidden lg:flex`). Queda en 15 px hasta ~1830 px de ancho. */
+.sc-nav { font-size: clamp(0.9375rem, 0.82vw, 1.3125rem); }
 
-/* Con la barra más alta (≥1280 px), en pantallas bajas la foto cede lo que creció la barra para
+/* En pantallas bajas (≥1280 px de ancho, <800 de alto) la foto descuenta la barra fluida para
    seguir cabiendo; desde 800 px de alto conserva su tamaño de siempre. */
 @media (min-width: 1280px) and (max-height: 799px) {
-  #inicio .sc-foto-caja { height: min(64svh, calc(100svh - 23rem)); }
+  #inicio .sc-foto-caja { height: min(64svh, calc(100svh - var(--sc-barra) - 13rem)); }
+}
+
+/* Pantallas bajas de escritorio: 1920×1080 al 150 % con barra de marcadores deja ≈ 1280×552.
+   Van después de la regla de la foto para ganarle por orden donde coinciden. */
+@media (min-width: 1024px) and (max-height: 700px) {
+  #inicio { padding-top: calc(var(--sc-barra) + 1rem); }
+  #inicio .sc-hero-col { gap: 1rem; }
+  #inicio .sc-garantia { padding: 1rem; }
+  #inicio .sc-garantia__titulo { font-size: 1.125rem; }
+  #inicio .sc-garantia__texto { margin-top: 0.375rem; font-size: 0.875rem; line-height: 1.45; }
+  #inicio .sc-foto-caja { aspect-ratio: auto; height: min(64svh, calc(100svh - var(--sc-barra) - 13rem)); }
+}
+
+/* Aún más bajas: queda el sello y la frase de la garantía; el párrafo se oculta, como en celular. */
+@media (min-width: 1024px) and (max-height: 620px) {
+  #inicio .sc-garantia__texto { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
