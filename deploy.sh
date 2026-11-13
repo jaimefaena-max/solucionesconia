@@ -38,7 +38,7 @@ BACKUP_DIR="${BACKUP_DIR:-/root/backups-solucionesconia/$(date +%Y%m%d-%H%M%S)}"
 # Lista BLANCA de lo que se publica (antes era lista negra, y acababan en el web
 # root docs/, nginx/ y diseño_premium.md, servidos con 200). Si index.html
 # empieza a enlazar otra carpeta, añadirla aquí.
-PUBLICAR=(index.html robots.txt sitemap.xml acceso assets dist src)
+PUBLICAR=(index.html robots.txt sitemap.xml acceso assets dist src privacidad)
 NO_PUBLICAR=(src/input.css .gitkeep)
 
 SIMULAR=0
