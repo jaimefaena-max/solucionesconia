@@ -38,7 +38,7 @@ BACKUP_DIR="${BACKUP_DIR:-/root/backups-solucionesconia/$(date +%Y%m%d-%H%M%S)}"
 # Lista BLANCA de lo que se publica (antes era lista negra, y acababan en el web
 # root docs/, nginx/ y diseño_premium.md, servidos con 200). Si index.html
 # empieza a enlazar otra carpeta, añadirla aquí.
-PUBLICAR=(index.html robots.txt sitemap.xml acceso assets dist src privacidad)
+PUBLICAR=(index.html robots.txt sitemap.xml acceso assets dist src privacidad desabolladura)
 NO_PUBLICAR=(src/input.css .gitkeep)
 
 SIMULAR=0
@@ -143,9 +143,18 @@ main() {
   local v_css v_js
   v_css="$(sha256sum < "${STAGE}/dist/style.css" | cut -c1-10)"
   v_js="$(sha256sum < "${STAGE}/src/main.js" | cut -c1-10)"
-  sed -i -e "s/\$CSS_VERSION/${v_css}/g" -e "s/\$JS_VERSION/${v_js}/g" "${STAGE}/index.html"
-  if grep -qE '\$(CSS|JS)_VERSION' "${STAGE}/index.html"; then
-    echo "ERROR: index.html conserva un placeholder de versión sin sustituir." >&2; exit 1
+  # Todas las páginas que enlazan CSS/JS con marcador (index.html y
+  # desabolladura/index.html; acceso/ y privacidad/ no lo llevan). `grep -rl`
+  # sin coincidencias sale con 1: el `|| true` va dentro de la sustitución de
+  # proceso para que set -e / pipefail no aborten.
+  local con_marcador=()
+  mapfile -t con_marcador < <(grep -rlE '\$(CSS|JS)_VERSION' --include='*.html' "${STAGE}" || true)
+  [ "${#con_marcador[@]}" -gt 0 ] || { echo "ERROR: ningún .html con marcador de versión." >&2; exit 1; }
+  for f in "${con_marcador[@]}"; do
+    sed -i -e "s/\$CSS_VERSION/${v_css}/g" -e "s/\$JS_VERSION/${v_js}/g" "${f}"
+  done
+  if grep -rqE '\$(CSS|JS)_VERSION' --include='*.html' "${STAGE}"; then
+    echo "ERROR: queda un placeholder de versión sin sustituir." >&2; exit 1
   fi
   echo "==> Versiones de assets: style.css?v=${v_css} · main.js?v=${v_js}"
 
@@ -201,6 +210,14 @@ main() {
     echo "ERROR: nginx no sirve el index.html recién publicado." >&2
     revertir; exit 1
   fi
+  # Página de Desabolladura: se compara el sha, no solo el 200, porque un
+  # fallback del vhost podría devolver la portada con 200.
+  esperado="$(sha256sum < "${STAGE}/desabolladura/index.html" | cut -c1-64)"
+  servido="$(curl -sk --max-time 10 -H "Host: ${DOMAIN}" https://127.0.0.1/desabolladura/ | sha256sum | cut -c1-64)" || servido="curl-fallido"
+  if [ "${esperado}" != "${servido}" ]; then
+    echo "ERROR: nginx no sirve el desabolladura/index.html recién publicado." >&2
+    revertir; exit 1
+  fi
   for ruta in / /acceso/ /dist/style.css /src/main.js; do
     codigo="$(curl -sk --max-time 10 -o /dev/null -w '%{http_code}' -H "Host: ${DOMAIN}" "https://127.0.0.1${ruta}")" || codigo="000"
     [ "${codigo}" = "200" ] || { echo "ERROR: ${ruta} → ${codigo} en loopback." >&2; revertir; exit 1; }
@@ -209,7 +226,7 @@ main() {
   # debe revertir nada) y se desarman los traps.
   EN_VENTANA=0
   trap - ERR INT TERM
-  echo "==> Loopback OK: index.html servido = publicado; /, /acceso/, CSS y JS en 200"
+  echo "==> Loopback OK: index.html y desabolladura/ servidos = publicados; /, /acceso/, CSS y JS en 200"
   # robots.txt y sitemap.xml: solo aviso. Si el vhost no los sirve, el sitio
   # funciona igual y no justifica revertir una publicación buena.
   for ruta in /robots.txt /sitemap.xml; do

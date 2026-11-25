@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // (aunque el servidor cuente igual). Nunca rompe la página.
   const EMBUDO_URL = "https://admin.solucionesconia.cl/api/sales-agent/evento";
   const contar = (e, f) => {
+    // Páginas con <body data-embudo="no"> (p. ej. /desabolladura/) no envían
+    // nada: el embudo mide solo la portada y sus tasas dejarían de cuadrar.
+    if (document.body.dataset.embudo === "no") return;
     try {
       fetch(EMBUDO_URL, {
         method: "POST",
