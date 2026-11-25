@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!iframeLoaded) {
         const iframe = document.createElement("iframe");
         iframe.src = SCHEDULER_URL;
-        iframe.title = "Agenda tu diagnóstico gratuito con Soluciones con IA";
+        iframe.title = "Agenda tu auditoría con Soluciones con IA";
         iframe.loading = "lazy";
         iframe.allow = "camera; microphone; fullscreen";
         frameHost.appendChild(iframe);
