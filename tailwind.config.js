@@ -6,7 +6,7 @@
 // estos ficheros. /acceso carga dist/style.css pero NO se escanea: sus estilos
 // van en acceso/acceso.css.
 module.exports = {
-  content: ["./index.html", "./src/**/*.js"],
+  content: ["./index.html", "./desabolladura/**/*.html", "./src/**/*.js"],
   theme: {
     extend: {
       colors: {
